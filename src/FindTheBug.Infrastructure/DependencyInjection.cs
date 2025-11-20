@@ -2,6 +2,7 @@ using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Infrastructure.Data;
 using FindTheBug.Infrastructure.Monitoring;
 using FindTheBug.Infrastructure.MultiTenancy;
+using FindTheBug.Infrastructure.Persistence;
 using FindTheBug.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -43,9 +44,10 @@ public static class DependencyInjection
             return new ApplicationDbContext(optionsBuilder.Options, tenantContext!);
         });
 
-        // Register repositories
+        // Register repositories and Unit of Work
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Register metrics service
         services.AddSingleton<IMetricsService, MetricsService>();
