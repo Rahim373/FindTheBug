@@ -1,14 +1,34 @@
 using FindTheBug.Application;
 using FindTheBug.Infrastructure;
 using FindTheBug.Infrastructure.MultiTenancy;
+using FindTheBug.WebAPI.Middleware;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Prometheus;
+using Serilog;
+using Serilog.Events;
+using Serilog.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("System", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .Enrich.WithEnvironmentName()
+    .Enrich.WithExceptionDetails()
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 // Add services to the container
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 
 // Add Application and Infrastructure layers
 builder.Services.AddApplication();
@@ -29,6 +49,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Add Request Logging Middleware (early in pipeline)
+app.UseMiddleware<RequestLoggingMiddleware>();
+
+// Add Global Exception Handler Middleware
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
 // Add Tenant Resolution Middleware (must be early in pipeline)
 app.UseMiddleware<TenantResolutionMiddleware>();
 
@@ -48,5 +74,17 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
-app.Run();
+try
+{
+    Log.Information("Starting FindTheBug application");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 
