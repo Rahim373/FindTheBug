@@ -1,0 +1,99 @@
+# Prometheus Configuration for FindTheBug
+
+## Local Development Setup
+
+Create a `prometheus.yml` file in your project root for local Prometheus testing:
+
+```yaml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'findthebug'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:5000']
+        labels:
+          environment: 'development'
+```
+
+## Running Prometheus Locally
+
+### Using Docker
+
+```bash
+docker run -d \
+  --name prometheus \
+  -p 9090:9090 \
+  -v ${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus
+```
+
+### Access Prometheus UI
+
+- Prometheus UI: http://localhost:9090
+- Metrics endpoint: http://localhost:5000/metrics
+- Health endpoint: http://localhost:5000/health
+
+## Available Metrics
+
+### HTTP Metrics (Automatic)
+- `http_requests_received_total` - Total HTTP requests
+- `http_requests_in_progress` - Current in-flight requests  
+- `http_request_duration_seconds` - Request duration histogram
+
+### Custom Business Metrics
+- `findthebug_tenant_requests_total{tenant_id}` - Requests per tenant
+- `findthebug_active_tenants` - Number of active tenants
+- `findthebug_entity_operations_total{entity_type,operation}` - CRUD operations
+- `findthebug_operation_duration_seconds{operation}` - Operation performance
+
+## Sample Prometheus Queries
+
+```promql
+# Total requests per tenant
+sum(findthebug_tenant_requests_total) by (tenant_id)
+
+# Request rate (requests per second)
+rate(http_requests_received_total[5m])
+
+# 95th percentile request duration
+histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))
+
+# Active tenants
+findthebug_active_tenants
+
+# Entity operations by type
+sum(findthebug_entity_operations_total) by (entity_type, operation)
+```
+
+## Grafana Dashboard
+
+Import this JSON to create a basic Grafana dashboard:
+
+```json
+{
+  "dashboard": {
+    "title": "FindTheBug Metrics",
+    "panels": [
+      {
+        "title": "Request Rate",
+        "targets": [
+          {
+            "expr": "rate(http_requests_received_total[5m])"
+          }
+        ]
+      },
+      {
+        "title": "Active Tenants",
+        "targets": [
+          {
+            "expr": "findthebug_active_tenants"
+          }
+        ]
+      }
+    ]
+  }
+}
+```

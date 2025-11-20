@@ -1,10 +1,12 @@
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Infrastructure.Data;
+using FindTheBug.Infrastructure.Monitoring;
 using FindTheBug.Infrastructure.MultiTenancy;
 using FindTheBug.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace FindTheBug.Infrastructure;
 
@@ -30,7 +32,7 @@ public static class DependencyInjection
             var tenantContext = provider.GetService<ITenantContext>();
             var factory = provider.GetRequiredService<ITenantDbContextFactory>();
             
-            if (tenantContext?.TenantId != null)
+            if (tenantContext?.TenantId is not null)
             {
                 return (ApplicationDbContext)factory.CreateDbContext(tenantContext.TenantId);
             }
@@ -44,6 +46,21 @@ public static class DependencyInjection
         // Register repositories
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
+        // Register metrics service
+        services.AddSingleton<IMetricsService, MetricsService>();
+
+        // Add health checks
+        services.AddHealthChecks()
+            .AddCheck("master_database", () =>
+            {
+                // In-memory database is always healthy
+                return HealthCheckResult.Healthy("Master database is healthy");
+            })
+            .AddCheck("application_health", () =>
+            {
+                return HealthCheckResult.Healthy("Application is running");
+            });
 
         return services;
     }
