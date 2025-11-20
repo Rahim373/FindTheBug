@@ -10,7 +10,7 @@ public class DiagnosticTest : BaseAuditableEntity, ITenantEntity
     public string? Description { get; set; }
     public string Category { get; set; } = string.Empty;
     public decimal Price { get; set; }
-    public int DurationInHours { get; set; }
+    public int? Duration { get; set; }
     public bool RequiresFasting { get; set; }
     public bool IsActive { get; set; } = true;
 

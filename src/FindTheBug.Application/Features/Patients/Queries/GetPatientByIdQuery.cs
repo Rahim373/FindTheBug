@@ -1,28 +1,21 @@
+using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
-using FindTheBug.Application.Common.Models;
 using FindTheBug.Domain.Entities;
 using MediatR;
 
 namespace FindTheBug.Application.Features.Patients.Queries;
 
-public record GetPatientByIdQuery(Guid Id) : IRequest<Result<Patient>>;
+public record GetPatientByIdQuery(Guid Id) : IRequest<ErrorOr<Patient>>;
 
-public class GetPatientByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetPatientByIdQuery, Result<Patient>>
+public class GetPatientByIdQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetPatientByIdQuery, ErrorOr<Patient>>
 {
-    public async Task<Result<Patient>> Handle(GetPatientByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Patient>> Handle(GetPatientByIdQuery request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var patient = await unitOfWork.Repository<Patient>().GetByIdAsync(request.Id, cancellationToken);
-            
-            if (patient is null)
-                return Result<Patient>.Failure($"Patient with ID {request.Id} not found");
+        var patient = await unitOfWork.Repository<Patient>().GetByIdAsync(request.Id, cancellationToken);
+        
+        if (patient is null)
+            return Error.NotFound("Patient.NotFound", $"Patient with ID {request.Id} not found");
 
-            return Result<Patient>.Success(patient);
-        }
-        catch (Exception ex)
-        {
-            return Result<Patient>.Failure($"Error retrieving patient: {ex.Message}");
-        }
+        return patient;
     }
 }

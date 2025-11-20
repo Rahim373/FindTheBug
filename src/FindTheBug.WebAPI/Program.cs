@@ -27,7 +27,10 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<FindTheBug.WebAPI.Filters.ErrorOrActionFilter>();
+});
 builder.Services.AddHttpContextAccessor();
 
 // Add Application and Infrastructure layers
