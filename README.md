@@ -104,6 +104,27 @@ dotnet run --project src/FindTheBug.WebAPI
 
 The API will be available at `https://localhost:7001` (or configured port).
 
+### Authentication Setup
+
+Update JWT and email settings in `appsettings.json`:
+
+```json
+{
+  "Jwt": {
+    "SecretKey": "your-secret-key-at-least-32-characters-long",
+    "AccessTokenExpirationMinutes": "15"
+  },
+  "Email": {
+    "SmtpHost": "smtp.gmail.com",
+    "SmtpPort": "587",
+    "SmtpUsername": "your-email@gmail.com",
+    "SmtpPassword": "your-app-password"
+  }
+}
+```
+
+> **Note:** For Gmail, create an [App Password](https://support.google.com/accounts/answer/185833) instead of using your regular password.
+
 ### API Documentation
 
 Swagger/OpenAPI documentation is available at:
@@ -189,6 +210,7 @@ Additional documentation is available in the `/docs` folder:
 
 - [ErrorOr + Result Integration](docs/ErrorOr-Result-Integration.md) - Error handling flow
 - [Generic Commands & Queries](docs/Generic-Commands-Queries.md) - CQRS pattern guide
+- [JWT Authentication Guide](docs/JWT-Authentication-Guide.md) - Complete authentication guide with examples
 
 ## 🏛️ Design Patterns
 
@@ -201,9 +223,15 @@ Additional documentation is available in the `/docs` folder:
 
 ## 🔐 Security Features
 
-- **Tenant isolation** - Automatic data segregation
+- **JWT Authentication** - Secure token-based authentication with automatic expiration
+- **Refresh Token Rotation** - Single-use refresh tokens with replacement tracking
+- **Account Lockout** - Protection against brute-force attacks (5 attempts, 15-min lockout)
+- **BCrypt Password Hashing** - Industry-standard password security (work factor 12)
+- **Password Reset Security** - Cryptographically secure one-time tokens with 1-hour expiration
+- **Tenant isolation** - Automatic data segregation per tenant
 - **Input validation** - Request validation at API layer
 - **Error sanitization** - No sensitive data in error responses
+- **Audit Trail** - IP address tracking for authentication events
 - **Correlation IDs** - Request tracing for security auditing
 
 ## 📊 Response Format
