@@ -29,6 +29,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<TestResult> TestResults => Set<TestResult>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<InvoiceItem> InvoiceItems => Set<InvoiceItem>();
+    
+    // Authentication DbSets
+    public DbSet<User> Users => Set<User>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

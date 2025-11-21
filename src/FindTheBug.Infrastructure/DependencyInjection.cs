@@ -1,9 +1,11 @@
 using FindTheBug.Application.Common.Interfaces;
+using FindTheBug.Infrastructure.Authentication;
 using FindTheBug.Infrastructure.Data;
 using FindTheBug.Infrastructure.Monitoring;
 using FindTheBug.Infrastructure.MultiTenancy;
 using FindTheBug.Infrastructure.Persistence;
 using FindTheBug.Infrastructure.Repositories;
+using FindTheBug.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +53,11 @@ public static class DependencyInjection
 
         // Register metrics service
         services.AddSingleton<IMetricsService, MetricsService>();
+        
+        // Register authentication services
+        services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IEmailService, EmailService>();
 
         // Add health checks
         services.AddHealthChecks()

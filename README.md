@@ -13,6 +13,16 @@ This project implements **Clean Architecture** with clear separation of concerns
 
 ## ✨ Key Features
 
+### Authentication & Security
+- **JWT Authentication** - Secure token-based authentication with 15-minute access tokens
+- **Refresh Token Mechanism** - Long-lived refresh tokens (7 days) with automatic rotation
+- **Password Reset** - Secure email-based password reset with one-time tokens
+- **Password Change** - Authenticated users can change passwords with automatic token revocation
+- **Account Lockout** - Automatic lockout after 5 failed login attempts (15-minute duration)
+- **BCrypt Password Hashing** - Industry-standard password hashing with work factor 12
+- **Token Revocation** - Logout functionality with refresh token revocation
+- **Security Audit Trail** - IP address tracking for logins and token operations
+
 ### Multi-Tenancy
 - **Subdomain-based tenant resolution** - Automatic tenant detection from request subdomain
 - **Tenant-isolated databases** - Each tenant has its own PostgreSQL database
@@ -48,6 +58,7 @@ This project implements **Clean Architecture** with clear separation of concerns
 
 ### Core Entities
 
+- **User** - User accounts with authentication and roles
 - **Patient** - Patient demographics and contact information
 - **DiagnosticTest** - Test catalog with pricing and descriptions
 - **TestParameter** - Individual parameters/fields for each test
@@ -55,6 +66,8 @@ This project implements **Clean Architecture** with clear separation of concerns
 - **TestResult** - Test results with verification workflow
 - **Invoice** - Billing and payment tracking
 - **InvoiceItem** - Line items for invoices
+- **RefreshToken** - JWT refresh tokens with expiration tracking
+- **PasswordResetToken** - Secure password reset tokens
 
 ## 🚀 Getting Started
 
@@ -136,6 +149,14 @@ Swagger/OpenAPI documentation is available at:
 - `POST /api/invoices` - Create new invoice
 - `PUT /api/invoices/{id}/status` - Update invoice status
 
+### Authentication
+- `POST /api/token` - Login with email and password
+- `POST /api/token/refresh` - Refresh access token
+- `POST /api/token/change-password` - Change password (requires auth)
+- `POST /api/token/request-reset` - Request password reset email
+- `POST /api/token/reset-password` - Reset password with token
+- `POST /api/token/revoke` - Revoke refresh token (logout)
+
 ### Monitoring
 - `GET /metrics` - Prometheus metrics endpoint
 - `GET /health` - Health check endpoint
@@ -158,6 +179,9 @@ Swagger/OpenAPI documentation is available at:
 - `Serilog.AspNetCore` - Logging
 - `prometheus-net.AspNetCore` - Metrics
 - `Swashbuckle.AspNetCore` - OpenAPI/Swagger
+- `BCrypt.Net-Next` - Password hashing
+- `Microsoft.AspNetCore.Authentication.JwtBearer` - JWT authentication
+- `System.IdentityModel.Tokens.Jwt` - JWT token handling
 
 ## 📚 Documentation
 
