@@ -1,13 +1,14 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
+using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Domain.Entities;
-using MediatR;
 
 namespace FindTheBug.Application.Features.Patients.Queries;
 
-public record GetAllPatientsQuery(string? Search) : IRequest<ErrorOr<IEnumerable<Patient>>>;
+public record GetAllPatientsQuery(string? Search) : IQuery<IEnumerable<Patient>>;
 
-public class GetAllPatientsQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetAllPatientsQuery, ErrorOr<IEnumerable<Patient>>>
+public class GetAllPatientsQueryHandler(IUnitOfWork unitOfWork) 
+    : IQueryHandler<GetAllPatientsQuery, IEnumerable<Patient>>
 {
     public async Task<ErrorOr<IEnumerable<Patient>>> Handle(GetAllPatientsQuery request, CancellationToken cancellationToken)
     {

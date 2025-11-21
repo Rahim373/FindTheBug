@@ -1,7 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
+using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Domain.Entities;
-using MediatR;
 
 namespace FindTheBug.Application.Features.Patients.Commands;
 
@@ -13,9 +13,10 @@ public record CreatePatientCommand(
     string? Gender,
     string? Email,
     string? Address
-) : IRequest<ErrorOr<Patient>>;
+) : ICommand<Patient>;
 
-public class CreatePatientCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreatePatientCommand, ErrorOr<Patient>>
+public class CreatePatientCommandHandler(IUnitOfWork unitOfWork) 
+    : ICommandHandler<CreatePatientCommand, Patient>
 {
     public async Task<ErrorOr<Patient>> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
     {

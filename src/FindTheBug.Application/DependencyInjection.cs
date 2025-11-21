@@ -1,7 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace FindTheBug.Application;
 
 public static class DependencyInjection

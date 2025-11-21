@@ -61,6 +61,9 @@ app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 // Add Tenant Resolution Middleware (must be early in pipeline)
 app.UseMiddleware<TenantResolutionMiddleware>();
 
+// Add Result Wrapper Middleware (wraps all responses in Result class)
+app.UseMiddleware<ResultWrapperMiddleware>();
+
 // Add HTTP metrics middleware (tracks request count, duration, etc.)
 app.UseHttpMetrics();
 

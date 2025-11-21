@@ -1,5 +1,6 @@
-using FindTheBug.Application.Common.Interfaces;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.TestResults.Commands;
+using FindTheBug.Application.Features.TestResults.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -9,19 +10,16 @@ namespace FindTheBug.WebAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class TestResultsController(IUnitOfWork unitOfWork) : ControllerBase
+public class TestResultsController(ISender mediator) : ControllerBase
 {
     /// <summary>
     /// Record test results for a test entry
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] TestResult result, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] CreateTestResultCommand command, CancellationToken cancellationToken)
     {
-        result.Id = Guid.NewGuid();
-        result.ResultDate = DateTime.UtcNow;
-        
-        var created = await unitOfWork.Repository<TestResult>().AddAsync(result, cancellationToken);
-        return CreatedAtAction(nameof(GetByTestEntry), new { testEntryId = created.TestEntryId }, created);
+        var result = await mediator.Send(command, cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>
@@ -30,24 +28,24 @@ public class TestResultsController(IUnitOfWork unitOfWork) : ControllerBase
     [HttpGet("entry/{testEntryId}")]
     public async Task<IActionResult> GetByTestEntry(Guid testEntryId, CancellationToken cancellationToken)
     {
-        var results = await unitOfWork.Repository<TestResult>().GetAllAsync(cancellationToken);
-        var entryResults = results.Where(r => r.TestEntryId == testEntryId);
-        
-        return Ok(entryResults);
+        var query = new GetTestResultsByEntryQuery(testEntryId);
+        var result = await mediator.Send(query, cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>
     /// Update test result
     /// </summary>
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] TestResult result, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTestResultRequest request, CancellationToken cancellationToken)
     {
-        var existing = await unitOfWork.Repository<TestResult>().GetByIdAsync(id, cancellationToken);
-        if (existing is null)
-            return NotFound();
-
-        result.Id = id;
-        await unitOfWork.Repository<TestResult>().UpdateAsync(result, cancellationToken);
+        var command = new UpdateTestResultCommand(
+            id,
+            request.ResultValue,
+            request.IsAbnormal,
+            request.Notes
+        );
+        var result = await mediator.Send(command, cancellationToken);
         return Ok(result);
     }
 
@@ -57,18 +55,16 @@ public class TestResultsController(IUnitOfWork unitOfWork) : ControllerBase
     [HttpPost("{testEntryId}/verify")]
     public async Task<IActionResult> VerifyResults(Guid testEntryId, [FromBody] VerifyRequest request, CancellationToken cancellationToken)
     {
-        var results = await unitOfWork.Repository<TestResult>().GetAllAsync(cancellationToken);
-        var entryResults = results.Where(r => r.TestEntryId == testEntryId).ToList();
-
-        foreach (var result in entryResults)
-        {
-            result.VerifiedBy = request.VerifiedBy;
-            result.VerifiedDate = DateTime.UtcNow;
-            await unitOfWork.Repository<TestResult>().UpdateAsync(result, cancellationToken);
-        }
-
-        return Ok(true);
+        var command = new VerifyTestResultsCommand(testEntryId, request.VerifiedBy);
+        var result = await mediator.Send(command, cancellationToken);
+        return Ok(result);
     }
 }
+
+public record UpdateTestResultRequest(
+    string ResultValue,
+    bool IsAbnormal,
+    string? Notes
+);
 
 public record VerifyRequest(string VerifiedBy);

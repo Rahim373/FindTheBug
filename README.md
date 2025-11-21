@@ -1,376 +1,248 @@
 # FindTheBug - Diagnostics Lab Management System
 
-A modern, multi-tenant ASP.NET Core Web API for diagnostics lab management, built with Clean Architecture, CQRS pattern, and comprehensive monitoring.
+A modern, multi-tenant diagnostics laboratory management system built with ASP.NET Core following Clean Architecture principles.
 
 ## 🏗️ Architecture
 
-This project follows **Clean Architecture** with **CQRS pattern** using MediatR, designed for scalability, maintainability, and testability.
+This project implements **Clean Architecture** with clear separation of concerns:
 
-```
-FindTheBug/
-├── src/
-│   ├── FindTheBug.Domain/          # Core business entities and logic
-│   ├── FindTheBug.Application/     # Commands, Queries, and Handlers (CQRS)
-│   ├── FindTheBug.Infrastructure/  # Data access, repositories, and services
-│   └── FindTheBug.WebAPI/          # API controllers and configuration
-└── FindTheBug.sln
-```
+- **Domain Layer** (`FindTheBug.Domain`) - Core business entities and interfaces
+- **Application Layer** (`FindTheBug.Application`) - Business logic, CQRS handlers, DTOs
+- **Infrastructure Layer** (`FindTheBug.Infrastructure`) - Data access, external services
+- **Presentation Layer** (`FindTheBug.WebAPI`) - REST API endpoints, middleware
 
-### Layer Dependencies
-
-```
-WebAPI → Infrastructure → Application → Domain
-         ↓
-    IMediator → Handlers → UnitOfWork → Repository → DbContext
-```
-
-- **Domain**: Enterprise business rules, entities, and domain exceptions (no dependencies)
-- **Application**: Commands, queries, handlers, and interfaces (depends on Domain)
-- **Infrastructure**: Data access, Unit of Work, repositories, and external services (depends on Application)
-- **WebAPI**: API controllers using MediatR (depends on Application & Infrastructure)
-
-## 🚀 Features
-
-### Core Architecture
-- ✅ **Clean Architecture** - Clear separation of concerns with dependency inversion
-- ✅ **CQRS Pattern** - Commands and Queries with MediatR
-- ✅ **Unit of Work Pattern** - Transaction management and repository coordination
-- ✅ **Repository Pattern** - Generic repository for data access abstraction
-- ✅ **Modern C# 12** - File-scoped namespaces, primary constructors, pattern matching
+## ✨ Key Features
 
 ### Multi-Tenancy
-- ✅ **Subdomain-based Tenant Resolution** - Automatic tenant detection from subdomain
-- ✅ **Tenant Isolation** - Separate in-memory databases per tenant
-- ✅ **Global Query Filters** - Automatic tenant data filtering
-- ✅ **Tenant Management API** - CRUD operations for tenant configuration
+- **Subdomain-based tenant resolution** - Automatic tenant detection from request subdomain
+- **Tenant-isolated databases** - Each tenant has its own PostgreSQL database
+- **Dynamic connection strings** - Runtime database selection based on tenant context
+- **Tenant-scoped data access** - Automatic filtering of all queries by tenant ID
 
-### Diagnostics Lab Management
-- ✅ **Diagnostic Tests** - Test catalog with pricing, categories, and parameters
-- ✅ **Test Parameters** - Configurable test inputs with reference ranges
-- ✅ **Patient Management** - Patient records with required mobile number
-- ✅ **Test Entries** - Patient test registration with status workflow
-- ✅ **Test Results** - Results storage with verification workflow
-- ✅ **Invoicing** - Billing with line items, discounts, and payment tracking
+### CQRS with MediatR
+- **Command/Query Separation** - Clear distinction between reads and writes
+- **Generic base interfaces** - `ICommand<TResponse>` and `IQuery<TResponse>` reduce boilerplate
+- **Handler pattern** - `ICommandHandler` and `IQueryHandler` for consistent implementation
+- **Decoupled architecture** - Controllers delegate to MediatR handlers
+
+### Error Handling
+- **ErrorOr pattern** - Functional error handling without exceptions
+- **Automatic response conversion** - `ErrorOrActionFilter` converts errors to Problem Details (RFC 7807)
+- **Consistent API responses** - `ResultWrapperMiddleware` wraps all responses in `Result<T>` format
+- **Typed errors** - NotFound, Validation, Conflict, Unauthorized, etc.
 
 ### Monitoring & Observability
-- ✅ **Prometheus Metrics** - HTTP metrics, custom business metrics, tenant-specific counters
-- ✅ **Health Checks** - Application and database health monitoring
-- ✅ **Metrics Endpoint** - `/metrics` for Prometheus scraping
-- ✅ **Health Endpoint** - `/health` with detailed status
+- **Prometheus metrics** - HTTP request metrics, custom business metrics
+- **Health checks** - Database connectivity, application health
+- **Structured logging** - Serilog with console sink and correlation IDs
+- **Request/Response logging** - Automatic logging of all HTTP requests
 
-### API & Documentation
-- ✅ **RESTful API** - Following REST principles with proper HTTP verbs
-- ✅ **Swagger/OpenAPI** - Interactive API documentation with XML comments
-- ✅ **Result Pattern** - Consistent response handling with success/failure states
-- ✅ **Audit Tracking** - Automatic CreatedAt/UpdatedAt timestamps
+### Modern C# Features
+- **File-scoped namespaces** - Cleaner code organization
+- **Primary constructors** - Reduced boilerplate in classes
+- **Record types** - Immutable DTOs and commands/queries
+- **Pattern matching** - Modern null checking with `is null`/`is not null`
+- **Collection expressions** - Simplified collection initialization
 
-## 📋 Prerequisites
+## 🏥 Domain Model
 
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download) or later
-- IDE: Visual Studio 2022, VS Code, or Rider
-- (Optional) Docker for Prometheus monitoring
+### Core Entities
 
-## 🛠️ Getting Started
+- **Patient** - Patient demographics and contact information
+- **DiagnosticTest** - Test catalog with pricing and descriptions
+- **TestParameter** - Individual parameters/fields for each test
+- **TestEntry** - Patient test registration and sample tracking
+- **TestResult** - Test results with verification workflow
+- **Invoice** - Billing and payment tracking
+- **InvoiceItem** - Line items for invoices
 
-### 1. Clone the Repository
+## 🚀 Getting Started
 
-```bash
-git clone <repository-url>
-cd FindTheBug
+### Prerequisites
+
+- .NET 8.0 SDK or later
+- PostgreSQL 14+
+- (Optional) Docker for containerized deployment
+
+### Configuration
+
+Update `appsettings.json` with your PostgreSQL connection string:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Database=FindTheBug;Username=postgres;Password=yourpassword"
+  }
+}
 ```
 
-### 2. Restore Dependencies
+### Running the Application
 
 ```bash
+# Restore dependencies
 dotnet restore
+
+# Run database migrations
+dotnet ef database update --project src/FindTheBug.Infrastructure --startup-project src/FindTheBug.WebAPI
+
+# Run the application
+dotnet run --project src/FindTheBug.WebAPI
 ```
 
-### 3. Build the Solution
+The API will be available at `https://localhost:7001` (or configured port).
 
-```bash
-dotnet build
-```
+### API Documentation
 
-### 4. Run the Application
+Swagger/OpenAPI documentation is available at:
+- `https://localhost:7001/swagger`
 
-```bash
-dotnet run --project src/FindTheBug.WebAPI/FindTheBug.WebAPI.csproj
-```
+## 📡 API Endpoints
 
-The API will be available at:
-- HTTPS: `https://localhost:5001`
-- HTTP: `http://localhost:5000`
-- Swagger UI: `https://localhost:5001/swagger`
-- Metrics: `https://localhost:5001/metrics`
-- Health: `https://localhost:5001/health`
-
-## 📚 API Endpoints
-
-### Tenant Management
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/tenants` | Get all tenants |
-| GET | `/api/tenants/{id}` | Get tenant by ID |
-| GET | `/api/tenants/subdomain/{subdomain}` | Get tenant by subdomain |
-| POST | `/api/tenants` | Create new tenant |
-| PUT | `/api/tenants/{id}` | Update tenant |
-
-### Patient Management
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/patients?search={query}` | Search patients by name or mobile |
-| GET | `/api/patients/{id}` | Get patient by ID |
-| POST | `/api/patients` | Register new patient (mobile required) |
+### Patients
+- `GET /api/patients` - Get all patients (with optional search)
+- `GET /api/patients/{id}` - Get patient by ID
+- `POST /api/patients` - Create new patient
+- `PUT /api/patients/{id}` - Update patient
+- `DELETE /api/patients/{id}` - Delete patient
 
 ### Diagnostic Tests
+- `GET /api/diagnostictests` - Get all tests
+- `GET /api/diagnostictests/{id}` - Get test by ID
+- `POST /api/diagnostictests` - Create new test
+- `PUT /api/diagnostictests/{id}` - Update test
+- `DELETE /api/diagnostictests/{id}` - Delete test
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/diagnostictests?category={category}` | Get tests by category |
-| GET | `/api/diagnostictests/{id}` | Get test details |
-| POST | `/api/diagnostictests` | Create new test |
+### Test Parameters
+- `GET /api/testparameters?diagnosticTestId={id}` - Get parameters for a test
+- `POST /api/testparameters` - Create new parameter
+- `PUT /api/testparameters/{id}` - Update parameter
+- `DELETE /api/testparameters/{id}` - Delete parameter
 
 ### Test Entries
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/testentries?status={status}` | Get entries by status |
-| GET | `/api/testentries/{id}` | Get entry details |
-| POST | `/api/testentries` | Register patient for test |
+- `GET /api/testentries` - Get all test entries
+- `GET /api/testentries/{id}` - Get entry by ID
+- `POST /api/testentries` - Register patient for test
+- `PUT /api/testentries/{id}/status` - Update entry status
 
 ### Test Results
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/testresults/entry/{testEntryId}` | Get results for test entry |
-| POST | `/api/testresults` | Record test results |
-| POST | `/api/testresults/{testEntryId}/verify` | Verify results |
+- `GET /api/testresults/entry/{testEntryId}` - Get results for a test entry
+- `POST /api/testresults` - Record test result
+- `PUT /api/testresults/{id}` - Update test result
+- `POST /api/testresults/{testEntryId}/verify` - Verify test results
 
 ### Invoices
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/invoices?status={status}` | Get invoices by status |
-| GET | `/api/invoices/{id}` | Get invoice details |
-| POST | `/api/invoices` | Create invoice from test entries |
+- `GET /api/invoices` - Get all invoices
+- `GET /api/invoices/{id}` - Get invoice by ID
+- `POST /api/invoices` - Create new invoice
+- `PUT /api/invoices/{id}/status` - Update invoice status
 
 ### Monitoring
+- `GET /metrics` - Prometheus metrics endpoint
+- `GET /health` - Health check endpoint
 
-| Endpoint | Description |
-|----------|-------------|
-| `/metrics` | Prometheus metrics endpoint |
-| `/health` | Health check endpoint |
-| `/api/metrics/summary` | Metrics summary |
+## 🔧 Technology Stack
 
-## 🔧 Multi-Tenancy Usage
+### Backend
+- **ASP.NET Core 8.0** - Web framework
+- **Entity Framework Core** - ORM
+- **PostgreSQL** - Database
+- **MediatR** - CQRS implementation
+- **ErrorOr** - Functional error handling
+- **Serilog** - Structured logging
+- **Prometheus** - Metrics and monitoring
 
-### Creating a Tenant
+### Packages
+- `ErrorOr` - Functional error handling
+- `MediatR` - Mediator pattern for CQRS
+- `Npgsql.EntityFrameworkCore.PostgreSQL` - PostgreSQL provider
+- `Serilog.AspNetCore` - Logging
+- `prometheus-net.AspNetCore` - Metrics
+- `Swashbuckle.AspNetCore` - OpenAPI/Swagger
 
-```bash
-curl -X POST https://localhost:5001/api/tenants \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Lab One",
-    "subdomain": "lab1",
-    "connectionString": "InMemory_Lab1",
-    "isActive": true
-  }'
-```
+## 📚 Documentation
 
-### Accessing Tenant Data
+Additional documentation is available in the `/docs` folder:
 
-Access the API using the tenant's subdomain:
-- `https://lab1.localhost:5001/api/patients`
-- `https://lab2.localhost:5001/api/diagnostictests`
+- [ErrorOr + Result Integration](docs/ErrorOr-Result-Integration.md) - Error handling flow
+- [Generic Commands & Queries](docs/Generic-Commands-Queries.md) - CQRS pattern guide
 
-Data is automatically isolated per tenant using global query filters.
+## 🏛️ Design Patterns
 
-## 📊 Prometheus Monitoring
-
-### Available Metrics
-
-**HTTP Metrics (Automatic):**
-- `http_requests_received_total` - Total HTTP requests
-- `http_request_duration_seconds` - Request duration histogram
-
-**Custom Business Metrics:**
-- `findthebug_tenant_requests_total{tenant_id}` - Requests per tenant
-- `findthebug_active_tenants` - Number of active tenants
-- `findthebug_entity_operations_total{entity_type,operation}` - CRUD operations
-- `findthebug_operation_duration_seconds{operation}` - Operation performance
-
-### Local Prometheus Setup
-
-See `prometheus.yml.example` for configuration.
-
-```bash
-docker run -d \
-  --name prometheus \
-  -p 9090:9090 \
-  -v ${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml \
-  prom/prometheus
-```
-
-## 🗂️ Project Structure
-
-### Domain Layer
-
-```
-Domain/
-├── Common/
-│   ├── BaseEntity.cs
-│   ├── BaseAuditableEntity.cs
-│   └── ITenantEntity.cs
-├── Entities/
-│   ├── DiagnosticTest.cs
-│   ├── TestParameter.cs
-│   ├── Patient.cs
-│   ├── TestEntry.cs
-│   ├── TestResult.cs
-│   ├── Invoice.cs
-│   └── InvoiceItem.cs
-└── Exceptions/
-    └── DomainException.cs
-```
-
-### Application Layer (CQRS)
-
-```
-Application/
-├── Common/
-│   ├── Interfaces/
-│   │   ├── IRepository.cs
-│   │   ├── IUnitOfWork.cs
-│   │   └── IApplicationDbContext.cs
-│   └── Models/
-│       └── Result.cs
-├── Features/
-│   ├── Patients/
-│   │   ├── Commands/
-│   │   │   └── CreatePatientCommand.cs
-│   │   └── Queries/
-│   │       ├── GetAllPatientsQuery.cs
-│   │       └── GetPatientByIdQuery.cs
-│   ├── DiagnosticTests/
-│   ├── TestEntries/
-│   └── Invoices/
-└── DependencyInjection.cs
-```
-
-### Infrastructure Layer
-
-```
-Infrastructure/
-├── Data/
-│   ├── ApplicationDbContext.cs
-│   └── MasterDbContext.cs
-├── MultiTenancy/
-│   ├── TenantContext.cs
-│   ├── TenantService.cs
-│   ├── TenantResolutionMiddleware.cs
-│   └── TenantDbContextFactory.cs
-├── Persistence/
-│   └── UnitOfWork.cs
-├── Repositories/
-│   └── Repository.cs
-├── Monitoring/
-│   └── MetricsService.cs
-└── DependencyInjection.cs
-```
-
-## 📦 NuGet Packages
-
-### Application
-- `MediatR` - CQRS pattern implementation
-
-### Infrastructure
-- `Microsoft.EntityFrameworkCore.InMemory` - In-memory database provider
-- `prometheus-net` - Metrics collection
-- `Microsoft.Extensions.Diagnostics.HealthChecks` - Health checks
-
-### WebAPI
-- `Swashbuckle.AspNetCore` - Swagger/OpenAPI
-- `prometheus-net.AspNetCore` - HTTP metrics middleware
-- `AspNetCore.HealthChecks.UI.Client` - Health check UI formatting
-
-## 🎯 Design Patterns
-
-- **Clean Architecture** - Dependency inversion and separation of concerns
-- **CQRS** - Command Query Responsibility Segregation with MediatR
+- **Clean Architecture** - Dependency inversion, separation of concerns
+- **CQRS** - Command Query Responsibility Segregation
 - **Repository Pattern** - Data access abstraction
 - **Unit of Work** - Transaction management
-- **Result Pattern** - Consistent response handling
-- **Factory Pattern** - Tenant database context creation
-- **Middleware Pattern** - Tenant resolution
+- **Mediator Pattern** - Decoupled request handling
+- **Functional Error Handling** - ErrorOr pattern instead of exceptions
 
-## 🧪 Example Workflow
+## 🔐 Security Features
 
-### 1. Create a Tenant
-```bash
-POST /api/tenants
+- **Tenant isolation** - Automatic data segregation
+- **Input validation** - Request validation at API layer
+- **Error sanitization** - No sensitive data in error responses
+- **Correlation IDs** - Request tracing for security auditing
+
+## 📊 Response Format
+
+All API responses follow a consistent format:
+
+### Success Response
+```json
 {
-  "name": "City Lab",
-  "subdomain": "citylab"
+  "isSuccess": true,
+  "data": { /* entity data */ },
+  "errorMessage": null,
+  "errors": []
 }
 ```
 
-### 2. Register a Patient
-```bash
-POST /api/patients
+### Error Response
+```json
 {
-  "firstName": "John",
-  "lastName": "Doe",
-  "mobileNumber": "1234567890"
+  "isSuccess": false,
+  "data": null,
+  "errorMessage": "Patient with ID xxx not found",
+  "errors": [
+    {
+      "code": "Patient.NotFound",
+      "description": "Patient with ID xxx not found"
+    }
+  ]
 }
 ```
 
-### 3. Create a Diagnostic Test
+## 🧪 Testing
+
 ```bash
-POST /api/diagnostictests
-{
-  "testCode": "CBC",
-  "testName": "Complete Blood Count",
-  "category": "Hematology",
-  "price": 500
-}
+# Run all tests
+dotnet test
+
+# Run with coverage
+dotnet test /p:CollectCoverage=true
 ```
 
-### 4. Register Patient for Test
-```bash
-POST /api/testentries
-{
-  "patientId": "guid",
-  "diagnosticTestId": "guid",
-  "priority": "Normal"
-}
-```
+## 📈 Monitoring
 
-### 5. Record Results
-```bash
-POST /api/testresults
-{
-  "testEntryId": "guid",
-  "testParameterId": "guid",
-  "resultValue": "14.5"
-}
-```
+### Prometheus Metrics
 
-### 6. Create Invoice
-```bash
-POST /api/invoices
-{
-  "patientId": "guid",
-  "items": [...]
-}
-```
+The application exposes metrics at `/metrics`:
+
+- HTTP request duration
+- HTTP request count by status code
+- Active requests
+- Custom business metrics (patients created, tests performed, etc.)
+
+### Health Checks
+
+Health check endpoint at `/health` returns:
+- Database connectivity status
+- Application health status
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
@@ -378,9 +250,12 @@ POST /api/invoices
 
 This project is licensed under the MIT License.
 
+## 👥 Authors
+
+- Your Name - Initial work
+
 ## 🙏 Acknowledgments
 
-- Clean Architecture principles by Robert C. Martin
-- CQRS pattern and MediatR library
-- ASP.NET Core team for the excellent framework
-- Prometheus for monitoring and observability
+- Clean Architecture by Robert C. Martin
+- ErrorOr library by Amichai Mantinband
+- MediatR by Jimmy Bogard

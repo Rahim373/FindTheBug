@@ -1,5 +1,6 @@
-using FindTheBug.Application.Common.Interfaces;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.TestParameters.Commands;
+using FindTheBug.Application.Features.TestParameters.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -9,7 +10,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class TestParametersController(IUnitOfWork unitOfWork) : ControllerBase
+public class TestParametersController(ISender mediator) : ControllerBase
 {
     /// <summary>
     /// Get all test parameters with optional filter by diagnostic test
@@ -17,40 +18,38 @@ public class TestParametersController(IUnitOfWork unitOfWork) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] Guid? diagnosticTestId, CancellationToken cancellationToken)
     {
-        var parameters = await unitOfWork.Repository<TestParameter>().GetAllAsync(cancellationToken);
-        
-        if (diagnosticTestId.HasValue)
-        {
-            parameters = parameters.Where(p => p.DiagnosticTestId == diagnosticTestId.Value);
-        }
-
-        return Ok(parameters.OrderBy(p => p.DisplayOrder));
+        var query = new GetAllTestParametersQuery(diagnosticTestId);
+        var result = await mediator.Send(query, cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>
     /// Create new test parameter
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] TestParameter parameter, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] CreateTestParameterCommand command, CancellationToken cancellationToken)
     {
-        parameter.Id = Guid.NewGuid();
-        var created = await unitOfWork.Repository<TestParameter>().AddAsync(parameter, cancellationToken);
-        return CreatedAtAction(nameof(GetAll), new { diagnosticTestId = created.DiagnosticTestId }, created);
+        var result = await mediator.Send(command, cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>
     /// Update test parameter
     /// </summary>
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] TestParameter parameter, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTestParameterRequest request, CancellationToken cancellationToken)
     {
-        var existing = await unitOfWork.Repository<TestParameter>().GetByIdAsync(id, cancellationToken);
-        if (existing is null)
-            return NotFound();
-
-        parameter.Id = id;
-        await unitOfWork.Repository<TestParameter>().UpdateAsync(parameter, cancellationToken);
-        return Ok(parameter);
+        var command = new UpdateTestParameterCommand(
+            id,
+            request.ParameterName,
+            request.Unit,
+            request.ReferenceRangeMin,
+            request.ReferenceRangeMax,
+            request.DataType,
+            request.DisplayOrder
+        );
+        var result = await mediator.Send(command, cancellationToken);
+        return Ok(result);
     }
 
     /// <summary>
@@ -59,7 +58,17 @@ public class TestParametersController(IUnitOfWork unitOfWork) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await unitOfWork.Repository<TestParameter>().DeleteAsync(id, cancellationToken);
-        return Ok(true);
+        var command = new DeleteTestParameterCommand(id);
+        var result = await mediator.Send(command, cancellationToken);
+        return Ok(result);
     }
 }
+
+public record UpdateTestParameterRequest(
+    string ParameterName,
+    string? Unit,
+    decimal? ReferenceRangeMin,
+    decimal? ReferenceRangeMax,
+    string DataType,
+    int DisplayOrder
+);
