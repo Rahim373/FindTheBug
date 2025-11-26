@@ -1,4 +1,5 @@
 using FindTheBug.WebAPI.Middleware;
+using FindTheBug.WebAPI.Extensions;
 using FindTheBug.WebAPI.Installers;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -73,6 +74,10 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 try
 {
     Log.Information("Starting FindTheBug application");
+    
+    // Initialize Database
+    await app.UseDatabaseInitializer();
+    
     app.Run();
 }
 catch (Exception ex)

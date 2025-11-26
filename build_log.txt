@@ -1,0 +1,30 @@
+﻿  Determining projects to restore...
+D:\Side Projects\FindTheBug\src\FindTheBug.WebAPI\FindTheBug.WebAPI.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c [D:\Side Projects\FindTheBug\FindTheBug.sln]
+D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\FindTheBug.ArchitectureTests.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c [D:\Side Projects\FindTheBug\FindTheBug.sln]
+D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\FindTheBug.Infrastructure.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c [D:\Side Projects\FindTheBug\FindTheBug.sln]
+  Restored D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\FindTheBug.Infrastructure.csproj (in 504 ms).
+  Restored D:\Side Projects\FindTheBug\src\FindTheBug.WebAPI\FindTheBug.WebAPI.csproj (in 467 ms).
+  Restored D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\FindTheBug.ArchitectureTests.csproj (in 467 ms).
+  2 of 5 projects are up-to-date for restore.
+D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\FindTheBug.Infrastructure.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c
+D:\Side Projects\FindTheBug\src\FindTheBug.WebAPI\FindTheBug.WebAPI.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c
+D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\FindTheBug.ArchitectureTests.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c
+  FindTheBug.Domain -> D:\Side Projects\FindTheBug\src\FindTheBug.Domain\bin\Debug\net10.0\FindTheBug.Domain.dll
+  FindTheBug.Application -> D:\Side Projects\FindTheBug\src\FindTheBug.Application\bin\Debug\net10.0\FindTheBug.Application.dll
+D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\Persistence\ApplicationDbContextFactory.cs(13,14): error CS1061: 'ConfigurationBuilder' does not contain a definition for 'SetBasePath' and no accessible extension method 'SetBasePath' accepting a first argument of type 'ConfigurationBuilder' could be found (are you missing a using directive or an assembly reference?) [D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\FindTheBug.Infrastructure.csproj]
+D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\Persistence\DbInitializer.cs(74,43): error CS1061: 'IPasswordHasher' does not contain a definition for 'Hash' and no accessible extension method 'Hash' accepting a first argument of type 'IPasswordHasher' could be found (are you missing a using directive or an assembly reference?) [D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\FindTheBug.Infrastructure.csproj]
+
+Build FAILED.
+
+D:\Side Projects\FindTheBug\src\FindTheBug.WebAPI\FindTheBug.WebAPI.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c [D:\Side Projects\FindTheBug\FindTheBug.sln]
+D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\FindTheBug.ArchitectureTests.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c [D:\Side Projects\FindTheBug\FindTheBug.sln]
+D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\FindTheBug.Infrastructure.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c [D:\Side Projects\FindTheBug\FindTheBug.sln]
+D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\FindTheBug.Infrastructure.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c
+D:\Side Projects\FindTheBug\src\FindTheBug.WebAPI\FindTheBug.WebAPI.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c
+D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\FindTheBug.ArchitectureTests.csproj : warning NU1903: Package 'Npgsql' 8.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c
+D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\Persistence\ApplicationDbContextFactory.cs(13,14): error CS1061: 'ConfigurationBuilder' does not contain a definition for 'SetBasePath' and no accessible extension method 'SetBasePath' accepting a first argument of type 'ConfigurationBuilder' could be found (are you missing a using directive or an assembly reference?) [D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\FindTheBug.Infrastructure.csproj]
+D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\Persistence\DbInitializer.cs(74,43): error CS1061: 'IPasswordHasher' does not contain a definition for 'Hash' and no accessible extension method 'Hash' accepting a first argument of type 'IPasswordHasher' could be found (are you missing a using directive or an assembly reference?) [D:\Side Projects\FindTheBug\src\FindTheBug.Infrastructure\FindTheBug.Infrastructure.csproj]
+    6 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:02.74

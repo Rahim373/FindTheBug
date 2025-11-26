@@ -40,11 +40,15 @@ public static class DependencyInjection
                 return (ApplicationDbContext)factory.CreateDbContext(tenantContext.TenantId);
             }
             
-            // Fallback to default in-memory database if no tenant context
+            // Fallback to default database if no tenant context
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseInMemoryDatabase("FindTheBugDefaultDb");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseNpgsql(connectionString);
             return new ApplicationDbContext(optionsBuilder.Options, tenantContext!);
         });
+
+        // Register DbInitializer
+        services.AddScoped<DbInitializer>();
 
         // Register repositories and Unit of Work
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
