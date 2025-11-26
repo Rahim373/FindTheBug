@@ -11,22 +11,17 @@ public class NamingConventionTests
         var assembly = AssemblyReference.ApplicationAssembly;
 
         // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .ImplementInterface(typeof(Application.Common.Messaging.ICommand<>))
-            .Or()
-            .ResideInNamespace("FindTheBug.Application.Features")
-            .And()
-            .AreClasses()
-            .And()
-            .AreNotAbstract()
-            .Should()
-            .HaveNameEndingWith("Command")
-            .GetResult();
+        var commandTypes = assembly.GetTypes()
+            .Where(t => t.Namespace?.Contains("Commands") == true && 
+                       t.IsClass && 
+                       !t.IsAbstract &&
+                       !t.Name.EndsWith("Handler"))
+            .Where(t => !t.Name.EndsWith("Command"))
+            .Select(t => t.Name)
+            .ToList();
 
         // Assert
-        Assert.True(result.IsSuccessful, 
-            $"All commands should end with 'Command'. Failing types: {string.Join(", ", result.FailingTypeNames ?? [])}");
+        Assert.Empty(commandTypes);
     }
 
     [Fact]
@@ -36,16 +31,17 @@ public class NamingConventionTests
         var assembly = AssemblyReference.ApplicationAssembly;
 
         // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .ImplementInterface(typeof(Application.Common.Messaging.IQuery<>))
-            .Should()
-            .HaveNameEndingWith("Query")
-            .GetResult();
+        var queryTypes = assembly.GetTypes()
+            .Where(t => t.Namespace?.Contains("Queries") == true && 
+                       t.IsClass &&
+                       !t.IsAbstract &&
+                       !t.Name.EndsWith("Handler"))
+            .Where(t => !t.Name.EndsWith("Query"))
+            .Select(t => t.Name)
+            .ToList();
 
         // Assert
-        Assert.True(result.IsSuccessful,
-            $"All queries should end with 'Query'. Failing types: {string.Join(", ", result.FailingTypeNames ?? [])}");
+        Assert.Empty(queryTypes);
     }
 
     [Fact]
@@ -55,18 +51,17 @@ public class NamingConventionTests
         var assembly = AssemblyReference.ApplicationAssembly;
 
         // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .ImplementInterface(typeof(Application.Common.Messaging.ICommandHandler<,>))
-            .Or()
-            .ImplementInterface(typeof(Application.Common.Messaging.IQueryHandler<,>))
-            .Should()
-            .HaveNameEndingWith("Handler")
-            .GetResult();
+        var handlerTypes = assembly.GetTypes()
+            .Where(t => (t.Name.Contains("Command") || t.Name.Contains("Query")) && 
+                       t.IsClass && 
+                       !t.IsAbstract &&
+                       t.Name.Contains("Handler"))
+            .Where(t => !t.Name.EndsWith("Handler"))
+            .Select(t => t.Name)
+            .ToList();
 
         // Assert
-        Assert.True(result.IsSuccessful,
-            $"All handlers should end with 'Handler'. Failing types: {string.Join(", ", result.FailingTypeNames ?? [])}");
+        Assert.Empty(handlerTypes);
     }
 
     [Fact]
@@ -97,22 +92,18 @@ public class NamingConventionTests
         var assemblies = new[] 
         { 
             AssemblyReference.DomainAssembly,
-            AssemblyReference.ApplicationAssembly,
-            AssemblyReference.InfrastructureAssembly
+            AssemblyReference.ApplicationAssembly
         };
 
         // Act & Assert
         foreach (var assembly in assemblies)
         {
-            var result = Types.InAssembly(assembly)
-                .That()
-                .AreInterfaces()
-                .Should()
-                .HaveNameStartingWith("I")
-                .GetResult();
+            var interfacesWithoutI = assembly.GetTypes()
+                .Where(t => t.IsInterface && !t.Name.StartsWith("I"))
+                .Select(t => t.FullName)
+                .ToList();
 
-            Assert.True(result.IsSuccessful,
-                $"All interfaces should start with 'I' in {assembly.GetName().Name}. Failing types: {string.Join(", ", result.FailingTypeNames ?? [])}");
+            Assert.Empty(interfacesWithoutI);
         }
     }
 

@@ -1,19 +1,20 @@
 using FindTheBug.Application.Features.TestParameters.Commands;
 using FindTheBug.Application.Features.TestParameters.Queries;
+using FindTheBug.WebAPI.Contracts.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
 
 /// <summary>
-/// Test parameters management
+/// Test parameter management endpoints
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class TestParametersController(ISender mediator) : ControllerBase
 {
     /// <summary>
-    /// Get all test parameters with optional filter by diagnostic test
+    /// Get all test parameters for a diagnostic test
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] Guid? diagnosticTestId, CancellationToken cancellationToken)
@@ -63,12 +64,3 @@ public class TestParametersController(ISender mediator) : ControllerBase
         return Ok(result);
     }
 }
-
-public record UpdateTestParameterRequest(
-    string ParameterName,
-    string? Unit,
-    decimal? ReferenceRangeMin,
-    decimal? ReferenceRangeMax,
-    string DataType,
-    int DisplayOrder
-);

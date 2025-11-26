@@ -13,6 +13,8 @@ public class LayerTests
         // Act
         var result = Types.InAssembly(assembly)
             .That()
+            .DoNotHaveName(nameof(Domain.Common.BaseAuditableEntity))
+            .And()
             .Inherit(typeof(Domain.Common.BaseEntity))
             .Or()
             .Inherit(typeof(Domain.Common.BaseAuditableEntity))

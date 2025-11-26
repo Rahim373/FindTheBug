@@ -9,7 +9,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class TestEntriesController(IMediator mediator) : ControllerBase
+public class TestEntriesController(ISender mediator) : ControllerBase
 {
     /// <summary>
     /// Register patient for test

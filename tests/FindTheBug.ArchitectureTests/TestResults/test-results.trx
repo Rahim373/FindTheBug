@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="741070fa-79ac-425b-b937-a12bc863a320" name="rahim@MDRAHIMLAP 2025-11-21 23:01:59" runUser="ENOSISBD\rahim" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-11-21T23:01:59.0774323+06:00" queuing="2025-11-21T23:01:59.0774328+06:00" start="2025-11-21T23:01:57.9703717+06:00" finish="2025-11-21T23:01:59.1926630+06:00" />
+  <TestSettings name="default" id="16939c94-9a1c-4f3c-ba46-64629e77fc97">
+    <Deployment runDeploymentRoot="rahim_MDRAHIMLAP_2025-11-21_23_01_59" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="4bf81213-e7e3-4bd3-9019-9e49bde54f74" testId="166651f0-a6e1-ed81-ddf6-8338e5cded93" testName="FindTheBug.ArchitectureTests.NamingConventionTests.Entities_Should_NotHaveEntitySuffix" computerName="MDRAHIMLAP" duration="00:00:00.0009576" startTime="2025-11-21T23:01:59.0279877+06:00" endTime="2025-11-21T23:01:59.0298925+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4bf81213-e7e3-4bd3-9019-9e49bde54f74">
+      <Output>
+        <ErrorInfo>
+          <Message>Domain entities should not have 'Entity' suffix. Failing types: FindTheBug.Domain.Entities.SampleEntity</Message>
+          <StackTrace>   at FindTheBug.ArchitectureTests.NamingConventionTests.Entities_Should_NotHaveEntitySuffix() in D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\NamingConventionTests.cs:line 134&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b87183ee-ceb7-4329-8e10-59a2fa0ef4b7" testId="adec06cf-5731-95e2-a598-dc45f061382f" testName="FindTheBug.ArchitectureTests.LayerTests.Middleware_Should_BeInMiddlewareNamespace" computerName="MDRAHIMLAP" duration="00:00:00.0754141" startTime="2025-11-21T23:01:58.8419103+06:00" endTime="2025-11-21T23:01:58.9210322+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b87183ee-ceb7-4329-8e10-59a2fa0ef4b7" />
+    <UnitTestResult executionId="81f63764-397f-4664-a884-0e1e3e030610" testId="ddec4b3b-6075-b57c-ae31-c218f67b2f64" testName="FindTheBug.ArchitectureTests.RepositoryTests.ApplicationLayer_Should_NotUseDbContextDirectly" computerName="MDRAHIMLAP" duration="00:00:00.2116530" startTime="2025-11-21T23:01:58.8418903+06:00" endTime="2025-11-21T23:01:59.0644316+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="81f63764-397f-4664-a884-0e1e3e030610" />
+    <UnitTestResult executionId="246d8104-8802-426a-94ad-7fb392d9fc91" testId="ced6316d-fd2d-9e1a-27f6-afffe82a55b1" testName="FindTheBug.ArchitectureTests.DependencyTests.Controllers_Should_HaveDependencyOnMediatR" computerName="MDRAHIMLAP" duration="00:00:00.1240165" startTime="2025-11-21T23:01:58.8418483+06:00" endTime="2025-11-21T23:01:59.0575978+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="246d8104-8802-426a-94ad-7fb392d9fc91">
+      <Output>
+        <ErrorInfo>
+          <Message>Controllers should use MediatR for CQRS</Message>
+          <StackTrace>   at FindTheBug.ArchitectureTests.DependencyTests.Controllers_Should_HaveDependencyOnMediatR() in D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\DependencyTests.cs:line 96&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="babfc28c-6c4a-476c-a3a2-985ce927619c" testId="f73378d1-2efa-6702-26fc-4d3edcd5acff" testName="FindTheBug.ArchitectureTests.InheritanceTests.QueryHandlers_Should_ImplementIQueryHandler" computerName="MDRAHIMLAP" duration="00:00:00.0020055" startTime="2025-11-21T23:01:59.0508567+06:00" endTime="2025-11-21T23:01:59.0560029+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="babfc28c-6c4a-476c-a3a2-985ce927619c">
+      <Output>
+        <ErrorInfo>
+          <Message>All query handlers should implement IQueryHandler&lt;T, R&gt;. Failing types: FindTheBug.Application.Features.TestParameters.Queries.GetAllTestParametersQueryHandler</Message>
+          <StackTrace>   at FindTheBug.ArchitectureTests.InheritanceTests.QueryHandlers_Should_ImplementIQueryHandler() in D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\InheritanceTests.cs:line 87&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7f132c46-999f-4947-bfc4-27645de1773e" testId="42e53d34-43f8-e499-04ce-b3c6aaf8cf67" testName="FindTheBug.ArchitectureTests.DependencyTests.Infrastructure_Should_Not_HaveDependencyOnWebAPI" computerName="MDRAHIMLAP" duration="00:00:00.0428800" startTime="2025-11-21T23:01:59.0616648+06:00" endTime="2025-11-21T23:01:59.0625652+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7f132c46-999f-4947-bfc4-27645de1773e" />
+    <UnitTestResult executionId="68652d6c-5df0-4939-b8d7-784491151fd4" testId="6ed5b1c9-6a73-cd57-736d-6a1705539fd3" testName="FindTheBug.ArchitectureTests.NamingConventionTests.Controllers_Should_EndWithController" computerName="MDRAHIMLAP" duration="00:00:00.0155442" startTime="2025-11-21T23:01:59.0643476+06:00" endTime="2025-11-21T23:01:59.0657774+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="68652d6c-5df0-4939-b8d7-784491151fd4">
+      <Output>
+        <ErrorInfo>
+          <Message>All controllers should end with 'Controller'. Failing types: FindTheBug.WebAPI.Controllers.ChangePasswordRequest, FindTheBug.WebAPI.Controllers.UpdateTestParameterRequest, FindTheBug.WebAPI.Controllers.UpdateTestResultRequest, FindTheBug.WebAPI.Controllers.VerifyRequest</Message>
+          <StackTrace>   at FindTheBug.ArchitectureTests.NamingConventionTests.Controllers_Should_EndWithController() in D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\NamingConventionTests.cs:line 89&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="acf2d8bd-d96d-4f46-b8b0-88ad93239152" testId="59e7b6bd-717b-7d61-82fd-180f70fcd45b" testName="FindTheBug.ArchitectureTests.LayerTests.Commands_Should_BeInFeaturesNamespace" computerName="MDRAHIMLAP" duration="00:00:00.0042113" startTime="2025-11-21T23:01:58.9214813+06:00" endTime="2025-11-21T23:01:58.9253748+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="acf2d8bd-d96d-4f46-b8b0-88ad93239152" />
+    <UnitTestResult executionId="e70bf763-2ea7-4d81-9177-51d4b9464c7f" testId="9ed52eaf-aee7-e676-09e8-c04146b756db" testName="FindTheBug.ArchitectureTests.ImmutabilityTests.Commands_Should_BeRecords" computerName="MDRAHIMLAP" duration="00:00:00.0186005" startTime="2025-11-21T23:01:58.8400974+06:00" endTime="2025-11-21T23:01:58.8674867+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e70bf763-2ea7-4d81-9177-51d4b9464c7f" />
+    <UnitTestResult executionId="a623d654-9862-4082-a854-2ad999c85f66" testId="b394dc3b-e226-0dae-649f-12d0efc8fec1" testName="FindTheBug.ArchitectureTests.InheritanceTests.DomainEntities_Should_InheritFromBaseEntity" computerName="MDRAHIMLAP" duration="00:00:00.0197019" startTime="2025-11-21T23:01:59.0624917+06:00" endTime="2025-11-21T23:01:59.0627984+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a623d654-9862-4082-a854-2ad999c85f66" />
+    <UnitTestResult executionId="9836f044-b92a-49e9-8a05-adc19cc8bba4" testId="f4b3eea0-2ce3-c12b-6d11-8a2f8060e556" testName="FindTheBug.ArchitectureTests.InheritanceTests.Queries_Should_ImplementIQuery" computerName="MDRAHIMLAP" duration="00:00:00.0380590" startTime="2025-11-21T23:01:59.0614189+06:00" endTime="2025-11-21T23:01:59.0617396+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9836f044-b92a-49e9-8a05-adc19cc8bba4">
+      <Output>
+        <ErrorInfo>
+          <Message>All queries should implement IQuery&lt;T&gt;. Failing types: FindTheBug.Application.Features.TestParameters.Queries.GetAllTestParametersQuery</Message>
+          <StackTrace>   at FindTheBug.ArchitectureTests.InheritanceTests.Queries_Should_ImplementIQuery() in D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\InheritanceTests.cs:line 49&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="57d438e1-7715-40c4-9a97-4fe9233ea5fc" testId="5ff40d46-d1b4-fdee-9c07-812e7f4685b9" testName="FindTheBug.ArchitectureTests.DependencyTests.Application_Should_OnlyDependOnDomain" computerName="MDRAHIMLAP" duration="00:00:00.0567621" startTime="2025-11-21T23:01:59.0627363+06:00" endTime="2025-11-21T23:01:59.0963904+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="57d438e1-7715-40c4-9a97-4fe9233ea5fc" />
+    <UnitTestResult executionId="c361465f-b74a-419a-9fdc-c705906b9760" testId="8a8ecd23-cf59-3778-f1d1-292b40ebaada" testName="FindTheBug.ArchitectureTests.InheritanceTests.Commands_Should_ImplementICommand" computerName="MDRAHIMLAP" duration="00:00:00.0147445" startTime="2025-11-21T23:01:59.0629531+06:00" endTime="2025-11-21T23:01:59.0648904+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c361465f-b74a-419a-9fdc-c705906b9760">
+      <Output>
+        <ErrorInfo>
+          <Message>All commands should implement ICommand&lt;T&gt;. Failing types: FindTheBug.Application.Features.TestResults.Commands.UpdateTestResultCommand, FindTheBug.Application.Features.TestResults.Commands.VerifyTestResultsCommand, FindTheBug.Application.Features.TestParameters.Commands.CreateTestParameterCommand, FindTheBug.Application.Features.TestParameters.Commands.UpdateTestParameterCommand, FindTheBug.Application.Features.TestEntries.Commands.CreateTestEntryCommand, FindTheBug.Application.Features.Invoices.Commands.CreateInvoiceCommand, FindTheBug.Application.Features.DiagnosticTests.Commands.CreateDiagnosticTestCommand</Message>
+          <StackTrace>   at FindTheBug.ArchitectureTests.InheritanceTests.Commands_Should_ImplementICommand() in D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\InheritanceTests.cs:line 26&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d927e82c-b1c0-4496-8a61-3ddb93c11a7c" testId="6e0bee21-59e0-1a03-5302-e71d6a844ce5" testName="FindTheBug.ArchitectureTests.RepositoryTests.Handlers_Should_UseIUnitOfWork" computerName="MDRAHIMLAP" duration="00:00:00.0311672" startTime="2025-11-21T23:01:59.0648271+06:00" endTime="2025-11-21T23:01:59.0927907+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d927e82c-b1c0-4496-8a61-3ddb93c11a7c" />
+    <UnitTestResult executionId="3372ff7a-d108-4055-bb6e-0fb803106a6e" testId="80dcc764-70cc-28bf-b6e7-9e54db691ddd" testName="FindTheBug.ArchitectureTests.RepositoryTests.ApplicationLayer_Should_OnlyUseIRepositoryInterface" computerName="MDRAHIMLAP" duration="00:00:00.0147518" startTime="2025-11-21T23:01:59.0929499+06:00" endTime="2025-11-21T23:01:59.1076303+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3372ff7a-d108-4055-bb6e-0fb803106a6e" />
+    <UnitTestResult executionId="9db3700c-fff5-4afb-ad5c-b1129a86abb0" testId="d0023ff4-622f-ae0a-d2bd-c535c815d163" testName="FindTheBug.ArchitectureTests.DependencyTests.Application_Should_Not_HaveDependencyOnInfrastructure" computerName="MDRAHIMLAP" duration="00:00:00.0296939" startTime="2025-11-21T23:01:59.0965305+06:00" endTime="2025-11-21T23:01:59.1262246+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9db3700c-fff5-4afb-ad5c-b1129a86abb0" />
+    <UnitTestResult executionId="49733a26-6657-4b15-9872-23d4eda1086b" testId="27087115-2316-1338-f3a6-72b85836cfaf" testName="FindTheBug.ArchitectureTests.LayerTests.Controllers_Should_BeInControllersNamespace" computerName="MDRAHIMLAP" duration="00:00:00.0009315" startTime="2025-11-21T23:01:58.9256135+06:00" endTime="2025-11-21T23:01:58.9264401+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="49733a26-6657-4b15-9872-23d4eda1086b" />
+    <UnitTestResult executionId="ab7e3d16-dfdc-44e0-aadb-6afd49140fec" testId="29de51b0-e6aa-0982-0d8e-21d2e9a3b65a" testName="FindTheBug.ArchitectureTests.NamingConventionTests.Queries_Should_EndWithQuery" computerName="MDRAHIMLAP" duration="00:00:00.0230694" startTime="2025-11-21T23:01:59.0575275+06:00" endTime="2025-11-21T23:01:59.0609491+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ab7e3d16-dfdc-44e0-aadb-6afd49140fec" />
+    <UnitTestResult executionId="abfd3c7b-dc44-4667-97d7-b42b1a7a0de2" testId="5a540eb4-8e38-4c94-8402-a39a6a70e0c9" testName="FindTheBug.ArchitectureTests.NamingConventionTests.Handlers_Should_EndWithHandler" computerName="MDRAHIMLAP" duration="00:00:00.1069526" startTime="2025-11-21T23:01:58.8419275+06:00" endTime="2025-11-21T23:01:59.0275201+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="abfd3c7b-dc44-4667-97d7-b42b1a7a0de2" />
+    <UnitTestResult executionId="9f7da86f-4965-4814-ba40-cbb0f5cd6bd5" testId="c9a64f3d-3263-7f0c-615d-910df5019859" testName="FindTheBug.ArchitectureTests.DependencyTests.Domain_Should_Not_HaveDependencyOnOtherLayers" computerName="MDRAHIMLAP" duration="00:00:00.0266447" startTime="2025-11-21T23:01:59.0608740+06:00" endTime="2025-11-21T23:01:59.0614829+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9f7da86f-4965-4814-ba40-cbb0f5cd6bd5" />
+    <UnitTestResult executionId="56112041-e1d0-4d31-97a8-6f99a8c38fd1" testId="557e45cd-9955-1f18-539b-8aa3207c2ffc" testName="FindTheBug.ArchitectureTests.ImmutabilityTests.Queries_Should_BeRecords" computerName="MDRAHIMLAP" duration="00:00:00.0011765" startTime="2025-11-21T23:01:58.8871356+06:00" endTime="2025-11-21T23:01:58.8872707+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="56112041-e1d0-4d31-97a8-6f99a8c38fd1" />
+    <UnitTestResult executionId="c2f3a50a-d969-4d40-9993-3a6fc368658e" testId="affe0b64-6c25-c199-6f23-1f12ee1236bb" testName="FindTheBug.ArchitectureTests.InheritanceTests.Controllers_Should_InheritFromControllerBase" computerName="MDRAHIMLAP" duration="00:00:00.0280335" startTime="2025-11-21T23:01:59.0571664+06:00" endTime="2025-11-21T23:01:59.0612427+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c2f3a50a-d969-4d40-9993-3a6fc368658e" />
+    <UnitTestResult executionId="8e146df1-c4ab-4f78-bf2b-a0b729398a3a" testId="52f2465f-7f05-60bf-012d-709b45821485" testName="FindTheBug.ArchitectureTests.LayerTests.DomainEntities_Should_BeInEntitiesNamespace" computerName="MDRAHIMLAP" duration="00:00:00.0342652" startTime="2025-11-21T23:01:59.0274183+06:00" endTime="2025-11-21T23:01:59.0509321+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8e146df1-c4ab-4f78-bf2b-a0b729398a3a">
+      <Output>
+        <ErrorInfo>
+          <Message>All domain entities should be in Entities namespace. Failing types: FindTheBug.Domain.Common.BaseAuditableEntity</Message>
+          <StackTrace>   at FindTheBug.ArchitectureTests.LayerTests.DomainEntities_Should_BeInEntitiesNamespace() in D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\LayerTests.cs:line 24&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="6e2f5d6d-433c-4337-b2ce-0167c2dd3ce7" testId="f280a127-5776-c983-59ee-9338cd51df76" testName="FindTheBug.ArchitectureTests.InheritanceTests.CommandHandlers_Should_ImplementICommandHandler" computerName="MDRAHIMLAP" duration="00:00:00.1013544" startTime="2025-11-21T23:01:58.8419599+06:00" endTime="2025-11-21T23:01:59.0494466+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6e2f5d6d-433c-4337-b2ce-0167c2dd3ce7">
+      <Output>
+        <ErrorInfo>
+          <Message>All command handlers should implement ICommandHandler&lt;T, R&gt;. Failing types: FindTheBug.Application.Features.TestResults.Commands.UpdateTestResultCommandHandler, FindTheBug.Application.Features.TestResults.Commands.VerifyTestResultsCommandHandler, FindTheBug.Application.Features.TestParameters.Commands.CreateTestParameterCommandHandler, FindTheBug.Application.Features.TestParameters.Commands.UpdateTestParameterCommandHandler, FindTheBug.Application.Features.TestEntries.Commands.CreateTestEntryCommandHandler, FindTheBug.Application.Features.Invoices.Commands.CreateInvoiceCommandHandler, FindTheBug.Application.Features.DiagnosticTests.Commands.CreateDiagnosticTestCommandHandler</Message>
+          <StackTrace>   at FindTheBug.ArchitectureTests.InheritanceTests.CommandHandlers_Should_ImplementICommandHandler() in D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\InheritanceTests.cs:line 68&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="950c9dd9-f514-433f-aa8c-ad90318b239e" testId="5d328858-1447-e48d-fa5f-9cfae6c304c3" testName="FindTheBug.ArchitectureTests.NamingConventionTests.Commands_Should_EndWithCommand" computerName="MDRAHIMLAP" duration="00:00:00.0624588" startTime="2025-11-21T23:01:59.0611742+06:00" endTime="2025-11-21T23:01:59.0630181+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="950c9dd9-f514-433f-aa8c-ad90318b239e">
+      <Output>
+        <ErrorInfo>
+          <Message>All commands should end with 'Command'. Failing types: FindTheBug.Application.Features.TestResults.Queries.GetTestResultsByEntryQuery, FindTheBug.Application.Features.TestResults.Queries.GetTestResultsByEntryQueryHandler, FindTheBug.Application.Features.TestResults.Commands.CreateTestResultCommandHandler, FindTheBug.Application.Features.TestResults.Commands.UpdateTestResultCommandHandler, FindTheBug.Application.Features.TestResults.Commands.VerifyTestResultsCommandHandler, FindTheBug.Application.Features.TestParameters.Queries.GetAllTestParametersQuery, FindTheBug.Application.Features.TestParameters.Queries.GetAllTestParametersQueryHandler, FindTheBug.Application.Features.TestParameters.Commands.CreateTestParameterCommandHandler, FindTheBug.Application.Features.TestParameters.Commands.DeleteTestParameterCommandHandler, FindTheBug.Application.Features.TestParameters.Commands.UpdateTestParameterCommandHandler, FindTheBug.Application.Features.TestEntries.Commands.CreateTestEntryCommandHandler, FindTheBug.Application.Features.Patients.Queries.GetAllPatientsQuery, FindTheBug.Application.Features.Patients.Queries.GetAllPatientsQueryHandler, FindTheBug.Application.Features.Patients.Queries.GetPatientByIdQuery, FindTheBug.Application.Features.Patients.Queries.GetPatientByIdQueryHandler, FindTheBug.Application.Features.Patients.Commands.CreatePatientCommandHandler, FindTheBug.Application.Features.Invoices.Commands.InvoiceItemDto, FindTheBug.Application.Features.Invoices.Commands.CreateInvoiceCommandHandler, FindTheBug.Application.Features.DiagnosticTests.Commands.CreateDiagnosticTestCommandHandler, FindTheBug.Application.Features.Authentication.Commands.ChangePasswordCommandHandler, FindTheBug.Application.Features.Authentication.Commands.LoginResponse, FindTheBug.Application.Features.Authentication.Commands.UserInfo, FindTheBug.Application.Features.Authentication.Commands.LoginCommandHandler, FindTheBug.Application.Features.Authentication.Commands.RefreshTokenResponse, FindTheBug.Application.Features.Authentication.Commands.RefreshTokenCommandHandler, FindTheBug.Application.Features.Authentication.Commands.RequestPasswordResetCommandHandler, FindTheBug.Application.Features.Authentication.Commands.ResetPasswordCommandHandler, FindTheBug.Application.Features.Authentication.Commands.RevokeTokenCommandHandler</Message>
+          <StackTrace>   at FindTheBug.ArchitectureTests.NamingConventionTests.Commands_Should_EndWithCommand() in D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\NamingConventionTests.cs:line 28&#xD;
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d2b0ec72-9b6e-490e-862d-8780503bc3c2" testId="c5510748-f36c-4a0f-b1c4-d578dc077725" testName="FindTheBug.ArchitectureTests.RepositoryTests.Repositories_Should_OnlyBeInInfrastructureLayer" computerName="MDRAHIMLAP" duration="00:00:00.0041821" startTime="2025-11-21T23:01:59.0646093+06:00" endTime="2025-11-21T23:01:59.0646723+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d2b0ec72-9b6e-490e-862d-8780503bc3c2" />
+    <UnitTestResult executionId="f0da95b7-665b-41a4-b12f-357276c72cfd" testId="201424ff-eb47-8bcc-3c98-efb45f25d45b" testName="FindTheBug.ArchitectureTests.LayerTests.Queries_Should_BeInFeaturesNamespace" computerName="MDRAHIMLAP" duration="00:00:00.0011987" startTime="2025-11-21T23:01:59.0556853+06:00" endTime="2025-11-21T23:01:59.0557480+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f0da95b7-665b-41a4-b12f-357276c72cfd" />
+    <UnitTestResult executionId="4ce9f04f-7659-4841-a0ef-c760b5fdee32" testId="9df4f19a-4c0a-b343-8234-2d79757c00c9" testName="FindTheBug.ArchitectureTests.NamingConventionTests.Interfaces_Should_StartWithI" computerName="MDRAHIMLAP" duration="00:00:00.0031267" startTime="2025-11-21T23:01:59.0504041+06:00" endTime="2025-11-21T23:01:59.0572430+06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4ce9f04f-7659-4841-a0ef-c760b5fdee32" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="FindTheBug.ArchitectureTests.LayerTests.Queries_Should_BeInFeaturesNamespace" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="201424ff-eb47-8bcc-3c98-efb45f25d45b">
+      <Execution id="f0da95b7-665b-41a4-b12f-357276c72cfd" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.LayerTests" name="Queries_Should_BeInFeaturesNamespace" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.InheritanceTests.Queries_Should_ImplementIQuery" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="f4b3eea0-2ce3-c12b-6d11-8a2f8060e556">
+      <Execution id="9836f044-b92a-49e9-8a05-adc19cc8bba4" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.InheritanceTests" name="Queries_Should_ImplementIQuery" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.RepositoryTests.Repositories_Should_OnlyBeInInfrastructureLayer" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="c5510748-f36c-4a0f-b1c4-d578dc077725">
+      <Execution id="d2b0ec72-9b6e-490e-862d-8780503bc3c2" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.RepositoryTests" name="Repositories_Should_OnlyBeInInfrastructureLayer" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.InheritanceTests.QueryHandlers_Should_ImplementIQueryHandler" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="f73378d1-2efa-6702-26fc-4d3edcd5acff">
+      <Execution id="babfc28c-6c4a-476c-a3a2-985ce927619c" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.InheritanceTests" name="QueryHandlers_Should_ImplementIQueryHandler" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.RepositoryTests.ApplicationLayer_Should_NotUseDbContextDirectly" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="ddec4b3b-6075-b57c-ae31-c218f67b2f64">
+      <Execution id="81f63764-397f-4664-a884-0e1e3e030610" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.RepositoryTests" name="ApplicationLayer_Should_NotUseDbContextDirectly" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.NamingConventionTests.Entities_Should_NotHaveEntitySuffix" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="166651f0-a6e1-ed81-ddf6-8338e5cded93">
+      <Execution id="4bf81213-e7e3-4bd3-9019-9e49bde54f74" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.NamingConventionTests" name="Entities_Should_NotHaveEntitySuffix" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.LayerTests.Controllers_Should_BeInControllersNamespace" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="27087115-2316-1338-f3a6-72b85836cfaf">
+      <Execution id="49733a26-6657-4b15-9872-23d4eda1086b" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.LayerTests" name="Controllers_Should_BeInControllersNamespace" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.RepositoryTests.ApplicationLayer_Should_OnlyUseIRepositoryInterface" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="80dcc764-70cc-28bf-b6e7-9e54db691ddd">
+      <Execution id="3372ff7a-d108-4055-bb6e-0fb803106a6e" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.RepositoryTests" name="ApplicationLayer_Should_OnlyUseIRepositoryInterface" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.NamingConventionTests.Interfaces_Should_StartWithI" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="9df4f19a-4c0a-b343-8234-2d79757c00c9">
+      <Execution id="4ce9f04f-7659-4841-a0ef-c760b5fdee32" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.NamingConventionTests" name="Interfaces_Should_StartWithI" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.NamingConventionTests.Queries_Should_EndWithQuery" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="29de51b0-e6aa-0982-0d8e-21d2e9a3b65a">
+      <Execution id="ab7e3d16-dfdc-44e0-aadb-6afd49140fec" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.NamingConventionTests" name="Queries_Should_EndWithQuery" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.DependencyTests.Controllers_Should_HaveDependencyOnMediatR" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="ced6316d-fd2d-9e1a-27f6-afffe82a55b1">
+      <Execution id="246d8104-8802-426a-94ad-7fb392d9fc91" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.DependencyTests" name="Controllers_Should_HaveDependencyOnMediatR" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.NamingConventionTests.Handlers_Should_EndWithHandler" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="5a540eb4-8e38-4c94-8402-a39a6a70e0c9">
+      <Execution id="abfd3c7b-dc44-4667-97d7-b42b1a7a0de2" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.NamingConventionTests" name="Handlers_Should_EndWithHandler" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.NamingConventionTests.Controllers_Should_EndWithController" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="6ed5b1c9-6a73-cd57-736d-6a1705539fd3">
+      <Execution id="68652d6c-5df0-4939-b8d7-784491151fd4" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.NamingConventionTests" name="Controllers_Should_EndWithController" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.ImmutabilityTests.Queries_Should_BeRecords" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="557e45cd-9955-1f18-539b-8aa3207c2ffc">
+      <Execution id="56112041-e1d0-4d31-97a8-6f99a8c38fd1" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.ImmutabilityTests" name="Queries_Should_BeRecords" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.InheritanceTests.DomainEntities_Should_InheritFromBaseEntity" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="b394dc3b-e226-0dae-649f-12d0efc8fec1">
+      <Execution id="a623d654-9862-4082-a854-2ad999c85f66" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.InheritanceTests" name="DomainEntities_Should_InheritFromBaseEntity" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.DependencyTests.Infrastructure_Should_Not_HaveDependencyOnWebAPI" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="42e53d34-43f8-e499-04ce-b3c6aaf8cf67">
+      <Execution id="7f132c46-999f-4947-bfc4-27645de1773e" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.DependencyTests" name="Infrastructure_Should_Not_HaveDependencyOnWebAPI" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.InheritanceTests.Controllers_Should_InheritFromControllerBase" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="affe0b64-6c25-c199-6f23-1f12ee1236bb">
+      <Execution id="c2f3a50a-d969-4d40-9993-3a6fc368658e" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.InheritanceTests" name="Controllers_Should_InheritFromControllerBase" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.LayerTests.DomainEntities_Should_BeInEntitiesNamespace" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="52f2465f-7f05-60bf-012d-709b45821485">
+      <Execution id="8e146df1-c4ab-4f78-bf2b-a0b729398a3a" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.LayerTests" name="DomainEntities_Should_BeInEntitiesNamespace" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.RepositoryTests.Handlers_Should_UseIUnitOfWork" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="6e0bee21-59e0-1a03-5302-e71d6a844ce5">
+      <Execution id="d927e82c-b1c0-4496-8a61-3ddb93c11a7c" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.RepositoryTests" name="Handlers_Should_UseIUnitOfWork" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.ImmutabilityTests.Commands_Should_BeRecords" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="9ed52eaf-aee7-e676-09e8-c04146b756db">
+      <Execution id="e70bf763-2ea7-4d81-9177-51d4b9464c7f" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.ImmutabilityTests" name="Commands_Should_BeRecords" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.DependencyTests.Application_Should_Not_HaveDependencyOnInfrastructure" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="d0023ff4-622f-ae0a-d2bd-c535c815d163">
+      <Execution id="9db3700c-fff5-4afb-ad5c-b1129a86abb0" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.DependencyTests" name="Application_Should_Not_HaveDependencyOnInfrastructure" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.LayerTests.Commands_Should_BeInFeaturesNamespace" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="59e7b6bd-717b-7d61-82fd-180f70fcd45b">
+      <Execution id="acf2d8bd-d96d-4f46-b8b0-88ad93239152" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.LayerTests" name="Commands_Should_BeInFeaturesNamespace" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.NamingConventionTests.Commands_Should_EndWithCommand" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="5d328858-1447-e48d-fa5f-9cfae6c304c3">
+      <Execution id="950c9dd9-f514-433f-aa8c-ad90318b239e" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.NamingConventionTests" name="Commands_Should_EndWithCommand" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.InheritanceTests.Commands_Should_ImplementICommand" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="8a8ecd23-cf59-3778-f1d1-292b40ebaada">
+      <Execution id="c361465f-b74a-419a-9fdc-c705906b9760" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.InheritanceTests" name="Commands_Should_ImplementICommand" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.InheritanceTests.CommandHandlers_Should_ImplementICommandHandler" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="f280a127-5776-c983-59ee-9338cd51df76">
+      <Execution id="6e2f5d6d-433c-4337-b2ce-0167c2dd3ce7" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.InheritanceTests" name="CommandHandlers_Should_ImplementICommandHandler" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.DependencyTests.Application_Should_OnlyDependOnDomain" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="5ff40d46-d1b4-fdee-9c07-812e7f4685b9">
+      <Execution id="57d438e1-7715-40c4-9a97-4fe9233ea5fc" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.DependencyTests" name="Application_Should_OnlyDependOnDomain" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.DependencyTests.Domain_Should_Not_HaveDependencyOnOtherLayers" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="c9a64f3d-3263-7f0c-615d-910df5019859">
+      <Execution id="9f7da86f-4965-4814-ba40-cbb0f5cd6bd5" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.DependencyTests" name="Domain_Should_Not_HaveDependencyOnOtherLayers" />
+    </UnitTest>
+    <UnitTest name="FindTheBug.ArchitectureTests.LayerTests.Middleware_Should_BeInMiddlewareNamespace" storage="d:\side projects\findthebug\tests\findthebug.architecturetests\bin\debug\net10.0\findthebug.architecturetests.dll" id="adec06cf-5731-95e2-a598-dc45f061382f">
+      <Execution id="b87183ee-ceb7-4329-8e10-59a2fa0ef4b7" />
+      <TestMethod codeBase="D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\bin\Debug\net10.0\FindTheBug.ArchitectureTests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="FindTheBug.ArchitectureTests.LayerTests" name="Middleware_Should_BeInMiddlewareNamespace" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="166651f0-a6e1-ed81-ddf6-8338e5cded93" executionId="4bf81213-e7e3-4bd3-9019-9e49bde54f74" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="adec06cf-5731-95e2-a598-dc45f061382f" executionId="b87183ee-ceb7-4329-8e10-59a2fa0ef4b7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ddec4b3b-6075-b57c-ae31-c218f67b2f64" executionId="81f63764-397f-4664-a884-0e1e3e030610" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ced6316d-fd2d-9e1a-27f6-afffe82a55b1" executionId="246d8104-8802-426a-94ad-7fb392d9fc91" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f73378d1-2efa-6702-26fc-4d3edcd5acff" executionId="babfc28c-6c4a-476c-a3a2-985ce927619c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="42e53d34-43f8-e499-04ce-b3c6aaf8cf67" executionId="7f132c46-999f-4947-bfc4-27645de1773e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6ed5b1c9-6a73-cd57-736d-6a1705539fd3" executionId="68652d6c-5df0-4939-b8d7-784491151fd4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="59e7b6bd-717b-7d61-82fd-180f70fcd45b" executionId="acf2d8bd-d96d-4f46-b8b0-88ad93239152" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9ed52eaf-aee7-e676-09e8-c04146b756db" executionId="e70bf763-2ea7-4d81-9177-51d4b9464c7f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b394dc3b-e226-0dae-649f-12d0efc8fec1" executionId="a623d654-9862-4082-a854-2ad999c85f66" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f4b3eea0-2ce3-c12b-6d11-8a2f8060e556" executionId="9836f044-b92a-49e9-8a05-adc19cc8bba4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5ff40d46-d1b4-fdee-9c07-812e7f4685b9" executionId="57d438e1-7715-40c4-9a97-4fe9233ea5fc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8a8ecd23-cf59-3778-f1d1-292b40ebaada" executionId="c361465f-b74a-419a-9fdc-c705906b9760" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6e0bee21-59e0-1a03-5302-e71d6a844ce5" executionId="d927e82c-b1c0-4496-8a61-3ddb93c11a7c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="80dcc764-70cc-28bf-b6e7-9e54db691ddd" executionId="3372ff7a-d108-4055-bb6e-0fb803106a6e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d0023ff4-622f-ae0a-d2bd-c535c815d163" executionId="9db3700c-fff5-4afb-ad5c-b1129a86abb0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="27087115-2316-1338-f3a6-72b85836cfaf" executionId="49733a26-6657-4b15-9872-23d4eda1086b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="29de51b0-e6aa-0982-0d8e-21d2e9a3b65a" executionId="ab7e3d16-dfdc-44e0-aadb-6afd49140fec" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5a540eb4-8e38-4c94-8402-a39a6a70e0c9" executionId="abfd3c7b-dc44-4667-97d7-b42b1a7a0de2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c9a64f3d-3263-7f0c-615d-910df5019859" executionId="9f7da86f-4965-4814-ba40-cbb0f5cd6bd5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="557e45cd-9955-1f18-539b-8aa3207c2ffc" executionId="56112041-e1d0-4d31-97a8-6f99a8c38fd1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="affe0b64-6c25-c199-6f23-1f12ee1236bb" executionId="c2f3a50a-d969-4d40-9993-3a6fc368658e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="52f2465f-7f05-60bf-012d-709b45821485" executionId="8e146df1-c4ab-4f78-bf2b-a0b729398a3a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f280a127-5776-c983-59ee-9338cd51df76" executionId="6e2f5d6d-433c-4337-b2ce-0167c2dd3ce7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5d328858-1447-e48d-fa5f-9cfae6c304c3" executionId="950c9dd9-f514-433f-aa8c-ad90318b239e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c5510748-f36c-4a0f-b1c4-d578dc077725" executionId="d2b0ec72-9b6e-490e-862d-8780503bc3c2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="201424ff-eb47-8bcc-3c98-efb45f25d45b" executionId="f0da95b7-665b-41a4-b12f-357276c72cfd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9df4f19a-4c0a-b343-8234-2d79757c00c9" executionId="4ce9f04f-7659-4841-a0ef-c760b5fdee32" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="28" executed="28" passed="19" failed="9" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.0)&#xD;
+[xUnit.net 00:00:00.13]   Discovering: FindTheBug.ArchitectureTests&#xD;
+[xUnit.net 00:00:00.17]   Discovered:  FindTheBug.ArchitectureTests&#xD;
+[xUnit.net 00:00:00.19]   Starting:    FindTheBug.ArchitectureTests&#xD;
+[xUnit.net 00:00:00.42]       Domain entities should not have 'Entity' suffix. Failing types: FindTheBug.Domain.Entities.SampleEntity&#xD;
+[xUnit.net 00:00:00.42]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.43]         D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\NamingConventionTests.cs(134,0): at FindTheBug.ArchitectureTests.NamingConventionTests.Entities_Should_NotHaveEntitySuffix()&#xD;
+[xUnit.net 00:00:00.43]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.43]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.43]       All command handlers should implement ICommandHandler&lt;T, R&gt;. Failing types: FindTheBug.Application.Features.TestResults.Commands.UpdateTestResultCommandHandler, FindTheBug.Application.Features.TestResults.Commands.VerifyTestResultsCommandHandler, FindTheBug.Application.Features.TestParameters.Commands.CreateTestParameterCommandHandler, FindTheBug.Application.Features.TestParameters.Commands.UpdateTestParameterCommandHandler, FindTheBug.Application.Features.TestEntries.Commands.CreateTestEntryCommandHandler, FindTheBug.Application.Features.Invoices.Commands.CreateInvoiceCommandHandler, FindTheBug.Application.Features.DiagnosticTests.Commands.CreateDiagnosticTestCommandHandler&#xD;
+[xUnit.net 00:00:00.43]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.43]         D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\InheritanceTests.cs(68,0): at FindTheBug.ArchitectureTests.InheritanceTests.CommandHandlers_Should_ImplementICommandHandler()&#xD;
+[xUnit.net 00:00:00.43]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.43]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.44]       All domain entities should be in Entities namespace. Failing types: FindTheBug.Domain.Common.BaseAuditableEntity&#xD;
+[xUnit.net 00:00:00.44]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.44]         D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\LayerTests.cs(24,0): at FindTheBug.ArchitectureTests.LayerTests.DomainEntities_Should_BeInEntitiesNamespace()&#xD;
+[xUnit.net 00:00:00.44]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.44]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.44]       All query handlers should implement IQueryHandler&lt;T, R&gt;. Failing types: FindTheBug.Application.Features.TestParameters.Queries.GetAllTestParametersQueryHandler&#xD;
+[xUnit.net 00:00:00.44]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.44]         D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\InheritanceTests.cs(87,0): at FindTheBug.ArchitectureTests.InheritanceTests.QueryHandlers_Should_ImplementIQueryHandler()&#xD;
+[xUnit.net 00:00:00.44]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.44]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.44]       Controllers should use MediatR for CQRS&#xD;
+[xUnit.net 00:00:00.44]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.44]         D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\DependencyTests.cs(96,0): at FindTheBug.ArchitectureTests.DependencyTests.Controllers_Should_HaveDependencyOnMediatR()&#xD;
+[xUnit.net 00:00:00.44]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.44]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.45]       All queries should implement IQuery&lt;T&gt;. Failing types: FindTheBug.Application.Features.TestParameters.Queries.GetAllTestParametersQuery&#xD;
+[xUnit.net 00:00:00.45]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.45]         D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\InheritanceTests.cs(49,0): at FindTheBug.ArchitectureTests.InheritanceTests.Queries_Should_ImplementIQuery()&#xD;
+[xUnit.net 00:00:00.45]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.45]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.45]       All commands should end with 'Command'. Failing types: FindTheBug.Application.Features.TestResults.Queries.GetTestResultsByEntryQuery, FindTheBug.Application.Features.TestResults.Queries.GetTestResultsByEntryQueryHandler, FindTheBug.Application.Features.TestResults.Commands.CreateTestResultCommandHandler, FindTheBug.Application.Features.TestResults.Commands.UpdateTestResultCommandHandler, FindTheBug.Application.Features.TestResults.Commands.VerifyTestResultsCommandHandler, FindTheBug.Application.Features.TestParameters.Queries.GetAllTestParametersQuery, FindTheBug.Application.Features.TestParameters.Queries.GetAllTestParametersQueryHandler, FindTheBug.Application.Features.TestParameters.Commands.CreateTestParameterCommandHandler, FindTheBug.Application.Features.TestParameters.Commands.DeleteTestParameterCommandHandler, FindTheBug.Application.Features.TestParameters.Commands.UpdateTestParameterCommandHandler, FindTheBug.Application.Features.TestEntries.Commands.CreateTestEntryCommandHandler, FindTheBug.Application.Features.Patients.Queries.GetAllPatientsQuery, FindTheBug.Application.Features.Patients.Queries.GetAllPatientsQueryHandler, FindTheBug.Application.Features.Patients.Queries.GetPatientByIdQuery, FindTheBug.Application.Features.Patients.Queries.GetPatientByIdQueryHandler, FindTheBug.Application.Features.Patients.Commands.CreatePatientCommandHandler, FindTheBug.Application.Features.Invoices.Commands.InvoiceItemDto, FindTheBug.Application.Features.Invoices.Commands.CreateInvoiceCommandHandler, FindTheBug.Application.Features.DiagnosticTests.Commands.CreateDiagnosticTestCommandHandler, FindTheBug.Application.Features.Authentication.Commands.ChangePasswordCommandHandler, FindTheBug.Application.Features.Authentication.Commands.LoginResponse, FindTheBug.Application.Features.Authentication.Commands.UserInfo, FindTheBug.Application.Features.Authentication.Commands.LoginCommandHandler, FindTheBug.Application.Features.Authentication.Commands.RefreshTokenResponse, FindTheBug.Application.Features.Authentication.Commands.RefreshTokenCommandHandler, FindTheBug.Application.Features.Authentication.Commands.RequestPasswordResetCommandHandler, FindTheBug.Application.Features.Authentication.Commands.ResetPasswordCommandHandler, FindTheBug.Application.Features.Authentication.Commands.RevokeTokenCommandHandler&#xD;
+[xUnit.net 00:00:00.45]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.45]         D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\NamingConventionTests.cs(28,0): at FindTheBug.ArchitectureTests.NamingConventionTests.Commands_Should_EndWithCommand()&#xD;
+[xUnit.net 00:00:00.45]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.45]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.45]       All commands should implement ICommand&lt;T&gt;. Failing types: FindTheBug.Application.Features.TestResults.Commands.UpdateTestResultCommand, FindTheBug.Application.Features.TestResults.Commands.VerifyTestResultsCommand, FindTheBug.Application.Features.TestParameters.Commands.CreateTestParameterCommand, FindTheBug.Application.Features.TestParameters.Commands.UpdateTestParameterCommand, FindTheBug.Application.Features.TestEntries.Commands.CreateTestEntryCommand, FindTheBug.Application.Features.Invoices.Commands.CreateInvoiceCommand, FindTheBug.Application.Features.DiagnosticTests.Commands.CreateDiagnosticTestCommand&#xD;
+[xUnit.net 00:00:00.45]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.45]         D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\InheritanceTests.cs(26,0): at FindTheBug.ArchitectureTests.InheritanceTests.Commands_Should_ImplementICommand()&#xD;
+[xUnit.net 00:00:00.45]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.45]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.45]       All controllers should end with 'Controller'. Failing types: FindTheBug.WebAPI.Controllers.ChangePasswordRequest, FindTheBug.WebAPI.Controllers.UpdateTestParameterRequest, FindTheBug.WebAPI.Controllers.UpdateTestResultRequest, FindTheBug.WebAPI.Controllers.VerifyRequest&#xD;
+[xUnit.net 00:00:00.45]       Stack Trace:&#xD;
+[xUnit.net 00:00:00.45]         D:\Side Projects\FindTheBug\tests\FindTheBug.ArchitectureTests\NamingConventionTests.cs(89,0): at FindTheBug.ArchitectureTests.NamingConventionTests.Controllers_Should_EndWithController()&#xD;
+[xUnit.net 00:00:00.45]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)&#xD;
+[xUnit.net 00:00:00.45]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)&#xD;
+[xUnit.net 00:00:00.51]   Finished:    FindTheBug.ArchitectureTests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="MDRAHIMLAP" outcome="Error" timestamp="2025-11-21T23:01:59.0839062+06:00">
+        <Text>[xUnit.net 00:00:00.42]     FindTheBug.ArchitectureTests.NamingConventionTests.Entities_Should_NotHaveEntitySuffix [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="MDRAHIMLAP" outcome="Error" timestamp="2025-11-21T23:01:59.0843146+06:00">
+        <Text>[xUnit.net 00:00:00.43]     FindTheBug.ArchitectureTests.InheritanceTests.CommandHandlers_Should_ImplementICommandHandler [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="MDRAHIMLAP" outcome="Error" timestamp="2025-11-21T23:01:59.0849344+06:00">
+        <Text>[xUnit.net 00:00:00.44]     FindTheBug.ArchitectureTests.LayerTests.DomainEntities_Should_BeInEntitiesNamespace [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="MDRAHIMLAP" outcome="Error" timestamp="2025-11-21T23:01:59.0851894+06:00">
+        <Text>[xUnit.net 00:00:00.44]     FindTheBug.ArchitectureTests.InheritanceTests.QueryHandlers_Should_ImplementIQueryHandler [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="MDRAHIMLAP" outcome="Error" timestamp="2025-11-21T23:01:59.0853853+06:00">
+        <Text>[xUnit.net 00:00:00.44]     FindTheBug.ArchitectureTests.DependencyTests.Controllers_Should_HaveDependencyOnMediatR [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="MDRAHIMLAP" outcome="Error" timestamp="2025-11-21T23:01:59.1003262+06:00">
+        <Text>[xUnit.net 00:00:00.45]     FindTheBug.ArchitectureTests.InheritanceTests.Queries_Should_ImplementIQuery [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="MDRAHIMLAP" outcome="Error" timestamp="2025-11-21T23:01:59.1012777+06:00">
+        <Text>[xUnit.net 00:00:00.45]     FindTheBug.ArchitectureTests.NamingConventionTests.Commands_Should_EndWithCommand [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="MDRAHIMLAP" outcome="Error" timestamp="2025-11-21T23:01:59.1031486+06:00">
+        <Text>[xUnit.net 00:00:00.45]     FindTheBug.ArchitectureTests.InheritanceTests.Commands_Should_ImplementICommand [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="MDRAHIMLAP" outcome="Error" timestamp="2025-11-21T23:01:59.1035283+06:00">
+        <Text>[xUnit.net 00:00:00.45]     FindTheBug.ArchitectureTests.NamingConventionTests.Controllers_Should_EndWithController [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

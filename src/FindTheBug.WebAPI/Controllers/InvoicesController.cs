@@ -9,7 +9,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class InvoicesController(IMediator mediator) : ControllerBase
+public class InvoicesController(ISender mediator) : ControllerBase
 {
     /// <summary>
     /// Create invoice from test entries

@@ -1,4 +1,3 @@
-using NetArchTest.Rules;
 using System.Reflection;
 
 namespace FindTheBug.ArchitectureTests;

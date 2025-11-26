@@ -18,8 +18,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         _tenantContext = tenantContext;
     }
-
-    public DbSet<SampleEntity> SampleEntities => Set<SampleEntity>();
     
     // Lab Management DbSets
     public DbSet<DiagnosticTest> DiagnosticTests => Set<DiagnosticTest>();

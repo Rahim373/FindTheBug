@@ -2,7 +2,7 @@ using FindTheBug.Domain.Common;
 
 namespace FindTheBug.Domain.Entities;
 
-public class InvoiceItem : BaseEntity
+public class InvoiceItem : BaseAuditableEntity
 {
     public Guid InvoiceId { get; set; }
     public Guid? TestEntryId { get; set; }

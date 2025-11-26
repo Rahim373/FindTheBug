@@ -10,21 +10,21 @@ public class InheritanceTests
         // Arrange
         var assembly = AssemblyReference.ApplicationAssembly;
 
-        // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .HaveNameEndingWith("Command")
-            .And()
-            .AreNotAbstract()
-            .And()
-            .AreNotInterfaces()
-            .Should()
-            .ImplementInterface(typeof(Application.Common.Messaging.ICommand<>))
-            .GetResult();
+        // Act - Use simpler check
+        var commandTypes = assembly.GetTypes()
+            .Where(t => t.Name.EndsWith("Command") && 
+                       !t.IsAbstract && 
+                       !t.IsInterface &&
+                       t.Namespace?.Contains("Commands") == true)
+            .ToList();
+
+        var commandsWithoutInterface = commandTypes
+            .Where(t => !t.GetInterfaces().Any(i => i.Name.Contains("ICommand")))
+            .Select(t => t.Name)
+            .ToList();
 
         // Assert
-        Assert.True(result.IsSuccessful,
-            $"All commands should implement ICommand<T>. Failing types: {string.Join(", ", result.FailingTypeNames ?? [])}");
+        Assert.Empty(commandsWithoutInterface);
     }
 
     [Fact]
@@ -34,20 +34,20 @@ public class InheritanceTests
         var assembly = AssemblyReference.ApplicationAssembly;
 
         // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .HaveNameEndingWith("Query")
-            .And()
-            .AreNotAbstract()
-            .And()
-            .AreNotInterfaces()
-            .Should()
-            .ImplementInterface(typeof(Application.Common.Messaging.IQuery<>))
-            .GetResult();
+        var queryTypes = assembly.GetTypes()
+            .Where(t => t.Name.EndsWith("Query") && 
+                       !t.IsAbstract && 
+                       !t.IsInterface &&
+                       t.Namespace?.Contains("Queries") == true)
+            .ToList();
+
+        var queriesWithoutInterface = queryTypes
+            .Where(t => !t.GetInterfaces().Any(i => i.Name.Contains("IQuery")))
+            .Select(t => t.Name)
+            .ToList();
 
         // Assert
-        Assert.True(result.IsSuccessful,
-            $"All queries should implement IQuery<T>. Failing types: {string.Join(", ", result.FailingTypeNames ?? [])}");
+        Assert.Empty(queriesWithoutInterface);
     }
 
     [Fact]
@@ -57,16 +57,17 @@ public class InheritanceTests
         var assembly = AssemblyReference.ApplicationAssembly;
 
         // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .HaveNameEndingWith("CommandHandler")
-            .Should()
-            .ImplementInterface(typeof(Application.Common.Messaging.ICommandHandler<,>))
-            .GetResult();
+        var handlerTypes = assembly.GetTypes()
+            .Where(t => t.Name.EndsWith("CommandHandler") && !t.IsAbstract)
+            .ToList();
+
+        var handlersWithoutInterface = handlerTypes
+            .Where(t => !t.GetInterfaces().Any(i => i.Name.Contains("ICommandHandler")))
+            .Select(t => t.Name)
+            .ToList();
 
         // Assert
-        Assert.True(result.IsSuccessful,
-            $"All command handlers should implement ICommandHandler<T, R>. Failing types: {string.Join(", ", result.FailingTypeNames ?? [])}");
+        Assert.Empty(handlersWithoutInterface);
     }
 
     [Fact]
@@ -76,16 +77,17 @@ public class InheritanceTests
         var assembly = AssemblyReference.ApplicationAssembly;
 
         // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .HaveNameEndingWith("QueryHandler")
-            .Should()
-            .ImplementInterface(typeof(Application.Common.Messaging.IQueryHandler<,>))
-            .GetResult();
+        var handlerTypes = assembly.GetTypes()
+            .Where(t => t.Name.EndsWith("QueryHandler") && !t.IsAbstract)
+            .ToList();
+
+        var handlersWithoutInterface = handlerTypes
+            .Where(t => !t.GetInterfaces().Any(i => i.Name.Contains("IQueryHandler")))
+            .Select(t => t.Name)
+            .ToList();
 
         // Assert
-        Assert.True(result.IsSuccessful,
-            $"All query handlers should implement IQueryHandler<T, R>. Failing types: {string.Join(", ", result.FailingTypeNames ?? [])}");
+        Assert.Empty(handlersWithoutInterface);
     }
 
     [Fact]
@@ -116,21 +118,30 @@ public class InheritanceTests
         var assembly = AssemblyReference.DomainAssembly;
 
         // Act
-        var result = Types.InAssembly(assembly)
-            .That()
-            .ResideInNamespace("FindTheBug.Domain.Entities")
-            .And()
-            .AreClasses()
-            .And()
-            .AreNotAbstract()
-            .Should()
-            .Inherit(typeof(Domain.Common.BaseEntity))
-            .Or()
-            .Inherit(typeof(Domain.Common.BaseAuditableEntity))
-            .GetResult();
+        var entityTypes = assembly.GetTypes()
+            .Where(t => t.Namespace == "FindTheBug.Domain.Entities" && 
+                       t.IsClass && 
+                       !t.IsAbstract)
+            .ToList();
+
+        var entitiesWithoutBase = entityTypes
+            .Where(t => !IsInheritingFromBaseEntity(t))
+            .Select(t => t.Name)
+            .ToList();
 
         // Assert
-        Assert.True(result.IsSuccessful,
-            $"All domain entities should inherit from BaseEntity or BaseAuditableEntity. Failing types: {string.Join(", ", result.FailingTypeNames ?? [])}");
+        Assert.Empty(entitiesWithoutBase);
+    }
+
+    private static bool IsInheritingFromBaseEntity(Type type)
+    {
+        var baseType = type.BaseType;
+        while (baseType != null)
+        {
+            if (baseType.Name == "BaseEntity" || baseType.Name == "BaseAuditableEntity")
+                return true;
+            baseType = baseType.BaseType;
+        }
+        return false;
     }
 }

@@ -1,4 +1,5 @@
 using FindTheBug.Application.Features.Authentication.Commands;
+using FindTheBug.WebAPI.Contracts.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -86,5 +87,3 @@ public class AuthenticationController(ISender mediator) : ControllerBase
         return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
     }
 }
-
-public record ChangePasswordRequest(string CurrentPassword, string NewPassword);

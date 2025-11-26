@@ -1,5 +1,3 @@
-using FindTheBug.Domain.Entities;
-
 namespace FindTheBug.Application.Common.Interfaces;
 
 public interface IRepository<T> where T : class

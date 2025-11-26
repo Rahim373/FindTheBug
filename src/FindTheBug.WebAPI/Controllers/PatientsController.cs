@@ -10,7 +10,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class PatientsController(IMediator mediator) : ControllerBase
+public class PatientsController(ISender mediator) : ControllerBase
 {
     /// <summary>
     /// Get all patients with optional search
