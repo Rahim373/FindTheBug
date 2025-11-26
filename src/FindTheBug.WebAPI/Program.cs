@@ -1,16 +1,12 @@
-using FindTheBug.Application;
-using FindTheBug.Infrastructure;
-using FindTheBug.Infrastructure.MultiTenancy;
 using FindTheBug.WebAPI.Middleware;
+using FindTheBug.WebAPI.Installers;
 using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.IdentityModel.Tokens;
 using Prometheus;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
-using System.Text;
+using FindTheBug.Infrastructure.MultiTenancy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,47 +25,9 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-// Add services to the container
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<FindTheBug.WebAPI.Filters.ErrorOrActionFilter>();
-});
-builder.Services.AddHttpContextAccessor();
 
-// Add Application and Infrastructure layers
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
-
-// Add Swagger/OpenAPI
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// Add JWT Authentication
-var jwtSecretKey = builder.Configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured");
-var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "FindTheBug";
-var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "FindTheBug";
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
-        ValidateIssuer = true,
-        ValidIssuer = jwtIssuer,
-        ValidateAudience = true,
-        ValidAudience = jwtAudience,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
-});
-
-builder.Services.AddAuthorization();
+// Add services to the container using Installers
+builder.Services.InstallServicesInAssembly(builder.Configuration);
 
 var app = builder.Build();
 
