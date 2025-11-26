@@ -29,7 +29,7 @@ public class DbInitializer
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             // Apply migrations
-            if (context.Database.IsNpgsql())
+            if (context.Database.IsNpgsql() && context.Database.GetPendingMigrations().Any())
             {
                 await context.Database.MigrateAsync();
             }

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace FindTheBug.Infrastructure;
 
