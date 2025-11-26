@@ -1,5 +1,7 @@
 # FindTheBug - Diagnostics Lab Management System
 
+[![Architecture Tests](https://github.com/rahim373/FindTheBug/actions/workflows/architecture-tests.yml/badge.svg)](https://github.com/rahim373/FindTheBug/actions/workflows/architecture-tests.yml)
+
 A modern, multi-tenant diagnostics laboratory management system built with ASP.NET Core following Clean Architecture principles.
 
 ## 🏗️ Architecture
