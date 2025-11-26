@@ -14,7 +14,6 @@ public class CreateTestResultCommandHandler(IUnitOfWork unitOfWork)
         var testResult = new TestResult
         {
             Id = Guid.NewGuid(),
-            TenantId = string.Empty,
             TestEntryId = request.TestEntryId,
             TestParameterId = request.TestParameterId,
             ResultValue = request.ResultValue,

@@ -41,7 +41,7 @@ public class RefreshTokenCommandHandler(
             return Error.Unauthorized("Authentication.AccountDisabled", "Account is disabled");
 
         // Generate new tokens
-        var newAccessToken = authService.GenerateAccessToken(user.Id, user.Email, user.Roles, user.TenantId);
+        var newAccessToken = authService.GenerateAccessToken(user.Id, user.Email, user.Roles);
         var newRefreshToken = authService.GenerateRefreshToken();
 
         // Revoke old refresh token and create new one

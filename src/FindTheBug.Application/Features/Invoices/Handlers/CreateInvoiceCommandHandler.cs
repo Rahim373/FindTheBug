@@ -15,7 +15,6 @@ public class CreateInvoiceCommandHandler(IUnitOfWork unitOfWork) : ICommandHandl
         var invoice = new Invoice
         {
             Id = Guid.NewGuid(),
-            TenantId = string.Empty, // Will be set by DbContext
             PatientId = request.PatientId,
             InvoiceNumber = $"INV-{DateTime.UtcNow:yyyy}-{Guid.NewGuid().ToString()[..8].ToUpper()}",
             InvoiceDate = DateTime.UtcNow,

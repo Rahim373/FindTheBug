@@ -13,7 +13,6 @@ public class CreateTestEntryCommandHandler(IUnitOfWork unitOfWork) : ICommandHan
         var entry = new TestEntry
         {
             Id = Guid.NewGuid(),
-            TenantId = string.Empty, // Will be set by DbContext
             PatientId = request.PatientId,
             DiagnosticTestId = request.DiagnosticTestId,
             EntryNumber = $"TE-{DateTime.UtcNow:yyyy}-{Guid.NewGuid().ToString()[..8].ToUpper()}",

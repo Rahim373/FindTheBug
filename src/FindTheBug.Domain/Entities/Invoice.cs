@@ -2,9 +2,8 @@ using FindTheBug.Domain.Common;
 
 namespace FindTheBug.Domain.Entities;
 
-public class Invoice : BaseAuditableEntity, ITenantEntity
+public class Invoice : BaseAuditableEntity
 {
-    public required string TenantId { get; set; }
     public Guid PatientId { get; set; }
     public string InvoiceNumber { get; set; } = string.Empty;
     public DateTime InvoiceDate { get; set; } = DateTime.UtcNow;

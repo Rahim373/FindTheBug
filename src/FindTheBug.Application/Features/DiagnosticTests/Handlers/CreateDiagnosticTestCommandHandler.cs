@@ -13,7 +13,6 @@ public class CreateDiagnosticTestCommandHandler(IUnitOfWork unitOfWork) : IComma
         var test = new DiagnosticTest
         {
             Id = Guid.NewGuid(),
-            TenantId = string.Empty, // Will be set by DbContext
             TestCode = request.TestCode,
             TestName = request.TestName,
             Description = request.Description,

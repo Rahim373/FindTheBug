@@ -2,9 +2,8 @@ using FindTheBug.Domain.Common;
 
 namespace FindTheBug.Domain.Entities;
 
-public class User : BaseAuditableEntity, ITenantEntity
+public class User : BaseAuditableEntity
 {
-    public required string TenantId { get; set; }
     public required string Email { get; set; }
     public required string PasswordHash { get; set; }
     public string FirstName { get; set; } = string.Empty;

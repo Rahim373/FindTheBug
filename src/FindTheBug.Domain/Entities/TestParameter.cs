@@ -2,9 +2,8 @@ using FindTheBug.Domain.Common;
 
 namespace FindTheBug.Domain.Entities;
 
-public class TestParameter : BaseAuditableEntity, ITenantEntity
+public class TestParameter : BaseAuditableEntity
 {
-    public required string TenantId { get; set; }
     public Guid DiagnosticTestId { get; set; }
     public string ParameterName { get; set; } = string.Empty;
     public string? Unit { get; set; }

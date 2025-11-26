@@ -25,14 +25,13 @@ public class JwtAuthenticationService : IAuthenticationService
         _accessTokenExpirationMinutes = int.Parse(configuration["Jwt:AccessTokenExpirationMinutes"] ?? "15");
     }
 
-    public string GenerateAccessToken(Guid userId, string email, string roles, string tenantId)
+    public string GenerateAccessToken(Guid userId, string email, string roles)
     {
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new(JwtRegisteredClaimNames.Email, email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new("tenantId", tenantId),
             new("roles", roles)
         };
 

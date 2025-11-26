@@ -54,7 +54,7 @@ public class LoginCommandHandler(
         await unitOfWork.Repository<User>().UpdateAsync(user, cancellationToken);
 
         // Generate tokens
-        var accessToken = authService.GenerateAccessToken(user.Id, user.Email, user.Roles, user.TenantId);
+        var accessToken = authService.GenerateAccessToken(user.Id, user.Email, user.Roles);
         var refreshToken = authService.GenerateRefreshToken();
 
         // Save refresh token

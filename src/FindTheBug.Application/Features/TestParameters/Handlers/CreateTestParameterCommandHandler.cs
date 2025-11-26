@@ -14,7 +14,6 @@ public class CreateTestParameterCommandHandler(IUnitOfWork unitOfWork)
         var parameter = new TestParameter
         {
             Id = Guid.NewGuid(),
-            TenantId = string.Empty,
             DiagnosticTestId = request.DiagnosticTestId,
             ParameterName = request.ParameterName,
             Unit = request.Unit,

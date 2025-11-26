@@ -54,22 +54,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.UpdatedBy = "System"; // Replace with actual user
         }
 
-        // Set TenantId for tenant-scoped entities
-        if (_tenantContext?.TenantId is not null)
-        {
-            var tenantEntries = ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added && e.Entity is ITenantEntity);
-
-            foreach (var entry in tenantEntries)
-            {
-                var tenantEntity = (ITenantEntity)entry.Entity;
-                if (string.IsNullOrEmpty(tenantEntity.TenantId))
-                {
-                    tenantEntity.TenantId = _tenantContext.TenantId;
-                }
-            }
-        }
-
         return base.SaveChangesAsync(cancellationToken);
     }
 
@@ -77,20 +61,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         base.OnModelCreating(modelBuilder);
         
-        // Apply global query filter for multi-tenancy
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            if (typeof(ITenantEntity).IsAssignableFrom(entityType.ClrType))
-            {
-                var method = typeof(ApplicationDbContext)
-                    .GetMethod(nameof(SetGlobalQueryFilter), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)?
-                    .MakeGenericMethod(entityType.ClrType);
-                
-                method?.Invoke(null, new object[] { modelBuilder, this });
-            }
-        }
-
-        // Configure entity relationships and indexes
         ConfigureLabManagementEntities(modelBuilder);
     }
 
@@ -99,21 +69,21 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         // DiagnosticTest configuration
         modelBuilder.Entity<DiagnosticTest>(entity =>
         {
-            entity.HasIndex(e => new { e.TenantId, e.TestCode }).IsUnique();
+            entity.HasIndex(e => new { e.TestCode }).IsUnique();
             entity.Property(e => e.Price).HasPrecision(18, 2);
         });
 
         // Patient configuration
         modelBuilder.Entity<Patient>(entity =>
         {
-            entity.HasIndex(e => new { e.TenantId, e.MobileNumber }).IsUnique();
-            entity.HasIndex(e => new { e.TenantId, e.PatientCode }).IsUnique();
+            entity.HasIndex(e => new { e.MobileNumber }).IsUnique();
+            entity.HasIndex(e => new { e.PatientCode }).IsUnique();
         });
 
         // TestEntry configuration
         modelBuilder.Entity<TestEntry>(entity =>
         {
-            entity.HasIndex(e => new { e.TenantId, e.EntryNumber }).IsUnique();
+            entity.HasIndex(e => new { e.EntryNumber }).IsUnique();
             entity.HasOne(e => e.Patient)
                 .WithMany(p => p.TestEntries)
                 .HasForeignKey(e => e.PatientId)
@@ -154,7 +124,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         // Invoice configuration
         modelBuilder.Entity<Invoice>(entity =>
         {
-            entity.HasIndex(e => new { e.TenantId, e.InvoiceNumber }).IsUnique();
+            entity.HasIndex(e => new { e.InvoiceNumber }).IsUnique();
             entity.HasOne(e => e.Patient)
                 .WithMany(p => p.Invoices)
                 .HasForeignKey(e => e.PatientId)
@@ -183,15 +153,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.Amount).HasPrecision(18, 2);
             entity.Property(e => e.DiscountAmount).HasPrecision(18, 2);
         });
-    }
-
-    private static void SetGlobalQueryFilter<TEntity>(ModelBuilder modelBuilder, ApplicationDbContext context) 
-        where TEntity : class, ITenantEntity
-    {
-        modelBuilder.Entity<TEntity>().HasQueryFilter(e => 
-            context._tenantContext == null || 
-            context._tenantContext.TenantId == null || 
-            e.TenantId == context._tenantContext.TenantId);
     }
 }
 

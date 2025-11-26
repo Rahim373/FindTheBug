@@ -14,7 +14,6 @@ public class CreatePatientCommandHandler(IUnitOfWork unitOfWork)
         var patient = new Patient
         {
             Id = Guid.NewGuid(),
-            TenantId = string.Empty, // Will be set by DbContext
             PatientCode = $"PAT-{DateTime.UtcNow:yyyy}-{Guid.NewGuid().ToString()[..8].ToUpper()}",
             FirstName = request.FirstName,
             LastName = request.LastName,
