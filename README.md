@@ -208,9 +208,12 @@ Swagger/OpenAPI documentation is available at:
 
 Additional documentation is available in the `/docs` folder:
 
+- [Application Layer Structure](docs/Application-Layer-Structure.md) - Complete guide to feature organization, CQRS pattern, and handler structure
 - [ErrorOr + Result Integration](docs/ErrorOr-Result-Integration.md) - Error handling flow
 - [Generic Commands & Queries](docs/Generic-Commands-Queries.md) - CQRS pattern guide
 - [JWT Authentication Guide](docs/JWT-Authentication-Guide.md) - Complete authentication guide with examples
+- [Architecture Testing Guide](docs/Architecture-Testing-Guide.md) - Architecture tests and Clean Architecture enforcement
+- [Architecture Tests Status](docs/Architecture-Tests-Status.md) - Current status of architecture tests
 
 ## 🏛️ Design Patterns
 
@@ -304,7 +307,7 @@ This project is licensed under the MIT License.
 
 ## 👥 Authors
 
-- Your Name - Initial work
+- Abdur Rahim
 
 ## 🙏 Acknowledgments
 
