@@ -1,9 +1,10 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.Patients.Commands;
 using FindTheBug.Domain.Entities;
 
-namespace FindTheBug.Application.Features.Patients.Commands;
+namespace FindTheBug.Application.Features.Patients.Handlers;
 
 public class CreatePatientCommandHandler(IUnitOfWork unitOfWork) 
     : ICommandHandler<CreatePatientCommand, Patient>

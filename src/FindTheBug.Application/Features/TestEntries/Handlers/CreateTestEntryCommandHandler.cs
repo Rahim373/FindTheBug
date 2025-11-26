@@ -1,9 +1,10 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.TestEntries.Commands;
 using FindTheBug.Domain.Entities;
 
-namespace FindTheBug.Application.Features.TestEntries.Commands;
+namespace FindTheBug.Application.Features.TestEntries.Handlers;
 
 public class CreateTestEntryCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CreateTestEntryCommand, TestEntry>
 {

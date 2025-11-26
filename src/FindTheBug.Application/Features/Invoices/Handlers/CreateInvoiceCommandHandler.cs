@@ -1,9 +1,10 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.Invoices.Commands;
 using FindTheBug.Domain.Entities;
 
-namespace FindTheBug.Application.Features.Invoices.Commands;
+namespace FindTheBug.Application.Features.Invoices.Handlers;
 
 public class CreateInvoiceCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CreateInvoiceCommand, Invoice>
 {

@@ -1,9 +1,10 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Domain.Entities;
 
-namespace FindTheBug.Application.Features.Authentication.Commands;
+namespace FindTheBug.Application.Features.Authentication.Handlers;
 
 public class ResetPasswordCommandHandler(
     IUnitOfWork unitOfWork,

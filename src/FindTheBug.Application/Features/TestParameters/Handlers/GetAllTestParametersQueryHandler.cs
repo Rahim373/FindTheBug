@@ -1,9 +1,10 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.TestParameters.Queries;
 using FindTheBug.Domain.Entities;
 
-namespace FindTheBug.Application.Features.TestParameters.Queries;
+namespace FindTheBug.Application.Features.TestParameters.Handlers;
 
 public class GetAllTestParametersQueryHandler(IUnitOfWork unitOfWork) 
     : IQueryHandler<GetAllTestParametersQuery, IEnumerable<TestParameter>>

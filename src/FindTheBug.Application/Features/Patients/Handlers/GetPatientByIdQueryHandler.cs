@@ -1,9 +1,10 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.Patients.Queries;
 using FindTheBug.Domain.Entities;
 
-namespace FindTheBug.Application.Features.Patients.Queries;
+namespace FindTheBug.Application.Features.Patients.Handlers;
 
 public class GetPatientByIdQueryHandler(IUnitOfWork unitOfWork) 
     : IQueryHandler<GetPatientByIdQuery, Patient>

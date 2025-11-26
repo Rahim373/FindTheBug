@@ -1,9 +1,10 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.DiagnosticTests.Commands;
 using FindTheBug.Domain.Entities;
 
-namespace FindTheBug.Application.Features.DiagnosticTests.Commands;
+namespace FindTheBug.Application.Features.DiagnosticTests.Handlers;
 
 public class CreateDiagnosticTestCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CreateDiagnosticTestCommand, DiagnosticTest>
 {

@@ -1,11 +1,12 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Application.Features.Authentication.Contracts;
 using FindTheBug.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
-namespace FindTheBug.Application.Features.Authentication.Commands;
+namespace FindTheBug.Application.Features.Authentication.Handlers;
 
 public class RefreshTokenCommandHandler(
     IUnitOfWork unitOfWork,

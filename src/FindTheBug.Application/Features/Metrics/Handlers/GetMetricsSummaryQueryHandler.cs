@@ -2,8 +2,9 @@ using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Features.Metrics.Contracts;
+using FindTheBug.Application.Features.Metrics.Queries;
 
-namespace FindTheBug.Application.Features.Metrics.Queries;
+namespace FindTheBug.Application.Features.Metrics.Handlers;
 
 public class GetMetricsSummaryQueryHandler(
     IMetricsService metricsService,
