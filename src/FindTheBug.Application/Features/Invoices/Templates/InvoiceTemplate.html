@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Invoice {{ InvoiceNumber }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1f2937;
+            background: #ffffff;
+            padding: 40px;
+        }
+
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #3b82f6;
+        }
+
+        .company-info {
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+
+        .company-details {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .invoice-title {
+            text-align: right;
+        }
+
+        .invoice-label {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+
+        .invoice-number {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .info-block {
+            flex: 1;
+        }
+
+        .info-block h3 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .info-block p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .info-block .name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .items-table thead {
+            background: #f3f4f6;
+        }
+
+        .items-table th {
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .items-table th:nth-child(3),
+        .items-table th:nth-child(4),
+        .items-table th:nth-child(5),
+        .items-table th:nth-child(6) {
+            text-align: right;
+        }
+
+        .items-table th:nth-child(3) {
+            text-align: center;
+        }
+
+        .items-table td {
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .totals-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 40px;
+        }
+
+        .totals {
+            width: 350px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .total-row.subtotal {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .total-row.grand-total {
+            border-top: 2px solid #1e40af;
+            margin-top: 10px;
+            padding-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e40af;
+        }
+
+        .total-label {
+            color: #6b7280;
+        }
+
+        .total-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .grand-total .total-value {
+            color: #1e40af;
+        }
+
+        .notes-section {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .notes-section h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .notes-section p {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #e5e7eb;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-paid {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-draft {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-issued {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='invoice-container'>
+        <div class='header'>
+            <div class='company-info'>
+                <div class='company-name'>FindTheBug Diagnostics</div>
+                <div class='company-details'>
+                    123 Medical Center Drive<br>
+                    Healthcare City, HC 12345<br>
+                    Phone: (555) 123-4567<br>
+                    Email: info@findthebug.com
+                </div>
+            </div>
+            <div class='invoice-title'>
+                <div class='invoice-label'>INVOICE</div>
+                <div class='invoice-number'>#{{ InvoiceNumber }}</div>
+                <div class='invoice-number' style='margin-top: 8px;'>
+                    <span class='status-badge status-{{ StatusLower }}'>{{ Status }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class='info-section'>
+            <div class='info-block'>
+                <h3>Bill To</h3>
+                <p class='name'>{{ PatientName }}</p>
+                <p>
+                    {{ PatientAddress }}<br>
+                    Phone: {{ PatientMobile }}<br>
+                    Email: {{ PatientEmail }}
+                </p>
+            </div>
+            <div class='info-block' style='text-align: right;'>
+                <h3>Invoice Details</h3>
+                <p>
+                    <strong>Invoice Date:</strong> {{ InvoiceDate }}<br>
+                    {% if DueDate %}
+                    <strong>Due Date:</strong> {{ DueDate }}<br>
+                    {% endif %}
+                    {% if PaymentMethod %}
+                    <strong>Payment Method:</strong> {{ PaymentMethod }}<br>
+                    {% endif %}
+                    {% if PaymentDate %}
+                    <strong>Payment Date:</strong> {{ PaymentDate }}
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <table class='items-table'>
+            <thead>
+                <tr>
+                    <th style='width: 50px;'>#</th>
+                    <th>Description</th>
+                    <th style='width: 80px;'>Qty</th>
+                    <th style='width: 100px;'>Unit Price</th>
+                    <th style='width: 100px;'>Discount</th>
+                    <th style='width: 120px;'>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in Items %}
+                <tr>
+                    <td style='padding: 12px; border-bottom: 1px solid #e5e7eb;'>{{ item.Index }}</td>
+                    <td style='padding: 12px; border-bottom: 1px solid #e5e7eb;'>{{ item.Description }}</td>
+                    <td style='padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center;'>{{ item.Quantity }}
+                    </td>
+                    <td style='padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;'>${{ item.UnitPrice
+                        }}</td>
+                    <td style='padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;'>{{
+                        item.DiscountPercentage }}%</td>
+                    <td style='padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right; font-weight: 600;'>
+                        ${{ item.Total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class='totals-section'>
+            <div class='totals'>
+                <div class='total-row subtotal'>
+                    <span class='total-label'>Subtotal:</span>
+                    <span class='total-value'>${{ SubTotal }}</span>
+                </div>
+                {% if HasDiscount %}
+                <div class='total-row'>
+                    <span class='total-label'>Discount:</span>
+                    <span class='total-value'>-${{ DiscountAmount }}</span>
+                </div>
+                {% endif %}
+                {% if HasTax %}
+                <div class='total-row'>
+                    <span class='total-label'>Tax:</span>
+                    <span class='total-value'>${{ TaxAmount }}</span>
+                </div>
+                {% endif %}
+                <div class='total-row grand-total'>
+                    <span class='total-label'>Total Amount:</span>
+                    <span class='total-value'>${{ TotalAmount }}</span>
+                </div>
+            </div>
+        </div>
+
+        {% if Notes %}
+        <div class='notes-section'>
+            <h3>Notes</h3>
+            <p>{{ Notes }}</p>
+        </div>
+        {% endif %}
+
+        <div class='footer'>
+            <p>Thank you for choosing FindTheBug Diagnostics</p>
+            <p style='margin-top: 8px;'>This is a computer-generated invoice and does not require a signature.</p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -8,6 +8,11 @@ public class Repository<T>(ApplicationDbContext context) : IRepository<T> where 
 {
     protected readonly DbSet<T> _dbSet = context.Set<T>();
 
+    public virtual IQueryable<T> GetQueryable()
+    {
+        return _dbSet.AsQueryable();
+    }
+
     public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbSet.FindAsync([id], cancellationToken);

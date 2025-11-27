@@ -10,6 +10,8 @@ public static class DependencyInjection
         // Example: services.AddScoped<ISampleService, SampleService>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         
+        services.AddScoped<Common.Interfaces.ITemplateRenderService, Common.Services.TemplateRenderService>();
+
         return services;
     }
 }
