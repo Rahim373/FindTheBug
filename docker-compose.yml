@@ -71,7 +71,8 @@ services:
     networks:
       - findthebug-network
     depends_on:
-      - prometheus
+      prometheus:
+        condition: service_started
     restart: unless-stopped
 
 volumes:
