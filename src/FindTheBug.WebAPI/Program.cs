@@ -71,6 +71,8 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
+app.UseCors("AllowAngularApp");
+
 try
 {
     Log.Information("Starting FindTheBug application");
@@ -88,4 +90,3 @@ finally
 {
     Log.CloseAndFlush();
 }
-

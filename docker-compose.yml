@@ -43,6 +43,8 @@ services:
       context: ./src/FindTheBug.App
       dockerfile: Dockerfile
     container_name: findthebug-app
+    environment:
+     - apiUrl=${findthebug-api}/api
     ports:
       - "4200:80"
     depends_on:

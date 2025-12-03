@@ -1,5 +1,3 @@
-using ErrorOr;
-using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Domain.Entities;
 
