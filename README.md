@@ -1,6 +1,8 @@
 # FindTheBug - Diagnostics Lab Management System
 
 [![Architecture Tests](https://github.com/rahim373/FindTheBug/actions/workflows/architecture-tests.yml/badge.svg)](https://github.com/rahim373/FindTheBug/actions/workflows/architecture-tests.yml)
+[![Docker Build and Publish](https://github.com/rahim373/FindTheBug/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/rahim373/FindTheBug/actions/workflows/docker-publish.yml)
+[![Docker Build and Publish Angular App](https://github.com/rahim373/FindTheBug/actions/workflows/docker-publish-app.yml/badge.svg)](https://github.com/rahim373/FindTheBug/actions/workflows/docker-publish-app.yml)
 
 A modern, multi-tenant diagnostics laboratory management system built with ASP.NET Core following Clean Architecture principles.
 
@@ -105,6 +107,55 @@ dotnet run --project src/FindTheBug.WebAPI
 ```
 
 The API will be available at `https://localhost:7001` (or configured port).
+
+### Docker Deployment
+
+Pre-built Docker images are automatically published to GitHub Container Registry for both the API and Angular app.
+
+**WebAPI:**
+```bash
+# Pull the latest API image
+docker pull ghcr.io/rahim373/findthebug:latest
+
+# Run the API container
+docker run -p 8080:8080 \
+  -e ConnectionStrings__DefaultConnection="Host=your-db;Database=FindTheBug;Username=postgres;Password=yourpassword" \
+  -e Jwt__SecretKey="your-secret-key-at-least-32-characters-long" \
+  ghcr.io/rahim373/findthebug:latest
+```
+
+**Angular App:**
+```bash
+# Pull the latest Angular app image
+docker pull ghcr.io/rahim373/findthebug-app:latest
+
+# Run the Angular app container
+docker run -p 80:80 ghcr.io/rahim373/findthebug-app:latest
+```
+
+Or use the included `docker-compose.yml` for a complete setup with all services:
+
+```bash
+# Start all services (API, Angular App, PostgreSQL, Prometheus, Grafana)
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+```
+
+**Docker Compose includes:**
+- **Angular App** - Available at `http://localhost:4200`
+- **WebAPI** - Available at `http://localhost:9909`
+- **PostgreSQL** - Database on port `5432`
+- **Prometheus** - Metrics at `http://localhost:9090`
+- **Grafana** - Dashboards at `http://localhost:3000` (admin/admin)
+
+For more details on Docker deployment:
+- [WebAPI Docker Registry Documentation](docs/docker-registry.md)
+- [Angular App Docker Registry Documentation](docs/docker-registry-app.md)
 
 ### Authentication Setup
 
@@ -216,6 +267,8 @@ Additional documentation is available in the `/docs` folder:
 - [JWT Authentication Guide](docs/JWT-Authentication-Guide.md) - Complete authentication guide with examples
 - [Architecture Testing Guide](docs/Architecture-Testing-Guide.md) - Architecture tests and Clean Architecture enforcement
 - [Architecture Tests Status](docs/Architecture-Tests-Status.md) - Current status of architecture tests
+- [Docker Registry Documentation](docs/docker-registry.md) - Docker image publishing and deployment guide
+- [Angular App Docker Registry Documentation](docs/docker-registry-app.md) - Angular app Docker image publishing and deployment guide
 
 ## 🏛️ Design Patterns
 

@@ -38,6 +38,19 @@ services:
       - findthebug-network
     restart: unless-stopped
 
+  findthebug-app:
+    build:
+      context: ./src/FindTheBug.App
+      dockerfile: Dockerfile
+    container_name: findthebug-app
+    ports:
+      - "4200:80"
+    depends_on:
+      - findthebug-api
+    networks:
+      - findthebug-network
+    restart: unless-stopped
+
   prometheus:
     image: prom/prometheus:latest
     container_name: findthebug-prometheus
