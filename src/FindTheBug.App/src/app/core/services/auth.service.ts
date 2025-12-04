@@ -19,10 +19,10 @@ export class AuthService {
     public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
     /**
-     * Login with email and password
+     * Login with email/phone and password
      */
-    async login(email: string, password: string): Promise<LoginResponse> {
-        const request: LoginRequest = { email, password };
+    async login(emailOrPhone: string, password: string): Promise<LoginResponse> {
+        const request: LoginRequest = { emailOrPhone, password };
 
         try {
             const response = await firstValueFrom(

@@ -26,8 +26,8 @@
                 </nz-form-item>
 
                 <nz-form-item class="form-item-half">
-                    <nz-form-label>Phone</nz-form-label>
-                    <nz-form-control>
+                    <nz-form-label nzRequired>Phone</nz-form-label>
+                    <nz-form-control nzErrorTip="Please enter phone number">
                         <input nz-input formControlName="phone" placeholder="Phone Number" />
                     </nz-form-control>
                 </nz-form-item>
@@ -67,6 +67,16 @@
                     <nz-form-control>
                         <nz-switch formControlName="isActive"></nz-switch>
                         <span class="status-label">{{ userForm.get('isActive')?.value ? 'Active' : 'Inactive' }}</span>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div class="form-row">
+                <nz-form-item class="form-item-half">
+                    <nz-form-label>Allow User Login</nz-form-label>
+                    <nz-form-control>
+                        <nz-switch formControlName="allowUserLogin"></nz-switch>
+                        <span class="status-label">{{ userForm.get('allowUserLogin')?.value ? 'Allowed' : 'Not Allowed' }}</span>
                     </nz-form-control>
                 </nz-form-item>
             </div>

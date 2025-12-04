@@ -19,8 +19,9 @@ public class CreateUserRequest
     [MaxLength(100)]
     public required string LastName { get; set; }
 
+    [Required]
     [Phone]
-    public string? Phone { get; set; }
+    public required string Phone { get; set; }
 
     [MaxLength(50)]
     public string? NIDNumber { get; set; }
@@ -28,4 +29,6 @@ public class CreateUserRequest
     public string? Roles { get; set; }
 
     public bool IsActive { get; set; } = true;
+
+    public bool AllowUserLogin { get; set; } = true;
 }

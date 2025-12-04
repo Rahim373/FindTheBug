@@ -3,10 +3,11 @@ export interface User {
   email?: string;
   firstName: string;
   lastName: string;
-  phone?: string;
+  phone: string;
   nidNumber?: string;
   roles: string;
   isActive: boolean;
+  allowUserLogin: boolean;
   lastLoginAt?: Date;
   createdAt: Date;
   updatedAt?: Date;
@@ -17,20 +18,22 @@ export interface CreateUserRequest {
   password: string;
   firstName: string;
   lastName: string;
-  phone?: string;
+  phone: string;
   nidNumber?: string;
   roles?: string;
   isActive: boolean;
+  allowUserLogin: boolean;
 }
 
 export interface UpdateUserRequest {
   email?: string;
   firstName: string;
   lastName: string;
-  phone?: string;
+  phone: string;
   nidNumber?: string;
   roles?: string;
   isActive: boolean;
+  allowUserLogin: boolean;
   password?: string;
 }
 

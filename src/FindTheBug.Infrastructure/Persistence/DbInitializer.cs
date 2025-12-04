@@ -63,6 +63,7 @@ public class DbInitializer
         var password = superUserConfig["Password"];
         var firstName = superUserConfig["FirstName"] ?? "Super";
         var lastName = superUserConfig["LastName"] ?? "User";
+        var phoneNumber = superUserConfig["PhoneNumber"] ?? "01734014433";
 
         if (string.IsNullOrEmpty(password))
         {
@@ -75,6 +76,7 @@ public class DbInitializer
 
         var user = new User
         {
+            Phone = phoneNumber,
             Id = Guid.NewGuid(),
             Email = email,
             PasswordHash = passwordHash,

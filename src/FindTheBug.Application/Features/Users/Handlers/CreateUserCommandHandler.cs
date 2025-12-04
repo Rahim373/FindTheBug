@@ -14,14 +14,24 @@ public class CreateUserCommandHandler(
 {
     public async Task<ErrorOr<User>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
+        // Validate phone uniqueness (required field)
+        var existingUserByPhone = await unitOfWork.Repository<User>()
+            .GetQueryable()
+            .FirstOrDefaultAsync(u => u.Phone == request.Phone, cancellationToken);
+
+        if (existingUserByPhone != null)
+        {
+            return Error.Conflict("User.PhoneExists", "A user with this phone number already exists.");
+        }
+
         // Validate email uniqueness if email is provided
         if (!string.IsNullOrWhiteSpace(request.Email))
         {
-            var existingUser = await unitOfWork.Repository<User>()
+            var existingUserByEmail = await unitOfWork.Repository<User>()
                 .GetQueryable()
                 .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
-            if (existingUser != null)
+            if (existingUserByEmail != null)
             {
                 return Error.Conflict("User.EmailExists", "A user with this email already exists.");
             }
@@ -37,10 +47,11 @@ public class CreateUserCommandHandler(
             PasswordHash = passwordHash,
             FirstName = request.FirstName,
             LastName = request.LastName,
-            Phone = request.Phone,
+            Phone = request.Phone!,
             NIDNumber = request.NIDNumber,
             Roles = request.Roles ?? "User",
-            IsActive = request.IsActive
+            IsActive = request.IsActive,
+            AllowUserLogin = request.AllowUserLogin
         };
 
         var created = await unitOfWork.Repository<User>().AddAsync(user, cancellationToken);

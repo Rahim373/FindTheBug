@@ -8,10 +8,11 @@ public class User : BaseAuditableEntity
     public required string PasswordHash { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public string? Phone { get; set; }
+    public required string Phone { get; set; }
     public string? NIDNumber { get; set; }
     public string Roles { get; set; } = "User"; // Comma-separated roles: "Admin,User"
     public bool IsActive { get; set; } = true;
+    public bool AllowUserLogin { get; set; } = true;
     public DateTime? LastLoginAt { get; set; }
     public string? LastLoginIp { get; set; }
     public int FailedLoginAttempts { get; set; }

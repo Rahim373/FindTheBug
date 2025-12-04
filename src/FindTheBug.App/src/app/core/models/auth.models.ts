@@ -1,7 +1,7 @@
 // Authentication Models
 
 export interface LoginRequest {
-    email: string;
+    emailOrPhone: string;
     password: string;
 }
 

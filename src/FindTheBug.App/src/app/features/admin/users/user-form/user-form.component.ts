@@ -59,10 +59,11 @@ export class UserFormComponent implements OnInit {
             ],
             firstName: ['', [Validators.required, Validators.maxLength(100)]],
             lastName: ['', [Validators.required, Validators.maxLength(100)]],
-            phone: [''],
+            phone: ['', [Validators.required]],
             nidNumber: ['', [Validators.maxLength(50)]],
             roles: ['User'],
-            isActive: [true]
+            isActive: [true],
+            allowUserLogin: [true]
         });
     }
 
@@ -79,7 +80,8 @@ export class UserFormComponent implements OnInit {
                         phone: user.phone,
                         nidNumber: user.nidNumber,
                         roles: user.roles,
-                        isActive: user.isActive
+                        isActive: user.isActive,
+                        allowUserLogin: user.allowUserLogin
                     });
                 }
                 this.loading = false;
@@ -115,6 +117,7 @@ export class UserFormComponent implements OnInit {
                 nidNumber: formValue.nidNumber,
                 roles: formValue.roles,
                 isActive: formValue.isActive,
+                allowUserLogin: formValue.allowUserLogin,
                 password: formValue.password || undefined
             };
 
@@ -143,7 +146,8 @@ export class UserFormComponent implements OnInit {
                 phone: formValue.phone,
                 nidNumber: formValue.nidNumber,
                 roles: formValue.roles,
-                isActive: formValue.isActive
+                isActive: formValue.isActive,
+                allowUserLogin: formValue.allowUserLogin
             };
 
             this.userService.createUser(request).subscribe({

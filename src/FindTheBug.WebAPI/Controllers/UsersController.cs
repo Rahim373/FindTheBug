@@ -60,7 +60,8 @@ public class UsersController(ISender mediator) : ControllerBase
             request.Phone,
             request.NIDNumber,
             request.Roles,
-            request.IsActive
+            request.IsActive,
+            request.AllowUserLogin
         );
 
         var result = await mediator.Send(command, cancellationToken);
@@ -82,6 +83,7 @@ public class UsersController(ISender mediator) : ControllerBase
             request.NIDNumber,
             request.Roles,
             request.IsActive,
+            request.AllowUserLogin,
             request.Password
         );
 

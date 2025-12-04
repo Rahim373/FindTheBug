@@ -8,8 +8,9 @@ public record CreateUserCommand(
     string Password,
     string FirstName,
     string LastName,
-    string? Phone,
+    string Phone,
     string? NIDNumber,
     string? Roles,
-    bool IsActive
+    bool IsActive,
+    bool AllowUserLogin
 ) : ICommand<User>;

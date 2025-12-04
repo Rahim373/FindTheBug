@@ -17,12 +17,14 @@ public class LoginCommandHandler(
 {
     public async Task<ErrorOr<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        // Get user by email
+        // Get user by email or phone
         var users = await unitOfWork.Repository<User>().GetAllAsync(cancellationToken);
-        var user = users.FirstOrDefault(u => u.Email?.ToLower() == request.Email.ToLower());
+        var user = users.FirstOrDefault(u => 
+            (u.Email != null && u.Email.ToLower() == request.EmailOrPhone.ToLower()) ||
+            u.Phone == request.EmailOrPhone);
 
         if (user is null)
-            return Error.Unauthorized("Authentication.InvalidCredentials", "Invalid email or password");
+            return Error.Unauthorized("Authentication.InvalidCredentials", "Invalid email/phone or password");
 
         // Check if account is locked
         if (user.LockedOutUntil.HasValue && user.LockedOutUntil > DateTime.UtcNow)
@@ -39,12 +41,16 @@ public class LoginCommandHandler(
             }
             await unitOfWork.Repository<User>().UpdateAsync(user, cancellationToken);
             
-            return Error.Unauthorized("Authentication.InvalidCredentials", "Invalid email or password");
+            return Error.Unauthorized("Authentication.InvalidCredentials", "Invalid email/phone or password");
         }
 
         // Check if user is active
         if (!user.IsActive)
             return Error.Unauthorized("Authentication.AccountDisabled", "Account is disabled");
+
+        // Check if user is allowed to login
+        if (!user.AllowUserLogin)
+            return Error.Unauthorized("Authentication.LoginNotAllowed", "User is not allowed to login");
 
         // Reset failed login attempts
         user.FailedLoginAttempts = 0;
@@ -54,7 +60,7 @@ public class LoginCommandHandler(
         await unitOfWork.Repository<User>().UpdateAsync(user, cancellationToken);
 
         // Generate tokens
-        var accessToken = authService.GenerateAccessToken(user.Id, user.Email, user.Roles);
+        var accessToken = authService.GenerateAccessToken(user.Id, user.Email ?? user.Phone, user.Roles);
         var refreshToken = authService.GenerateRefreshToken();
 
         // Save refresh token
@@ -72,7 +78,7 @@ public class LoginCommandHandler(
             accessToken,
             refreshToken,
             refreshTokenEntity.ExpiresAt,
-            new UserInfo(user.Id, user.Email, user.FirstName, user.LastName, user.Roles)
+            new UserInfo(user.Id, user.Email ?? user.Phone, user.FirstName, user.LastName, user.Roles)
         );
     }
 }

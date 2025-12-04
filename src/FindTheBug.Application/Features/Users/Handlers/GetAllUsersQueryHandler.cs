@@ -3,6 +3,7 @@ using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Users.Queries;
+using FindTheBug.Domain.Contracts;
 using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Application.Features.Users.Handlers;
@@ -12,7 +13,8 @@ public class GetAllUsersQueryHandler(IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<PagedResult<User>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
-        var query = unitOfWork.Repository<User>().GetQueryable();
+        var query = unitOfWork.Repository<User>().GetQueryable()
+            .Where(u => !u.Roles.Contains(Role.SuperUser));
 
         // Apply search filter if provided
         if (!string.IsNullOrWhiteSpace(request.Search))

@@ -10,6 +10,7 @@ public class UserResponse
     public string? NIDNumber { get; set; }
     public string Roles { get; set; } = string.Empty;
     public bool IsActive { get; set; }
+    public bool AllowUserLogin { get; set; }
     public DateTime? LastLoginAt { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

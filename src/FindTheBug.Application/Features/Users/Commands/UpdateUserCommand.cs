@@ -8,9 +8,10 @@ public record UpdateUserCommand(
     string? Email,
     string FirstName,
     string LastName,
-    string? Phone,
+    string Phone,
     string? NIDNumber,
     string? Roles,
     bool IsActive,
+    bool AllowUserLogin,
     string? Password
 ) : ICommand<User>;

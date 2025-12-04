@@ -3,6 +3,7 @@ using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Features.Users.Commands;
 using FindTheBug.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Application.Features.Users.Handlers;
 
@@ -20,6 +21,19 @@ public class UpdateUserCommandHandler(
             return Error.NotFound("User.NotFound", "User not found.");
         }
 
+        // Validate phone uniqueness if phone is being changed
+        if (user.Phone != request.Phone)
+        {
+            var existingUserByPhone = await unitOfWork.Repository<User>()
+                .GetQueryable()
+                .FirstOrDefaultAsync(u => u.Phone == request.Phone && u.Id != request.Id, cancellationToken);
+
+            if (existingUserByPhone != null)
+            {
+                return Error.Conflict("User.PhoneExists", "A user with this phone number already exists.");
+            }
+        }
+
         // Update fields
         user.Email = request.Email;
         user.FirstName = request.FirstName;
@@ -28,6 +42,7 @@ public class UpdateUserCommandHandler(
         user.NIDNumber = request.NIDNumber;
         user.Roles = request.Roles ?? user.Roles;
         user.IsActive = request.IsActive;
+        user.AllowUserLogin = request.AllowUserLogin;
 
         // Update password if provided
         if (!string.IsNullOrWhiteSpace(request.Password))
