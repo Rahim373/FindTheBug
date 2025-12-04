@@ -1,0 +1,23 @@
+.users-container {
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.search-bar {
+  margin-bottom: 16px;
+  max-width: 400px;
+}

@@ -18,6 +18,7 @@ This project implements **Clean Architecture** with clear separation of concerns
 ## ✨ Key Features
 
 ### Authentication & Security
+
 - **JWT Authentication** - Secure token-based authentication with 15-minute access tokens
 - **Refresh Token Mechanism** - Long-lived refresh tokens (7 days) with automatic rotation
 - **Password Reset** - Secure email-based password reset with one-time tokens
@@ -28,30 +29,35 @@ This project implements **Clean Architecture** with clear separation of concerns
 - **Security Audit Trail** - IP address tracking for logins and token operations
 
 ### Multi-Tenancy
+
 - **Subdomain-based tenant resolution** - Automatic tenant detection from request subdomain
 - **Tenant-isolated databases** - Each tenant has its own PostgreSQL database
 - **Dynamic connection strings** - Runtime database selection based on tenant context
 - **Tenant-scoped data access** - Automatic filtering of all queries by tenant ID
 
 ### CQRS with MediatR
+
 - **Command/Query Separation** - Clear distinction between reads and writes
 - **Generic base interfaces** - `ICommand<TResponse>` and `IQuery<TResponse>` reduce boilerplate
 - **Handler pattern** - `ICommandHandler` and `IQueryHandler` for consistent implementation
 - **Decoupled architecture** - Controllers delegate to MediatR handlers
 
 ### Error Handling
+
 - **ErrorOr pattern** - Functional error handling without exceptions
 - **Automatic response conversion** - `ErrorOrActionFilter` converts errors to Problem Details (RFC 7807)
 - **Consistent API responses** - `ResultWrapperMiddleware` wraps all responses in `Result<T>` format
 - **Typed errors** - NotFound, Validation, Conflict, Unauthorized, etc.
 
 ### Monitoring & Observability
+
 - **Prometheus metrics** - HTTP request metrics, custom business metrics
 - **Health checks** - Database connectivity, application health
 - **Structured logging** - Serilog with console sink and correlation IDs
 - **Request/Response logging** - Automatic logging of all HTTP requests
 
 ### Modern C# Features
+
 - **File-scoped namespaces** - Cleaner code organization
 - **Primary constructors** - Reduced boilerplate in classes
 - **Record types** - Immutable DTOs and commands/queries
@@ -62,7 +68,7 @@ This project implements **Clean Architecture** with clear separation of concerns
 
 ### Core Entities
 
-- **User** - User accounts with authentication and roles
+- **User** - User accounts with authentication, roles, phone, and NID number
 - **Patient** - Patient demographics and contact information
 - **DiagnosticTest** - Test catalog with pricing and descriptions
 - **TestParameter** - Individual parameters/fields for each test
@@ -113,6 +119,7 @@ The API will be available at `https://localhost:7001` (or configured port).
 Pre-built Docker images are automatically published to GitHub Container Registry for both the API and Angular app.
 
 **WebAPI:**
+
 ```bash
 # Pull the latest API image
 docker pull ghcr.io/rahim373/findthebug:latest
@@ -125,6 +132,7 @@ docker run -p 8080:8080 \
 ```
 
 **Angular App:**
+
 ```bash
 # Pull the latest Angular app image
 docker pull ghcr.io/rahim373/findthebug-app:latest
@@ -147,6 +155,7 @@ docker-compose down
 ```
 
 **Docker Compose includes:**
+
 - **Angular App** - Available at `http://localhost:4200`
 - **WebAPI** - Available at `http://localhost:9909`
 - **PostgreSQL** - Database on port `5432`
@@ -154,6 +163,7 @@ docker-compose down
 - **Grafana** - Dashboards at `http://localhost:3000` (admin/admin)
 
 For more details on Docker deployment:
+
 - [WebAPI Docker Registry Documentation](docs/docker-registry.md)
 - [Angular App Docker Registry Documentation](docs/docker-registry-app.md)
 
@@ -181,11 +191,21 @@ Update JWT and email settings in `appsettings.json`:
 ### API Documentation
 
 Swagger/OpenAPI documentation is available at:
+
 - `https://localhost:7001/swagger`
 
 ## 📡 API Endpoints
 
+### Users
+
+- `GET /api/users` - Get all users with pagination and search (requires auth)
+- `GET /api/users/{id}` - Get user by ID (requires auth)
+- `POST /api/users` - Create new user (requires auth)
+- `PUT /api/users/{id}` - Update user (requires auth)
+- `DELETE /api/users/{id}` - Delete user (requires auth)
+
 ### Patients
+
 - `GET /api/patients` - Get all patients (with optional search)
 - `GET /api/patients/{id}` - Get patient by ID
 - `POST /api/patients` - Create new patient
@@ -193,6 +213,7 @@ Swagger/OpenAPI documentation is available at:
 - `DELETE /api/patients/{id}` - Delete patient
 
 ### Diagnostic Tests
+
 - `GET /api/diagnostictests` - Get all tests
 - `GET /api/diagnostictests/{id}` - Get test by ID
 - `POST /api/diagnostictests` - Create new test
@@ -200,30 +221,35 @@ Swagger/OpenAPI documentation is available at:
 - `DELETE /api/diagnostictests/{id}` - Delete test
 
 ### Test Parameters
+
 - `GET /api/testparameters?diagnosticTestId={id}` - Get parameters for a test
 - `POST /api/testparameters` - Create new parameter
 - `PUT /api/testparameters/{id}` - Update parameter
 - `DELETE /api/testparameters/{id}` - Delete parameter
 
 ### Test Entries
+
 - `GET /api/testentries` - Get all test entries
 - `GET /api/testentries/{id}` - Get entry by ID
 - `POST /api/testentries` - Register patient for test
 - `PUT /api/testentries/{id}/status` - Update entry status
 
 ### Test Results
+
 - `GET /api/testresults/entry/{testEntryId}` - Get results for a test entry
 - `POST /api/testresults` - Record test result
 - `PUT /api/testresults/{id}` - Update test result
 - `POST /api/testresults/{testEntryId}/verify` - Verify test results
 
 ### Invoices
+
 - `GET /api/invoices` - Get all invoices
 - `GET /api/invoices/{id}` - Get invoice by ID
 - `POST /api/invoices` - Create new invoice
 - `PUT /api/invoices/{id}/status` - Update invoice status
 
 ### Authentication
+
 - `POST /api/token` - Login with email and password
 - `POST /api/token/refresh` - Refresh access token
 - `POST /api/token/change-password` - Change password (requires auth)
@@ -232,12 +258,14 @@ Swagger/OpenAPI documentation is available at:
 - `POST /api/token/revoke` - Revoke refresh token (logout)
 
 ### Monitoring
+
 - `GET /metrics` - Prometheus metrics endpoint
 - `GET /health` - Health check endpoint
 
 ## 🔧 Technology Stack
 
 ### Backend
+
 - **ASP.NET Core 8.0** - Web framework
 - **Entity Framework Core** - ORM
 - **PostgreSQL** - Database
@@ -247,6 +275,7 @@ Swagger/OpenAPI documentation is available at:
 - **Prometheus** - Metrics and monitoring
 
 ### Packages
+
 - `ErrorOr` - Functional error handling
 - `MediatR` - Mediator pattern for CQRS
 - `Npgsql.EntityFrameworkCore.PostgreSQL` - PostgreSQL provider
@@ -297,16 +326,20 @@ Additional documentation is available in the `/docs` folder:
 All API responses follow a consistent format:
 
 ### Success Response
+
 ```json
 {
   "isSuccess": true,
-  "data": { /* entity data */ },
+  "data": {
+    /* entity data */
+  },
   "errorMessage": null,
   "errors": []
 }
 ```
 
 ### Error Response
+
 ```json
 {
   "isSuccess": false,
@@ -345,6 +378,7 @@ The application exposes metrics at `/metrics`:
 ### Health Checks
 
 Health check endpoint at `/health` returns:
+
 - Database connectivity status
 - Application health status
 

@@ -1,0 +1,171 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { UserService } from '../../../../core/services/user.service';
+import { CreateUserRequest, UpdateUserRequest } from '../../../../core/models/user.models';
+
+@Component({
+    selector: 'app-user-form',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        NzFormModule,
+        NzInputModule,
+        NzButtonModule,
+        NzSwitchModule,
+        NzCardModule
+    ],
+    templateUrl: './user-form.component.html',
+    styleUrls: ['./user-form.component.css']
+})
+export class UserFormComponent implements OnInit {
+    private readonly fb = inject(FormBuilder);
+    private readonly userService = inject(UserService);
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
+    private readonly message = inject(NzMessageService);
+
+    userForm!: FormGroup;
+    isEditMode = false;
+    userId?: string;
+    loading = false;
+    submitting = false;
+
+    ngOnInit(): void {
+        this.userId = this.route.snapshot.paramMap.get('id') || undefined;
+        this.isEditMode = !!this.userId;
+
+        this.initForm();
+
+        if (this.isEditMode && this.userId) {
+            this.loadUser(this.userId);
+        }
+    }
+
+    initForm(): void {
+        this.userForm = this.fb.group({
+            email: ['', [Validators.email]],
+            password: [
+                '', 
+                this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]
+            ],
+            firstName: ['', [Validators.required, Validators.maxLength(100)]],
+            lastName: ['', [Validators.required, Validators.maxLength(100)]],
+            phone: [''],
+            nidNumber: ['', [Validators.maxLength(50)]],
+            roles: ['User'],
+            isActive: [true]
+        });
+    }
+
+    loadUser(id: string): void {
+        this.loading = true;
+        this.userService.getUserById(id).subscribe({
+            next: (response) => {
+                if (response.isSuccess && response.data) {
+                    const user = response.data;
+                    this.userForm.patchValue({
+                        email: user.email,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        phone: user.phone,
+                        nidNumber: user.nidNumber,
+                        roles: user.roles,
+                        isActive: user.isActive
+                    });
+                }
+                this.loading = false;
+            },
+            error: (error) => {
+                console.error('Error loading user:', error);
+                this.message.error('Failed to load user');
+                this.loading = false;
+            }
+        });
+    }
+
+    onSubmit(): void {
+        if (this.userForm.invalid) {
+            Object.values(this.userForm.controls).forEach(control => {
+                if (control.invalid) {
+                    control.markAsDirty();
+                    control.updateValueAndValidity({ onlySelf: true });
+                }
+            });
+            return;
+        }
+
+        this.submitting = true;
+        const formValue = this.userForm.value;
+
+        if (this.isEditMode && this.userId) {
+            const request: UpdateUserRequest = {
+                email: formValue.email,
+                firstName: formValue.firstName,
+                lastName: formValue.lastName,
+                phone: formValue.phone,
+                nidNumber: formValue.nidNumber,
+                roles: formValue.roles,
+                isActive: formValue.isActive,
+                password: formValue.password || undefined
+            };
+
+            this.userService.updateUser(this.userId, request).subscribe({
+                next: (response) => {
+                    if (response.isSuccess) {
+                        this.message.success('User updated successfully');
+                        this.router.navigate(['/admin/users']);
+                    } else {
+                        this.message.error(response.errors?.[0]?.description || 'Failed to update user');
+                    }
+                    this.submitting = false;
+                },
+                error: (error) => {
+                    console.error('Error updating user:', error);
+                    this.message.error('Failed to update user');
+                    this.submitting = false;
+                }
+            });
+        } else {
+            const request: CreateUserRequest = {
+                email: formValue.email,
+                password: formValue.password,
+                firstName: formValue.firstName,
+                lastName: formValue.lastName,
+                phone: formValue.phone,
+                nidNumber: formValue.nidNumber,
+                roles: formValue.roles,
+                isActive: formValue.isActive
+            };
+
+            this.userService.createUser(request).subscribe({
+                next: (response) => {
+                    if (response.isSuccess) {
+                        this.message.success('User created successfully');
+                        this.router.navigate(['/admin/users']);
+                    } else {
+                        this.message.error(response.errors?.[0]?.description || 'Failed to create user');
+                    }
+                    this.submitting = false;
+                },
+                error: (error) => {
+                    console.error('Error creating user:', error);
+                    this.message.error('Failed to create user');
+                    this.submitting = false;
+                }
+            });
+        }
+    }
+
+    cancel(): void {
+        this.router.navigate(['/admin/users']);
+    }
+}

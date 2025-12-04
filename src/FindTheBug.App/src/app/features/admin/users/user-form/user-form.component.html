@@ -1,0 +1,84 @@
+<div class="form-container">
+    <nz-card [nzTitle]="isEditMode ? 'Edit User' : 'Create New User'" [nzLoading]="loading">
+        <form nz-form [formGroup]="userForm" (ngSubmit)="onSubmit()" nzLayout="vertical">
+            <div class="form-row">
+                <nz-form-item class="form-item-half">
+                    <nz-form-label nzRequired>First Name</nz-form-label>
+                    <nz-form-control nzErrorTip="Please enter first name">
+                        <input nz-input formControlName="firstName" placeholder="First Name" />
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class="form-item-half">
+                    <nz-form-label nzRequired>Last Name</nz-form-label>
+                    <nz-form-control nzErrorTip="Please enter last name">
+                        <input nz-input formControlName="lastName" placeholder="Last Name" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div class="form-row">
+                <nz-form-item class="form-item-half">
+                    <nz-form-label>Email</nz-form-label>
+                    <nz-form-control nzErrorTip="Please enter a valid email">
+                        <input nz-input formControlName="email" type="email" placeholder="Email" />
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class="form-item-half">
+                    <nz-form-label>Phone</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input formControlName="phone" placeholder="Phone Number" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div class="form-row">
+                <nz-form-item class="form-item-half">
+                    <nz-form-label>NID Number</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input formControlName="nidNumber" placeholder="National ID Number" />
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class="form-item-half">
+                    <nz-form-label [nzRequired]="!isEditMode">Password</nz-form-label>
+                    <nz-form-control [nzErrorTip]="isEditMode ? 'Password must be at least 6 characters' : 'Please enter password (min 6 characters)'">
+                        <input 
+                            nz-input 
+                            formControlName="password" 
+                            type="password" 
+                            [placeholder]="isEditMode ? 'Leave blank to keep current password' : 'Password'" 
+                        />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div class="form-row">
+                <nz-form-item class="form-item-half">
+                    <nz-form-label>Roles</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input formControlName="roles" placeholder="User, Admin" />
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class="form-item-half">
+                    <nz-form-label>Active Status</nz-form-label>
+                    <nz-form-control>
+                        <nz-switch formControlName="isActive"></nz-switch>
+                        <span class="status-label">{{ userForm.get('isActive')?.value ? 'Active' : 'Inactive' }}</span>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div class="form-actions">
+                <button nz-button nzType="default" (click)="cancel()" [disabled]="submitting">
+                    Cancel
+                </button>
+                <button nz-button nzType="primary" type="submit" [nzLoading]="submitting">
+                    {{ isEditMode ? 'Update' : 'Create' }} User
+                </button>
+            </div>
+        </form>
+    </nz-card>
+</div>

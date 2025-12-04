@@ -29,6 +29,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=FindTheBug;Username=postgres;Password=postgres
+      - Jwt__AccessTokenExpirationMinutes=3600
     ports:
       - "9909:8080"
     depends_on:

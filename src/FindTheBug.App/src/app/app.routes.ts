@@ -30,6 +30,18 @@ export const routes: Routes = [
                 path: 'dashboard', 
                 component: DashboardComponent 
             },
+            {
+                path: 'users',
+                loadComponent: () => import('./features/admin/users/users-list/users-list.component').then(c => c.UsersListComponent)
+            },
+            {
+                path: 'users/new',
+                loadComponent: () => import('./features/admin/users/user-form/user-form.component').then(c => c.UserFormComponent)
+            },
+            {
+                path: 'users/:id/edit',
+                loadComponent: () => import('./features/admin/users/user-form/user-form.component').then(c => c.UserFormComponent)
+            },
             // Future routes can be added here
             // { path: 'patients', loadComponent: () => import('./features/admin/patients/patients.component').then(c => c.PatientsComponent) },
             // { path: 'tests', loadComponent: () => import('./features/admin/tests/tests.component').then(c => c.TestsComponent) },

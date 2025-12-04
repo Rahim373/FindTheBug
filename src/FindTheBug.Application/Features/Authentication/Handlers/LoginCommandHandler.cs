@@ -19,7 +19,7 @@ public class LoginCommandHandler(
     {
         // Get user by email
         var users = await unitOfWork.Repository<User>().GetAllAsync(cancellationToken);
-        var user = users.FirstOrDefault(u => u.Email.ToLower() == request.Email.ToLower());
+        var user = users.FirstOrDefault(u => u.Email?.ToLower() == request.Email.ToLower());
 
         if (user is null)
             return Error.Unauthorized("Authentication.InvalidCredentials", "Invalid email or password");

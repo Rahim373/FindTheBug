@@ -1,0 +1,127 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Angular Application",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/src/FindTheBug.App",
+      "program": "${workspaceFolder}/src/FindTheBug.App/node_modules/@angular/cli/bin/ng",
+      "args": [
+        "serve",
+        "--configuration=development"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "NG_CLI_ANALYTICS": "false"
+      },
+      "serverReadyAction": {
+        "pattern": "Local:.+(http://localhost:[0-9]+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome"
+      }
+    },
+    {
+      "name": "Launch Angular Application (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/src/FindTheBug.App/src",
+      "sourceMaps": true,
+      "userDataDir": false,
+      "runtimeExecutable": "chrome",
+      "runtimeArgs": [
+        "--remote-debugging-port=9222",
+        "--disable-web-security",
+        "--disable-features=VizDisplayCompositor"
+      ]
+    },
+    {
+      "name": "Attach to Chrome",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}/src/FindTheBug.App/src",
+      "sourceMaps": true,
+      "url": "http://localhost:4200/*",
+      "timeout": 30000
+    },
+    {
+      "name": "Launch Angular Tests",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/src/FindTheBug.App",
+      "program": "${workspaceFolder}/src/FindTheBug.App/node_modules/@angular/cli/bin/ng",
+      "args": [
+        "test",
+        "--watch=false",
+        "--browsers=ChromeHeadless",
+        "--code-coverage=false"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "NG_CLI_ANALYTICS": "false"
+      }
+    },
+    {
+      "name": "Launch Angular E2E Tests",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/src/FindTheBug.App",
+      "program": "${workspaceFolder}/src/FindTheBug.App/node_modules/@angular/cli/bin/ng",
+      "args": [
+        "e2e"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "NG_CLI_ANALYTICS": "false"
+      }
+    },
+    {
+      "name": "Debug Angular CLI",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/src/FindTheBug.App",
+      "program": "${workspaceFolder}/src/FindTheBug.App/node_modules/@angular/cli/bin/ng",
+      "args": [
+        "${input:ngCommand}"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "NG_CLI_ANALYTICS": "false",
+        "NODE_OPTIONS": "--inspect-brk"
+      }
+    },
+    {
+      "name": "Launch .NET Web API",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/FindTheBug.WebAPI/bin/Debug/net8.0/FindTheBug.WebAPI.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/FindTheBug.WebAPI",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/src/FindTheBug.WebAPI/Views"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "ngCommand",
+      "description": "Angular CLI command",
+      "default": "serve",
+      "type": "promptString"
+    }
+  ]
+}

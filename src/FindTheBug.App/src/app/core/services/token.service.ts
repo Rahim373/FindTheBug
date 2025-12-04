@@ -17,6 +17,7 @@ export class TokenService {
         localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 
         // Calculate expiry timestamp
+        debugger
         const expiryTime = new Date(expiresAt);
         localStorage.setItem(TOKEN_EXPIRY_KEY, expiryTime.toString());
     }
@@ -43,14 +44,15 @@ export class TokenService {
         if (!token) {
             return false;
         }
+        return true;
 
-        const expiryTime = localStorage.getItem(TOKEN_EXPIRY_KEY);
-        if (!expiryTime) {
-            return false;
-        }
+        // const expiryTime = localStorage.getItem(TOKEN_EXPIRY_KEY);
+        // if (!expiryTime) {
+        //     return false;
+        // }
 
-        // Check if token is expired (with 1 minute buffer)
-        return Date.now() < (parseInt(expiryTime) - 60000);
+        // // Check if token is expired (with 1 minute buffer)
+        // return Date.now() < (parseInt(expiryTime) - 60000);
     }
 
     /**
