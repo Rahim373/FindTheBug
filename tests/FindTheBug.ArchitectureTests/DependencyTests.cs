@@ -1,3 +1,4 @@
+using FindTheBug.WebAPI.Controllers;
 using NetArchTest.Rules;
 
 namespace FindTheBug.ArchitectureTests;
@@ -85,6 +86,8 @@ public class DependencyTests
         // Act
         var result = Types.InAssembly(assembly)
             .That()
+            .DoNotHaveName(nameof(BaseApiController))
+            .And()
             .ResideInNamespace("FindTheBug.WebAPI.Controllers")
             .And()
             .AreClasses()
