@@ -42,13 +42,13 @@
                 </nz-form-item>
 
                 <nz-form-item class="form-item-half">
-                    <nz-form-label [nzRequired]="!isEditMode">Password</nz-form-label>
-                    <nz-form-control [nzErrorTip]="isEditMode ? 'Password must be at least 6 characters' : 'Please enter password (min 6 characters)'">
+                    <nz-form-label [nzRequired]="!isEditMode && userForm.get('allowUserLogin')?.value">Password</nz-form-label>
+                    <nz-form-control [nzErrorTip]="getPasswordErrorTip()">
                         <input 
                             nz-input 
                             formControlName="password" 
                             type="password" 
-                            [placeholder]="isEditMode ? 'Leave blank to keep current password' : 'Password'" 
+                            [placeholder]="getPasswordPlaceholder()" 
                         />
                     </nz-form-control>
                 </nz-form-item>

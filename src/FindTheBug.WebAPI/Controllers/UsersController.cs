@@ -1,7 +1,6 @@
 using FindTheBug.Application.Features.Users.Commands;
 using FindTheBug.Application.Features.Users.Queries;
 using FindTheBug.WebAPI.Contracts.Requests;
-using FindTheBug.WebAPI.Contracts.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -53,10 +53,7 @@ export class UserFormComponent implements OnInit {
     initForm(): void {
         this.userForm = this.fb.group({
             email: ['', [Validators.email]],
-            password: [
-                '', 
-                this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]
-            ],
+            password: [''],
             firstName: ['', [Validators.required, Validators.maxLength(100)]],
             lastName: ['', [Validators.required, Validators.maxLength(100)]],
             phone: ['', [Validators.required]],
@@ -65,6 +62,31 @@ export class UserFormComponent implements OnInit {
             isActive: [true],
             allowUserLogin: [true]
         });
+
+        // Add dynamic password validation based on allowUserLogin
+        this.userForm.get('allowUserLogin')?.valueChanges.subscribe(allowLogin => {
+            const passwordControl = this.userForm.get('password');
+            if (allowLogin) {
+                // Password required when allowUserLogin is true (only for create mode)
+                if (!this.isEditMode) {
+                    passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
+                } else {
+                    passwordControl?.setValidators([Validators.minLength(6)]);
+                }
+            } else {
+                // Password not required when allowUserLogin is false
+                passwordControl?.clearValidators();
+            }
+            passwordControl?.updateValueAndValidity();
+        });
+
+        // Set initial validators based on mode
+        const passwordControl = this.userForm.get('password');
+        if (!this.isEditMode) {
+            passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
+        } else {
+            passwordControl?.setValidators([Validators.minLength(6)]);
+        }
     }
 
     loadUser(id: string): void {
@@ -171,5 +193,24 @@ export class UserFormComponent implements OnInit {
 
     cancel(): void {
         this.router.navigate(['/admin/users']);
+    }
+
+    getPasswordPlaceholder(): string {
+        const allowLogin = this.userForm.get('allowUserLogin')?.value;
+        if (this.isEditMode) {
+            return allowLogin ? 'Leave blank to keep current password' : 'Password not required (login disabled)';
+        }
+        return allowLogin ? 'Password' : 'Password not required (login disabled)';
+    }
+
+    getPasswordErrorTip(): string {
+        const allowLogin = this.userForm.get('allowUserLogin')?.value;
+        if (!allowLogin) {
+            return 'Password not required when login is disabled';
+        }
+        if (this.isEditMode) {
+            return 'Password must be at least 6 characters';
+        }
+        return 'Please enter password (min 6 characters)';
     }
 }

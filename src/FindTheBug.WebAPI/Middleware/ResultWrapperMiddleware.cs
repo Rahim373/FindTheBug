@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Text.Json;
 
 namespace FindTheBug.WebAPI.Middleware;

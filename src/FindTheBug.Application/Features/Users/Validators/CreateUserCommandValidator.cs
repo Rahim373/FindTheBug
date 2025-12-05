@@ -22,8 +22,9 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
             .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Phone number must be a valid format (E.164 format recommended)");
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Password is required")
-            .MinimumLength(6).WithMessage("Password must be at least 6 characters");
+            .NotEmpty().When(x => x.AllowUserLogin).WithMessage("Password is required when user login is allowed")
+            .MinimumLength(6).When(x => x.AllowUserLogin && !string.IsNullOrWhiteSpace(x.Password))
+            .WithMessage("Password must be at least 6 characters");
 
         RuleFor(x => x.Email)
             .EmailAddress().When(x => !string.IsNullOrWhiteSpace(x.Email))
