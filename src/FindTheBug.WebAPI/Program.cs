@@ -78,7 +78,7 @@ try
     Log.Information("Starting FindTheBug application");
     
     // Initialize Database
-    await app.UseDatabaseInitializer();
+    app.UseDatabaseInitializer().GetAwaiter();
     
     app.Run();
 }

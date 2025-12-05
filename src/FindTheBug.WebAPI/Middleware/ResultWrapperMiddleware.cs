@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Text.Json;
 
 namespace FindTheBug.WebAPI.Middleware;
@@ -68,17 +69,17 @@ public class ResultWrapperMiddleware(RequestDelegate next)
                     {
                         try
                         {
-                            var errorsList = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(
+                            var errorsList = JsonSerializer.Deserialize<Dictionary<string, string[]>>(
                                 JsonSerializer.Serialize(errorsObj), JsonOptions);
                             
                             if (errorsList is not null)
                             {
                                 foreach (var error in errorsList)
                                 {
-                                    if (error.TryGetValue("description", out var desc) && !string.IsNullOrEmpty(desc))
+                                    foreach(var errorStr in error.Value)
                                     {
-                                        if (!errors.Contains(desc))
-                                            errors.Add(desc);
+                                        if (!errors.Contains(errorStr))
+                                            errors.Add(errorStr);
                                     }
                                 }
                             }
