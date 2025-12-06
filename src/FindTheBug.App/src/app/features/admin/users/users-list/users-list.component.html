@@ -59,11 +59,8 @@
         <td>{{ user.phone || "-" }}</td>
         <td>{{ user.nidNumber || "-" }}</td>
         <td>
-          <nz-tag
-            *ngFor="let role of user.roles.split(',')"
-            [nzColor]="role === 'Admin' ? 'red' : 'blue'"
-          >
-            {{ role }}
+          <nz-tag nzColor="blue">
+            {{ user.roleIds.length || 0 }} role(s)
           </nz-tag>
         </td>
         <td>
