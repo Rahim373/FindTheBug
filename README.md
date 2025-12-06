@@ -4,7 +4,7 @@
 [![Docker Build and Publish](https://github.com/rahim373/FindTheBug/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/rahim373/FindTheBug/actions/workflows/docker-publish.yml)
 [![Docker Build and Publish Angular App](https://github.com/rahim373/FindTheBug/actions/workflows/docker-publish-app.yml/badge.svg)](https://github.com/rahim373/FindTheBug/actions/workflows/docker-publish-app.yml)
 
-A modern, multi-tenant diagnostics laboratory management system built with ASP.NET Core following Clean Architecture principles.
+A modern, multi-tenant diagnostics laboratory management system built with ASP.NET Core and Angular, following Clean Architecture principles.
 
 ## 🏗️ Architecture
 
@@ -14,8 +14,19 @@ This project implements **Clean Architecture** with clear separation of concerns
 - **Application Layer** (`FindTheBug.Application`) - Business logic, CQRS handlers, DTOs
 - **Infrastructure Layer** (`FindTheBug.Infrastructure`) - Data access, external services
 - **Presentation Layer** (`FindTheBug.WebAPI`) - REST API endpoints, middleware
+- **Frontend** (`FindTheBug.App`) - Angular SPA with Ng-Zorro UI
 
 ## ✨ Key Features
+
+### Role-Based Access Control (RBAC) 🆕
+
+- **Custom Roles** - Create and manage custom roles with specific permissions
+- **Module-Based Permissions** - Granular CRUD permissions (View, Create, Edit, Delete) per module
+- **Multi-Role Users** - Assign multiple roles to users via multi-select dropdown
+- **Grouped Navigation** - User Management menu groups Users and Roles together
+- **System Modules** - Dashboard, Users, Roles, Modules pre-configured
+- **Role Management UI** - Full CRUD interface for managing roles
+- **System Role Protection** - Built-in roles (Admin, User, SuperUser) cannot be deleted or modified
 
 ### Authentication & Security
 
@@ -47,7 +58,7 @@ This project implements **Clean Architecture** with clear separation of concerns
 - **ErrorOr pattern** - Functional error handling without exceptions
 - **Automatic response conversion** - `ErrorOrActionFilter` converts errors to Problem Details (RFC 7807)
 - **Consistent API responses** - `ResultWrapperMiddleware` wraps all responses in `Result<T>` format
-- **Typed errors** - NotFound, Validation, Conflict, Unauthorized, etc.
+- **Typed errors** - NotFound, Validation, Conflict, Unauthorized, Forbidden, etc.
 
 ### Monitoring & Observability
 
@@ -68,7 +79,16 @@ This project implements **Clean Architecture** with clear separation of concerns
 
 ### Core Entities
 
-- **User** - User accounts with authentication, roles, phone, and NID number
+**RBAC Entities:**
+
+- **User** - User accounts with authentication, multi-role assignment, phone, and NID number
+- **Role** - Custom roles with system role protection
+- **Module** - System modules (Dashboard, Users, Roles, Modules)
+- **UserRole** - Many-to-many relationship between users and roles
+- **RoleModulePermission** - CRUD permissions for roles on modules
+
+**Business Entities:**
+
 - **Patient** - Patient demographics and contact information
 - **DiagnosticTest** - Test catalog with pricing and descriptions
 - **TestParameter** - Individual parameters/fields for each test
@@ -76,6 +96,9 @@ This project implements **Clean Architecture** with clear separation of concerns
 - **TestResult** - Test results with verification workflow
 - **Invoice** - Billing and payment tracking
 - **InvoiceItem** - Line items for invoices
+
+**Security Entities:**
+
 - **RefreshToken** - JWT refresh tokens with expiration tracking
 - **PasswordResetToken** - Secure password reset tokens
 
@@ -83,65 +106,12 @@ This project implements **Clean Architecture** with clear separation of concerns
 
 ### Prerequisites
 
-- .NET 8.0 SDK or later
+- .NET 10.0 SDK or later
+- Node.js 18+ and Yarn
 - PostgreSQL 14+
 - (Optional) Docker for containerized deployment
 
-### Configuration
-
-Update `appsettings.json` with your PostgreSQL connection string:
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=FindTheBug;Username=postgres;Password=yourpassword"
-  }
-}
-```
-
-### Running the Application
-
-```bash
-# Restore dependencies
-dotnet restore
-
-# Run database migrations
-dotnet ef database update --project src/FindTheBug.Infrastructure --startup-project src/FindTheBug.WebAPI
-
-# Run the application
-dotnet run --project src/FindTheBug.WebAPI
-```
-
-The API will be available at `https://localhost:7001` (or configured port).
-
-### Docker Deployment
-
-Pre-built Docker images are automatically published to GitHub Container Registry for both the API and Angular app.
-
-**WebAPI:**
-
-```bash
-# Pull the latest API image
-docker pull ghcr.io/rahim373/findthebug:latest
-
-# Run the API container
-docker run -p 8080:8080 \
-  -e ConnectionStrings__DefaultConnection="Host=your-db;Database=FindTheBug;Username=postgres;Password=yourpassword" \
-  -e Jwt__SecretKey="your-secret-key-at-least-32-characters-long" \
-  ghcr.io/rahim373/findthebug:latest
-```
-
-**Angular App:**
-
-```bash
-# Pull the latest Angular app image
-docker pull ghcr.io/rahim373/findthebug-app:latest
-
-# Run the Angular app container
-docker run -p 80:80 ghcr.io/rahim373/findthebug-app:latest
-```
-
-Or use the included `docker-compose.yml` for a complete setup with all services:
+### Running with Docker Compose (Recommended)
 
 ```bash
 # Start all services (API, Angular App, PostgreSQL, Prometheus, Grafana)
@@ -154,55 +124,61 @@ docker-compose logs -f
 docker-compose down
 ```
 
-**Docker Compose includes:**
+**Services:**
 
-- **Angular App** - Available at `http://localhost:4200`
-- **WebAPI** - Available at `http://localhost:9909`
-- **PostgreSQL** - Database on port `5432`
-- **Prometheus** - Metrics at `http://localhost:9090`
-- **Grafana** - Dashboards at `http://localhost:3000` (admin/admin)
+- **Angular App** - http://localhost:4200
+- **WebAPI** - http://localhost:9909
+- **PostgreSQL** - Port 5432
+- **Prometheus** - http://localhost:9090
+- **Grafana** - http://localhost:3000 (admin/admin)
 
-For more details on Docker deployment:
+### Running Locally
 
-- [WebAPI Docker Registry Documentation](docs/docker-registry.md)
-- [Angular App Docker Registry Documentation](docs/docker-registry-app.md)
+**Backend:**
 
-### Authentication Setup
+```bash
+# Restore dependencies
+dotnet restore
 
-Update JWT and email settings in `appsettings.json`:
+# Run database migrations
+dotnet ef database update --project src/FindTheBug.Infrastructure --startup-project src/FindTheBug.WebAPI
 
-```json
-{
-  "Jwt": {
-    "SecretKey": "your-secret-key-at-least-32-characters-long",
-    "AccessTokenExpirationMinutes": "15"
-  },
-  "Email": {
-    "SmtpHost": "smtp.gmail.com",
-    "SmtpPort": "587",
-    "SmtpUsername": "your-email@gmail.com",
-    "SmtpPassword": "your-app-password"
-  }
-}
+# Run the API
+dotnet run --project src/FindTheBug.WebAPI
 ```
 
-> **Note:** For Gmail, create an [App Password](https://support.google.com/accounts/answer/185833) instead of using your regular password.
+**Frontend:**
 
-### API Documentation
+```bash
+cd src/FindTheBug.App
 
-Swagger/OpenAPI documentation is available at:
+# Install dependencies
+yarn install
 
-- `https://localhost:7001/swagger`
+# Run development server
+yarn start
+```
+
+The Angular app will be available at `http://localhost:4200` and API at `https://localhost:7001`.
 
 ## 📡 API Endpoints
 
 ### Users
 
-- `GET /api/users` - Get all users with pagination and search (requires auth)
-- `GET /api/users/{id}` - Get user by ID (requires auth)
-- `POST /api/users` - Create new user (requires auth)
-- `PUT /api/users/{id}` - Update user (requires auth)
-- `DELETE /api/users/{id}` - Delete user (requires auth)
+- `GET /api/users` - Get all users with pagination and search
+- `GET /api/users/{id}` - Get user by ID
+- `POST /api/users` - Create new user with role assignment
+- `PUT /api/users/{id}` - Update user and roles
+- `DELETE /api/users/{id}` - Delete user
+
+### Roles (RBAC) 🆕
+
+- `GET /api/roles` - Get all roles with pagination and search
+- `GET /api/roles/active` - Get active roles (for dropdowns)
+- `GET /api/roles/{id}` - Get role by ID
+- `POST /api/roles` - Create new role
+- `PUT /api/roles/{id}` - Update role (system roles protected)
+- `DELETE /api/roles/{id}` - Delete role (system roles protected)
 
 ### Patients
 
@@ -212,47 +188,11 @@ Swagger/OpenAPI documentation is available at:
 - `PUT /api/patients/{id}` - Update patient
 - `DELETE /api/patients/{id}` - Delete patient
 
-### Diagnostic Tests
-
-- `GET /api/diagnostictests` - Get all tests
-- `GET /api/diagnostictests/{id}` - Get test by ID
-- `POST /api/diagnostictests` - Create new test
-- `PUT /api/diagnostictests/{id}` - Update test
-- `DELETE /api/diagnostictests/{id}` - Delete test
-
-### Test Parameters
-
-- `GET /api/testparameters?diagnosticTestId={id}` - Get parameters for a test
-- `POST /api/testparameters` - Create new parameter
-- `PUT /api/testparameters/{id}` - Update parameter
-- `DELETE /api/testparameters/{id}` - Delete parameter
-
-### Test Entries
-
-- `GET /api/testentries` - Get all test entries
-- `GET /api/testentries/{id}` - Get entry by ID
-- `POST /api/testentries` - Register patient for test
-- `PUT /api/testentries/{id}/status` - Update entry status
-
-### Test Results
-
-- `GET /api/testresults/entry/{testEntryId}` - Get results for a test entry
-- `POST /api/testresults` - Record test result
-- `PUT /api/testresults/{id}` - Update test result
-- `POST /api/testresults/{testEntryId}/verify` - Verify test results
-
-### Invoices
-
-- `GET /api/invoices` - Get all invoices
-- `GET /api/invoices/{id}` - Get invoice by ID
-- `POST /api/invoices` - Create new invoice
-- `PUT /api/invoices/{id}/status` - Update invoice status
-
 ### Authentication
 
 - `POST /api/token` - Login with email and password
 - `POST /api/token/refresh` - Refresh access token
-- `POST /api/token/change-password` - Change password (requires auth)
+- `POST /api/token/change-password` - Change password
 - `POST /api/token/request-reset` - Request password reset email
 - `POST /api/token/reset-password` - Reset password with token
 - `POST /api/token/revoke` - Revoke refresh token (logout)
@@ -266,7 +206,7 @@ Swagger/OpenAPI documentation is available at:
 
 ### Backend
 
-- **ASP.NET Core 8.0** - Web framework
+- **ASP.NET Core 10.0** - Web framework
 - **Entity Framework Core** - ORM
 - **PostgreSQL** - Database
 - **MediatR** - CQRS implementation
@@ -274,113 +214,46 @@ Swagger/OpenAPI documentation is available at:
 - **Serilog** - Structured logging
 - **Prometheus** - Metrics and monitoring
 
-### Packages
+### Frontend
 
-- `ErrorOr` - Functional error handling
-- `MediatR` - Mediator pattern for CQRS
-- `Npgsql.EntityFrameworkCore.PostgreSQL` - PostgreSQL provider
-- `Serilog.AspNetCore` - Logging
-- `prometheus-net.AspNetCore` - Metrics
-- `Swashbuckle.AspNetCore` - OpenAPI/Swagger
-- `BCrypt.Net-Next` - Password hashing
-- `Microsoft.AspNetCore.Authentication.JwtBearer` - JWT authentication
-- `System.IdentityModel.Tokens.Jwt` - JWT token handling
+- **Angular 19** - SPA framework
+- **Ng-Zorro** - UI component library
+- **RxJS** - Reactive programming
+- **TypeScript** - Type-safe JavaScript
+
+## 🎨 Frontend Features
+
+- **Standalone Components** - Modern Angular architecture
+- **Reactive Forms** - Type-safe form handling
+- **Lazy Loading** - Optimized bundle sizes
+- **Grouped Navigation** - User Management menu with Users and Roles
+- **Multi-Select Dropdowns** - Assign multiple roles to users
+- **Responsive Design** - Mobile-friendly interface
+- **Dark Theme** - Ng-Zorro dark theme support
 
 ## 📚 Documentation
 
 Additional documentation is available in the `/docs` folder:
 
-- [Application Layer Structure](docs/Application-Layer-Structure.md) - Complete guide to feature organization, CQRS pattern, and handler structure
-- [ErrorOr + Result Integration](docs/ErrorOr-Result-Integration.md) - Error handling flow
-- [Generic Commands & Queries](docs/Generic-Commands-Queries.md) - CQRS pattern guide
-- [JWT Authentication Guide](docs/JWT-Authentication-Guide.md) - Complete authentication guide with examples
-- [Architecture Testing Guide](docs/Architecture-Testing-Guide.md) - Architecture tests and Clean Architecture enforcement
-- [Architecture Tests Status](docs/Architecture-Tests-Status.md) - Current status of architecture tests
-- [Docker Registry Documentation](docs/docker-registry.md) - Docker image publishing and deployment guide
-- [Angular App Docker Registry Documentation](docs/docker-registry-app.md) - Angular app Docker image publishing and deployment guide
-
-## 🏛️ Design Patterns
-
-- **Clean Architecture** - Dependency inversion, separation of concerns
-- **CQRS** - Command Query Responsibility Segregation
-- **Repository Pattern** - Data access abstraction
-- **Unit of Work** - Transaction management
-- **Mediator Pattern** - Decoupled request handling
-- **Functional Error Handling** - ErrorOr pattern instead of exceptions
+- [Application Layer Structure](docs/Application-Layer-Structure.md)
+- [ErrorOr + Result Integration](docs/ErrorOr-Result-Integration.md)
+- [Generic Commands & Queries](docs/Generic-Commands-Queries.md)
+- [JWT Authentication Guide](docs/JWT-Authentication-Guide.md)
+- [Architecture Testing Guide](docs/Architecture-Testing-Guide.md)
+- [Docker Registry Documentation](docs/docker-registry.md)
+- [Angular App Docker Registry Documentation](docs/docker-registry-app.md)
 
 ## 🔐 Security Features
 
-- **JWT Authentication** - Secure token-based authentication with automatic expiration
-- **Refresh Token Rotation** - Single-use refresh tokens with replacement tracking
-- **Account Lockout** - Protection against brute-force attacks (5 attempts, 15-min lockout)
-- **BCrypt Password Hashing** - Industry-standard password security (work factor 12)
-- **Password Reset Security** - Cryptographically secure one-time tokens with 1-hour expiration
-- **Tenant isolation** - Automatic data segregation per tenant
-- **Input validation** - Request validation at API layer
-- **Error sanitization** - No sensitive data in error responses
-- **Audit Trail** - IP address tracking for authentication events
-- **Correlation IDs** - Request tracing for security auditing
-
-## 📊 Response Format
-
-All API responses follow a consistent format:
-
-### Success Response
-
-```json
-{
-  "isSuccess": true,
-  "data": {
-    /* entity data */
-  },
-  "errorMessage": null,
-  "errors": []
-}
-```
-
-### Error Response
-
-```json
-{
-  "isSuccess": false,
-  "data": null,
-  "errorMessage": "Patient with ID xxx not found",
-  "errors": [
-    {
-      "code": "Patient.NotFound",
-      "description": "Patient with ID xxx not found"
-    }
-  ]
-}
-```
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-dotnet test
-
-# Run with coverage
-dotnet test /p:CollectCoverage=true
-```
-
-## 📈 Monitoring
-
-### Prometheus Metrics
-
-The application exposes metrics at `/metrics`:
-
-- HTTP request duration
-- HTTP request count by status code
-- Active requests
-- Custom business metrics (patients created, tests performed, etc.)
-
-### Health Checks
-
-Health check endpoint at `/health` returns:
-
-- Database connectivity status
-- Application health status
+- **JWT Authentication** - Secure token-based authentication
+- **Refresh Token Rotation** - Single-use refresh tokens
+- **Account Lockout** - Brute-force protection
+- **BCrypt Password Hashing** - Work factor 12
+- **Password Reset Security** - One-time tokens with 1-hour expiration
+- **RBAC** - Granular permission system
+- **Tenant Isolation** - Automatic data segregation
+- **Audit Trail** - IP address tracking
+- **Correlation IDs** - Request tracing
 
 ## 🤝 Contributing
 
@@ -403,3 +276,4 @@ This project is licensed under the MIT License.
 - Clean Architecture by Robert C. Martin
 - ErrorOr library by Amichai Mantinband
 - MediatR by Jimmy Bogard
+- Ng-Zorro UI Library
