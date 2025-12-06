@@ -58,7 +58,7 @@ public class UsersController(ISender mediator) : ControllerBase
             request.LastName,
             request.Phone,
             request.NIDNumber,
-            request.Roles,
+            request.RoleIds,
             request.IsActive,
             request.AllowUserLogin
         );
@@ -80,7 +80,7 @@ public class UsersController(ISender mediator) : ControllerBase
             request.LastName,
             request.Phone,
             request.NIDNumber,
-            request.Roles,
+            request.RoleIds,
             request.IsActive,
             request.AllowUserLogin,
             request.Password

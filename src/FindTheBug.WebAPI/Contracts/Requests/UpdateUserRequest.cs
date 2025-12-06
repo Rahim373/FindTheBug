@@ -22,7 +22,7 @@ public class UpdateUserRequest
     [MaxLength(50)]
     public string? NIDNumber { get; set; }
 
-    public string? Roles { get; set; }
+    public List<Guid> RoleIds { get; set; } = new();
 
     public bool IsActive { get; set; }
 

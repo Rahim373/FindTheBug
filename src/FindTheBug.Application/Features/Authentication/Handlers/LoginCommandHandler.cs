@@ -5,6 +5,7 @@ using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Application.Features.Authentication.Contracts;
 using FindTheBug.Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Application.Features.Authentication.Handlers;
 
@@ -59,8 +60,16 @@ public class LoginCommandHandler(
         user.LastLoginIp = httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
         await unitOfWork.Repository<User>().UpdateAsync(user, cancellationToken);
 
+        // Get user roles
+        var userRoles = await unitOfWork.Repository<UserRole>()
+            .GetQueryable()
+            .Where(ur => ur.UserId == user.Id)
+            .Select(ur => ur.Role.Name)
+            .ToListAsync(cancellationToken);
+        var rolesString = string.Join(",", userRoles);
+
         // Generate tokens
-        var accessToken = authService.GenerateAccessToken(user.Id, user.Email ?? user.Phone, user.Roles);
+        var accessToken = authService.GenerateAccessToken(user.Id, user.Email ?? user.Phone, rolesString);
         var refreshToken = authService.GenerateRefreshToken();
 
         // Save refresh token
@@ -78,7 +87,7 @@ public class LoginCommandHandler(
             accessToken,
             refreshToken,
             refreshTokenEntity.ExpiresAt,
-            new UserInfo(user.Id, user.Email ?? user.Phone, user.FirstName, user.LastName, user.Roles)
+            new UserInfo(user.Id, user.Email ?? user.Phone, user.FirstName, user.LastName, rolesString)
         );
     }
 }

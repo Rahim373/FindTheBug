@@ -32,6 +32,12 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
+    
+    // RBAC DbSets
+    public DbSet<Module> Modules => Set<Module>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<RoleModulePermission> RoleModulePermissions => Set<RoleModulePermission>();
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -62,6 +68,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         base.OnModelCreating(modelBuilder);
         
         ConfigureLabManagementEntities(modelBuilder);
+        ConfigureRBACEntities(modelBuilder);
+        
+        // Seed data
+        modelBuilder.SeedRBACData();
     }
 
     private static void ConfigureLabManagementEntities(ModelBuilder modelBuilder)
@@ -152,6 +162,60 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.UnitPrice).HasPrecision(18, 2);
             entity.Property(e => e.Amount).HasPrecision(18, 2);
             entity.Property(e => e.DiscountAmount).HasPrecision(18, 2);
+        });
+    }
+
+    private static void ConfigureRBACEntities(ModelBuilder modelBuilder)
+    {
+        // Module configuration
+        modelBuilder.Entity<Module>(entity =>
+        {
+            entity.HasIndex(e => e.Name).IsUnique();
+            entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.DisplayName).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.Icon).HasMaxLength(50);
+            entity.Property(e => e.Route).HasMaxLength(200);
+        });
+
+        // Role configuration
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasIndex(e => e.Name).IsUnique();
+            entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(500);
+        });
+
+        // UserRole configuration (many-to-many)
+        modelBuilder.Entity<UserRole>(entity =>
+        {
+            entity.HasIndex(e => new { e.UserId, e.RoleId }).IsUnique();
+            
+            entity.HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // RoleModulePermission configuration
+        modelBuilder.Entity<RoleModulePermission>(entity =>
+        {
+            entity.HasIndex(e => new { e.RoleId, e.ModuleId }).IsUnique();
+            
+            entity.HasOne(rmp => rmp.Role)
+                .WithMany(r => r.RoleModulePermissions)
+                .HasForeignKey(rmp => rmp.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(rmp => rmp.Module)
+                .WithMany(m => m.RoleModulePermissions)
+                .HasForeignKey(rmp => rmp.ModuleId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

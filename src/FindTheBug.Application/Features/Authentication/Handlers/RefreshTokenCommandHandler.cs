@@ -5,6 +5,7 @@ using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Application.Features.Authentication.Contracts;
 using FindTheBug.Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Application.Features.Authentication.Handlers;
 
@@ -40,8 +41,16 @@ public class RefreshTokenCommandHandler(
         if (!user.IsActive)
             return Error.Unauthorized("Authentication.AccountDisabled", "Account is disabled");
 
+        // Get user roles
+        var userRoles = await unitOfWork.Repository<UserRole>()
+            .GetQueryable()
+            .Where(ur => ur.UserId == user.Id)
+            .Select(ur => ur.Role.Name)
+            .ToListAsync(cancellationToken);
+        var rolesString = string.Join(",", userRoles);
+
         // Generate new tokens
-        var newAccessToken = authService.GenerateAccessToken(user.Id, user.Email, user.Roles);
+        var newAccessToken = authService.GenerateAccessToken(user.Id, user.Email ?? user.Phone, rolesString);
         var newRefreshToken = authService.GenerateRefreshToken();
 
         // Revoke old refresh token and create new one

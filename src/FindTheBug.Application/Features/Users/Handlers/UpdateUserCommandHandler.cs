@@ -40,7 +40,6 @@ public class UpdateUserCommandHandler(
         user.LastName = request.LastName;
         user.Phone = request.Phone;
         user.NIDNumber = request.NIDNumber;
-        user.Roles = request.Roles ?? user.Roles;
         user.IsActive = request.IsActive;
         user.AllowUserLogin = request.AllowUserLogin;
 
@@ -48,6 +47,34 @@ public class UpdateUserCommandHandler(
         if (!string.IsNullOrWhiteSpace(request.Password))
         {
             user.PasswordHash = passwordHasher.HashPassword(request.Password);
+        }
+
+        // Update UserRoles
+        if (request.RoleIds != null)
+        {
+            // Remove existing roles
+            var existingUserRoles = await unitOfWork.Repository<UserRole>()
+                .GetQueryable()
+                .Where(ur => ur.UserId == user.Id)
+                .ToListAsync(cancellationToken);
+
+            foreach (var existingRole in existingUserRoles)
+            {
+                await unitOfWork.Repository<UserRole>().DeleteAsync(existingRole.Id, cancellationToken);
+            }
+
+            // Add new roles
+            foreach (var roleId in request.RoleIds)
+            {
+                var userRole = new UserRole
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    RoleId = roleId,
+                    AssignedAt = DateTime.UtcNow
+                };
+                await unitOfWork.Repository<UserRole>().AddAsync(userRole, cancellationToken);
+            }
         }
 
         await unitOfWork.Repository<User>().UpdateAsync(user, cancellationToken);

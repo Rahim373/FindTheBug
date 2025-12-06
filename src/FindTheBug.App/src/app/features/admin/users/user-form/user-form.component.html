@@ -56,9 +56,21 @@
 
             <div class="form-row">
                 <nz-form-item class="form-item-half">
-                    <nz-form-label>Roles</nz-form-label>
-                    <nz-form-control>
-                        <input nz-input formControlName="roles" placeholder="User, Admin" />
+                    <nz-form-label nzRequired>Roles</nz-form-label>
+                    <nz-form-control nzErrorTip="Please select at least one role">
+                        <nz-select
+                            formControlName="roleIds"
+                            nzMode="multiple"
+                            nzPlaceHolder="Select roles"
+                            [nzLoading]="loadingRoles"
+                            nzShowSearch
+                        >
+                            <nz-option
+                                *ngFor="let role of availableRoles"
+                                [nzValue]="role.id"
+                                [nzLabel]="role.name"
+                            ></nz-option>
+                        </nz-select>
                     </nz-form-control>
                 </nz-form-item>
 

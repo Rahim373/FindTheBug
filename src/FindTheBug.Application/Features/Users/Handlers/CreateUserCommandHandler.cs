@@ -49,12 +49,28 @@ public class CreateUserCommandHandler(
             LastName = request.LastName,
             Phone = request.Phone!,
             NIDNumber = request.NIDNumber,
-            Roles = request.Roles ?? "User",
             IsActive = request.IsActive,
             AllowUserLogin = request.AllowUserLogin
         };
 
         var created = await unitOfWork.Repository<User>().AddAsync(user, cancellationToken);
+
+        // Create UserRole entries
+        if (request.RoleIds != null && request.RoleIds.Any())
+        {
+            foreach (var roleId in request.RoleIds)
+            {
+                var userRole = new UserRole
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = created.Id,
+                    RoleId = roleId,
+                    AssignedAt = DateTime.UtcNow
+                };
+                await unitOfWork.Repository<UserRole>().AddAsync(userRole, cancellationToken);
+            }
+        }
+
         return created;
     }
 }

@@ -10,7 +10,6 @@ public class User : BaseAuditableEntity
     public string LastName { get; set; } = string.Empty;
     public required string Phone { get; set; }
     public string? NIDNumber { get; set; }
-    public string Roles { get; set; } = "User"; // Comma-separated roles: "Admin,User"
     public bool IsActive { get; set; } = true;
     public bool AllowUserLogin { get; set; } = true;
     public DateTime? LastLoginAt { get; set; }
@@ -20,4 +19,5 @@ public class User : BaseAuditableEntity
 
     // Navigation properties
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+    public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

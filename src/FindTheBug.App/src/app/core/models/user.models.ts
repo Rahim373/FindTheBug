@@ -5,7 +5,7 @@ export interface User {
   lastName: string;
   phone: string;
   nidNumber?: string;
-  roles: string;
+  roleIds: string[];
   isActive: boolean;
   allowUserLogin: boolean;
   lastLoginAt?: Date;
@@ -20,7 +20,7 @@ export interface CreateUserRequest {
   lastName: string;
   phone: string;
   nidNumber?: string;
-  roles?: string;
+  roleIds: string[];
   isActive: boolean;
   allowUserLogin: boolean;
 }
@@ -31,7 +31,7 @@ export interface UpdateUserRequest {
   lastName: string;
   phone: string;
   nidNumber?: string;
-  roles?: string;
+  roleIds: string[];
   isActive: boolean;
   allowUserLogin: boolean;
   password?: string;

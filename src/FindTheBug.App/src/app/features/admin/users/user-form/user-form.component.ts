@@ -6,10 +6,13 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { UserService } from '../../../../core/services/user.service';
+import { RoleService } from '../../../../core/services/role.service';
 import { CreateUserRequest, UpdateUserRequest } from '../../../../core/models/user.models';
+import { Role } from '../../../../core/models/role.models';
 
 @Component({
     selector: 'app-user-form',
@@ -21,6 +24,7 @@ import { CreateUserRequest, UpdateUserRequest } from '../../../../core/models/us
         NzInputModule,
         NzButtonModule,
         NzSwitchModule,
+        NzSelectModule,
         NzCardModule
     ],
     templateUrl: './user-form.component.html',
@@ -29,6 +33,7 @@ import { CreateUserRequest, UpdateUserRequest } from '../../../../core/models/us
 export class UserFormComponent implements OnInit {
     private readonly fb = inject(FormBuilder);
     private readonly userService = inject(UserService);
+    private readonly roleService = inject(RoleService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly message = inject(NzMessageService);
@@ -38,12 +43,15 @@ export class UserFormComponent implements OnInit {
     userId?: string;
     loading = false;
     submitting = false;
+    availableRoles: Role[] = [];
+    loadingRoles = false;
 
     ngOnInit(): void {
         this.userId = this.route.snapshot.paramMap.get('id') || undefined;
         this.isEditMode = !!this.userId;
 
         this.initForm();
+        this.loadRoles();
 
         if (this.isEditMode && this.userId) {
             this.loadUser(this.userId);
@@ -58,7 +66,7 @@ export class UserFormComponent implements OnInit {
             lastName: ['', [Validators.required, Validators.maxLength(100)]],
             phone: ['', [Validators.required]],
             nidNumber: ['', [Validators.maxLength(50)]],
-            roles: ['User'],
+            roleIds: [[], [Validators.required]],
             isActive: [true],
             allowUserLogin: [true]
         });
@@ -89,6 +97,20 @@ export class UserFormComponent implements OnInit {
         }
     }
 
+    loadRoles(): void {
+        this.loadingRoles = true;
+        this.roleService.getActive().subscribe({
+            next: (roles) => {
+                this.availableRoles = roles;
+                this.loadingRoles = false;
+            },
+            error: () => {
+                this.message.error('Failed to load roles');
+                this.loadingRoles = false;
+            }
+        });
+    }
+
     loadUser(id: string): void {
         this.loading = true;
         this.userService.getUserById(id).subscribe({
@@ -101,7 +123,7 @@ export class UserFormComponent implements OnInit {
                         lastName: user.lastName,
                         phone: user.phone,
                         nidNumber: user.nidNumber,
-                        roles: user.roles,
+                        roleIds: user.roleIds || [],
                         isActive: user.isActive,
                         allowUserLogin: user.allowUserLogin
                     });
@@ -137,7 +159,7 @@ export class UserFormComponent implements OnInit {
                 lastName: formValue.lastName,
                 phone: formValue.phone,
                 nidNumber: formValue.nidNumber,
-                roles: formValue.roles,
+                roleIds: formValue.roleIds,
                 isActive: formValue.isActive,
                 allowUserLogin: formValue.allowUserLogin,
                 password: formValue.password || undefined
@@ -167,7 +189,7 @@ export class UserFormComponent implements OnInit {
                 lastName: formValue.lastName,
                 phone: formValue.phone,
                 nidNumber: formValue.nidNumber,
-                roles: formValue.roles,
+                roleIds: formValue.roleIds,
                 isActive: formValue.isActive,
                 allowUserLogin: formValue.allowUserLogin
             };

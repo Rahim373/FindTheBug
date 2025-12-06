@@ -82,7 +82,6 @@ public class DbInitializer
             PasswordHash = passwordHash,
             FirstName = firstName,
             LastName = lastName,
-            Roles = "Admin,SuperUser",
             CreatedAt = DateTime.UtcNow,
             CreatedBy = "System",
             UpdatedAt = DateTime.UtcNow,
@@ -92,6 +91,24 @@ public class DbInitializer
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
 
-        _logger.LogInformation("SuperUser seeded successfully.");
+        // Assign SuperUser role
+        var superUserRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "SuperUser");
+        if (superUserRole != null)
+        {
+            var userRole = new UserRole
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                RoleId = superUserRole.Id,
+                AssignedAt = DateTime.UtcNow
+            };
+            await context.UserRoles.AddAsync(userRole);
+            await context.SaveChangesAsync();
+            _logger.LogInformation("SuperUser seeded successfully with SuperUser role assigned.");
+        }
+        else
+        {
+            _logger.LogWarning("SuperUser role not found in database. User created without role assignment.");
+        }
     }
 }

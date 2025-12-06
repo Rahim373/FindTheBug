@@ -1,0 +1,16 @@
+using FindTheBug.Domain.Common;
+
+namespace FindTheBug.Domain.Entities;
+
+public class Module : BaseAuditableEntity
+{
+    public required string Name { get; set; }
+    public required string DisplayName { get; set; }
+    public string? Description { get; set; }
+    public string? Icon { get; set; }
+    public string? Route { get; set; }
+    public bool IsActive { get; set; } = true;
+
+    // Navigation properties
+    public ICollection<RoleModulePermission> RoleModulePermissions { get; set; } = new List<RoleModulePermission>();
+}

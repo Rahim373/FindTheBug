@@ -1,0 +1,13 @@
+.form-container {
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+}
+
+.form-header {
+  margin-bottom: 24px;
+}
+
+.form-header h2 {
+  margin: 0;
+}

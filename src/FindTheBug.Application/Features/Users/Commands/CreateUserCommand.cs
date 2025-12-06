@@ -10,7 +10,7 @@ public record CreateUserCommand(
     string LastName,
     string Phone,
     string? NIDNumber,
-    string? Roles,
+    List<Guid> RoleIds,
     bool IsActive,
     bool AllowUserLogin
 ) : ICommand<User>;

@@ -14,7 +14,7 @@ public class GetAllUsersQueryHandler(IUnitOfWork unitOfWork)
     public async Task<ErrorOr<PagedResult<User>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
         var query = unitOfWork.Repository<User>().GetQueryable()
-            .Where(u => !u.Roles.Contains(Role.SuperUser));
+            .Where(u => !u.UserRoles.Any(ur => ur.Role.Name == RoleConstants.SuperUser));
 
         // Apply search filter if provided
         if (!string.IsNullOrWhiteSpace(request.Search))
