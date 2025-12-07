@@ -43,10 +43,19 @@ public class RolesController(ISender mediator) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRoleRequest request, CancellationToken cancellationToken = default)
     {
+        var modulePermissions = request.ModulePermissions?.Select(mp => new ModulePermissionDto(
+            mp.ModuleId,
+            mp.CanView,
+            mp.CanCreate,
+            mp.CanEdit,
+            mp.CanDelete
+        )).ToList();
+
         var command = new CreateRoleCommand(
             request.Name,
             request.Description,
-            request.IsActive
+            request.IsActive,
+            modulePermissions
         );
 
         var result = await mediator.Send(command, cancellationToken);

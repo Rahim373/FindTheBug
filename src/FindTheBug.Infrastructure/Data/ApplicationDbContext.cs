@@ -61,6 +61,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         
         ConfigureLabManagementEntities(modelBuilder);
         ConfigureRBACEntities(modelBuilder);
+        
+        // Seed default modules
+        modelBuilder.Entity<Module>().HasData(SeedData.GetDefaultModules());
     }
 
     private static void ConfigureLabManagementEntities(ModelBuilder modelBuilder)
@@ -206,4 +209,3 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         });
     }
 }
-

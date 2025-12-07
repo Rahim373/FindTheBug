@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment.development';
+import { jwtDecode  } from 'jwt-decode';
+
 
 const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const TOKEN_EXPIRY_KEY = 'token_expiry';
+const REFRESH_TOKEN_EXPIRY_KEY = 'refresh_token_expiry';
 
 @Injectable({
     providedIn: 'root'
@@ -16,10 +20,10 @@ export class TokenService {
         localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
         localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 
-        // Calculate expiry timestamp
-        debugger
-        const expiryTime = new Date(expiresAt);
-        localStorage.setItem(TOKEN_EXPIRY_KEY, expiryTime.toString());
+        const exp = jwtDecode(accessToken).exp;
+        const expiration = exp ? exp * 1000 :  new Date();
+        localStorage.setItem(TOKEN_EXPIRY_KEY, expiration.toString());
+        localStorage.setItem(REFRESH_TOKEN_EXPIRY_KEY, new Date(expiresAt).toString());
     }
 
     /**
@@ -44,15 +48,17 @@ export class TokenService {
         if (!token) {
             return false;
         }
-        return true;
 
-        // const expiryTime = localStorage.getItem(TOKEN_EXPIRY_KEY);
-        // if (!expiryTime) {
-        //     return false;
-        // }
+        const expiryTime = localStorage.getItem(TOKEN_EXPIRY_KEY);
+        if (!expiryTime) {
+            return false;
+        }
 
-        // // Check if token is expired (with 1 minute buffer)
-        // return Date.now() < (parseInt(expiryTime) - 60000);
+        // Check if token is expired (with configured buffer time)
+        const expiryDate = new Date(parseInt(expiryTime));
+        const now = new Date();
+        const bufferTime = environment.jwt.tokenBufferMinutes * 60 * 1000; // Convert minutes to milliseconds
+        return now.getTime() < (expiryDate.getTime() - bufferTime);
     }
 
     /**
@@ -62,6 +68,7 @@ export class TokenService {
         localStorage.removeItem(ACCESS_TOKEN_KEY);
         localStorage.removeItem(REFRESH_TOKEN_KEY);
         localStorage.removeItem(TOKEN_EXPIRY_KEY);
+        localStorage.removeItem(REFRESH_TOKEN_EXPIRY_KEY);
     }
 
     /**

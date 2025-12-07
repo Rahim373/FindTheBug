@@ -1,44 +1,88 @@
-<div class="form-container">
-  <div class="form-header">
-    <h2>{{ isEditMode ? 'Edit Role' : 'Create New Role' }}</h2>
-  </div>
+<div class="container">
+  <nz-page-header nzTitle="{{ isEditMode ? 'Edit Role' : 'Create Role' }}"></nz-page-header>
+  
+  <nz-card [nzLoading]="loading">
+    <form nz-form [formGroup]="roleForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzRequired nzFor="name">Name</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Please input role name!">
+          <input nz-input formControlName="name" id="name" placeholder="Role Name" />
+        </nz-form-control>
+      </nz-form-item>
 
-  <form nz-form [formGroup]="roleForm" (ngSubmit)="submitForm()" [nzLayout]="'vertical'">
-    <nz-form-item>
-      <nz-form-label nzRequired>Name</nz-form-label>
-      <nz-form-control nzErrorTip="Please enter role name (max 100 characters)">
-        <input nz-input formControlName="name" placeholder="Role name" />
-      </nz-form-control>
-    </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="description">Description</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <textarea nz-input formControlName="description" id="description" placeholder="Role Description" rows="4"></textarea>
+        </nz-form-control>
+      </nz-form-item>
 
-    <nz-form-item>
-      <nz-form-label>Description</nz-form-label>
-      <nz-form-control nzErrorTip="Maximum 500 characters">
-        <textarea
-          nz-input
-          formControlName="description"
-          placeholder="Role description"
-          [nzAutosize]="{ minRows: 3, maxRows: 6 }"
-        ></textarea>
-      </nz-form-control>
-    </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="isActive">Active</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <label nz-switch formControlName="isActive" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></label>
+        </nz-form-control>
+      </nz-form-item>
 
-    <nz-form-item>
-      <nz-form-label>Active</nz-form-label>
-      <nz-form-control>
-        <nz-switch formControlName="isActive"></nz-switch>
-      </nz-form-control>
-    </nz-form-item>
+      <!-- Module Permissions Section -->
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Module Permissions</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-table #moduleTable [nzData]="modules" [nzFrontPagination]="true" [nzPageSize]="10">
+            <thead>
+              <tr>
+                <th>Module</th>
+                <th>View</th>
+                <th>Create</th>
+                <th>Edit</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let module of moduleTable.data">
+                <td>{{ module.displayName || module.name }}</td>
+                <td>
+                  <nz-switch 
+                    [ngModel]="getModulePermission(module.id)?.canView || false"
+                    (ngModelChange)="updateModulePermission(module.id, 'canView', $event)"
+                    nzCheckedChildren="✓" nzUnCheckedChildren="✗">
+                  </nz-switch>
+                </td>
+                <td>
+                  <nz-switch 
+                    [ngModel]="getModulePermission(module.id)?.canCreate || false"
+                    (ngModelChange)="updateModulePermission(module.id, 'canCreate', $event)"
+                    nzCheckedChildren="✓" nzUnCheckedChildren="✗">
+                  </nz-switch>
+                </td>
+                <td>
+                  <nz-switch 
+                    [ngModel]="getModulePermission(module.id)?.canEdit || false"
+                    (ngModelChange)="updateModulePermission(module.id, 'canEdit', $event)"
+                    nzCheckedChildren="✓" nzUnCheckedChildren="✗">
+                  </nz-switch>
+                </td>
+                <td>
+                  <nz-switch 
+                    [ngModel]="getModulePermission(module.id)?.canDelete || false"
+                    (ngModelChange)="updateModulePermission(module.id, 'canDelete', $event)"
+                    nzCheckedChildren="✓" nzUnCheckedChildren="✗">
+                  </nz-switch>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-form-control>
+      </nz-form-item>
 
-    <nz-form-item>
-      <nz-form-control>
-        <button nz-button nzType="primary" type="submit" [nzLoading]="submitting">
-          {{ isEditMode ? 'Update' : 'Create' }}
-        </button>
-        <button nz-button type="button" (click)="cancel()" [disabled]="submitting" style="margin-left: 8px;">
-          Cancel
-        </button>
-      </nz-form-control>
-    </nz-form-item>
-  </form>
+      <nz-form-item>
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+          <button nz-button nzType="primary" [nzLoading]="submitting" type="submit">
+            {{ isEditMode ? 'Update' : 'Create' }} Role
+          </button>
+          <button nz-button (click)="cancel()" style="margin-left: 8px;">Cancel</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </nz-card>
 </div>

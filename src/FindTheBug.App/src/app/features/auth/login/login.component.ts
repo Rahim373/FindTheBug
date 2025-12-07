@@ -145,6 +145,7 @@ export class LoginComponent {
 
                 if (response.isSuccess) {
                     // Get the returnUrl from query params or default to admin dashboard
+                    debugger
                     const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin/dashboard';
                     await this.router.navigate([returnUrl]);
                 } else {

@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { RoleService } from '../../../../core/services/role.service';
+import { ModuleService, Module } from '../../../../core/services/module.service';
+import { ModulePermission } from '../../../../core/models/role.models';
 
 @Component({
   selector: 'app-role-form',
@@ -15,10 +20,14 @@ import { RoleService } from '../../../../core/services/role.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     NzFormModule,
     NzInputModule,
     NzButtonModule,
-    NzSwitchModule
+    NzSwitchModule,
+    NzTableModule,
+    NzCardModule,
+    NzPageHeaderModule
   ],
   templateUrl: './role-form.component.html',
   styleUrl: './role-form.component.css'
@@ -29,10 +38,13 @@ export class RoleFormComponent implements OnInit {
   roleId?: string;
   loading = false;
   submitting = false;
+  modules: Module[] = [];
+  modulePermissions: { [key: string]: ModulePermission } = {};
 
   constructor(
     private fb: FormBuilder,
     private roleService: RoleService,
+    private moduleService: ModuleService,
     private router: Router,
     private route: ActivatedRoute,
     private message: NzMessageService
@@ -40,11 +52,46 @@ export class RoleFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.loadModules();
     this.roleId = this.route.snapshot.paramMap.get('id') || undefined;
     this.isEditMode = !!this.roleId;
 
     if (this.isEditMode && this.roleId) {
       this.loadRole(this.roleId);
+    }
+  }
+
+  loadModules(): void {
+    this.moduleService.getAll().subscribe({
+      next: (modules) => {
+        this.modules = modules;
+        // Initialize module permissions for all modules
+        modules.forEach(module => {
+          this.modulePermissions[module.id] = {
+            moduleId: module.id,
+            canView: false,
+            canCreate: false,
+            canEdit: false,
+            canDelete: false
+          };
+        });
+      },
+      error: () => {
+        this.message.error('Failed to load modules');
+      }
+    });
+  }
+
+  getModulePermission(moduleId: string): ModulePermission | undefined {
+    return this.modulePermissions[moduleId];
+  }
+
+  updateModulePermission(moduleId: string, permission: keyof ModulePermission, value: boolean): void {
+    if (this.modulePermissions[moduleId]) {
+      this.modulePermissions[moduleId] = {
+        ...this.modulePermissions[moduleId],
+        [permission]: value
+      };
     }
   }
 
@@ -83,7 +130,10 @@ export class RoleFormComponent implements OnInit {
       const request = {
         name: formValue.name,
         description: formValue.description,
-        isActive: formValue.isActive
+        isActive: formValue.isActive,
+        modulePermissions: Object.values(this.modulePermissions).filter(mp => 
+          mp.canView || mp.canCreate || mp.canEdit || mp.canDelete
+        )
       };
 
       const operation = this.isEditMode && this.roleId

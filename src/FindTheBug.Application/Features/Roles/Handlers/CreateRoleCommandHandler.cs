@@ -30,7 +30,31 @@ public class CreateRoleCommandHandler(IUnitOfWork unitOfWork)
             IsSystemRole = false
         };
 
+        // Create the role first
         var created = await unitOfWork.Repository<Role>().AddAsync(role, cancellationToken);
+
+        // Add module permissions if provided
+        if (request.ModulePermissions != null && request.ModulePermissions.Any())
+        {
+            foreach (var mp in request.ModulePermissions)
+            {
+                var roleModulePermission = new RoleModulePermission
+                {
+                    RoleId = created.Id,
+                    ModuleId = mp.ModuleId,
+                    CanView = mp.CanView,
+                    CanCreate = mp.CanCreate,
+                    CanEdit = mp.CanEdit,
+                    CanDelete = mp.CanDelete,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await unitOfWork.Repository<RoleModulePermission>().AddAsync(roleModulePermission, cancellationToken);
+            }
+        }
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
         return created;
     }
 }

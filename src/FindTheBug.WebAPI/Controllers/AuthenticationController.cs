@@ -14,7 +14,7 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     [HttpPost]
     [Route("/api/token")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult>     Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
         return Ok(result);
