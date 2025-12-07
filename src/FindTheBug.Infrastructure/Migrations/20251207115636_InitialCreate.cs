@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -31,6 +32,25 @@ namespace FindTheBug.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DiagnosticTests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Modules",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DisplayName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Modules", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,16 +99,37 @@ namespace FindTheBug.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    IsSystemRole = table.Column<bool>(type: "boolean", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: true),
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
-                    Roles = table.Column<string>(type: "text", nullable: false),
+                    Phone = table.Column<string>(type: "text", nullable: false),
+                    NIDNumber = table.Column<string>(type: "text", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    AllowUserLogin = table.Column<bool>(type: "boolean", nullable: false),
                     LastLoginAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LastLoginIp = table.Column<string>(type: "text", nullable: true),
                     FailedLoginAttempts = table.Column<int>(type: "integer", nullable: false),
@@ -201,6 +242,37 @@ namespace FindTheBug.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RoleModulePermissions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ModuleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CanView = table.Column<bool>(type: "boolean", nullable: false),
+                    CanCreate = table.Column<bool>(type: "boolean", nullable: false),
+                    CanEdit = table.Column<bool>(type: "boolean", nullable: false),
+                    CanDelete = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleModulePermissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleModulePermissions_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RoleModulePermissions_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RefreshTokens",
                 columns: table => new
                 {
@@ -220,6 +292,33 @@ namespace FindTheBug.Infrastructure.Migrations
                     table.PrimaryKey("PK_RefreshTokens", x => x.Id);
                     table.ForeignKey(
                         name: "FK_RefreshTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AssignedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AssignedBy = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRoles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -324,6 +423,12 @@ namespace FindTheBug.Infrastructure.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Modules_Name",
+                table: "Modules",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Patients_MobileNumber",
                 table: "Patients",
                 column: "MobileNumber",
@@ -339,6 +444,23 @@ namespace FindTheBug.Infrastructure.Migrations
                 name: "IX_RefreshTokens_UserId",
                 table: "RefreshTokens",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleModulePermissions_ModuleId",
+                table: "RoleModulePermissions",
+                column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleModulePermissions_RoleId_ModuleId",
+                table: "RoleModulePermissions",
+                columns: new[] { "RoleId", "ModuleId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_Name",
+                table: "Roles",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestEntries_DiagnosticTestId",
@@ -370,6 +492,17 @@ namespace FindTheBug.Infrastructure.Migrations
                 name: "IX_TestResults_TestParameterId",
                 table: "TestResults",
                 column: "TestParameterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_RoleId",
+                table: "UserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_UserId_RoleId",
+                table: "UserRoles",
+                columns: new[] { "UserId", "RoleId" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -385,19 +518,31 @@ namespace FindTheBug.Infrastructure.Migrations
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
+                name: "RoleModulePermissions");
+
+            migrationBuilder.DropTable(
                 name: "TestResults");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "Invoices");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Modules");
 
             migrationBuilder.DropTable(
                 name: "TestEntries");
 
             migrationBuilder.DropTable(
                 name: "TestParameters");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Patients");

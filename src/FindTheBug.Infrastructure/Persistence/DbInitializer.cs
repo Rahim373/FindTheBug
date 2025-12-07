@@ -52,10 +52,10 @@ public class DbInitializer
         // Seed Modules
         var moduleDefinitions = new[]
         {
-            new { Name = "Dashboard", DisplayName = "Dashboard", Description = "Main dashboard and overview", Icon = "dashboard", Route = "/admin/dashboard" },
-            new { Name = "Users", DisplayName = "User Management", Description = "Manage system users and their access", Icon = "user", Route = "/admin/users" },
-            new { Name = "Roles", DisplayName = "Role Management", Description = "Manage user roles and permissions", Icon = "safety", Route = "/admin/roles" },
-            new { Name = "Modules", DisplayName = "Module Management", Description = "Manage system modules", Icon = "appstore", Route = "/admin/modules" }
+            new { Name = "Dashboard", DisplayName = "Dashboard", Description = "Main dashboard and overview" },
+            new { Name = "Users", DisplayName = "User Management", Description = "Manage system users and their access" },
+            new { Name = "Roles", DisplayName = "Role Management", Description = "Manage user roles and permissions" },
+            new { Name = "Modules", DisplayName = "Module Management", Description = "Manage system modules" }
         };
 
         foreach (var moduleDef in moduleDefinitions)
@@ -67,8 +67,6 @@ public class DbInitializer
                     Name = moduleDef.Name,
                     DisplayName = moduleDef.DisplayName,
                     Description = moduleDef.Description,
-                    Icon = moduleDef.Icon,
-                    Route = moduleDef.Route,
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = "System"

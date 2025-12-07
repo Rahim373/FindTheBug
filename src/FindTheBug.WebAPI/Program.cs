@@ -7,7 +7,6 @@ using Prometheus;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
-using FindTheBug.Infrastructure.MultiTenancy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,9 +45,6 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 
 // Add Global Exception Handler Middleware
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
-
-// Add Tenant Resolution Middleware (must be early in pipeline)
-app.UseMiddleware<TenantResolutionMiddleware>();
 
 // Add Result Wrapper Middleware (wraps all responses in Result class)
 app.UseMiddleware<ResultWrapperMiddleware>();

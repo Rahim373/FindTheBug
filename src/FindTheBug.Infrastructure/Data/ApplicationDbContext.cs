@@ -7,16 +7,8 @@ namespace FindTheBug.Infrastructure.Data;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
-    private readonly ITenantContext? _tenantContext;
-
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-    }
-
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ITenantContext tenantContext) 
-        : base(options)
-    {
-        _tenantContext = tenantContext;
     }
     
     // Lab Management DbSets
@@ -171,8 +163,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
             entity.Property(e => e.DisplayName).HasMaxLength(100).IsRequired();
             entity.Property(e => e.Description).HasMaxLength(500);
-            entity.Property(e => e.Icon).HasMaxLength(50);
-            entity.Property(e => e.Route).HasMaxLength(200);
         });
 
         // Role configuration

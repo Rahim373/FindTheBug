@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FindTheBug.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251126143019_InitialCreate")]
+    [Migration("20251207115636_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -204,6 +204,49 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.ToTable("InvoiceItems");
                 });
 
+            modelBuilder.Entity("FindTheBug.Domain.Entities.Module", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Modules");
+                });
+
             modelBuilder.Entity("FindTheBug.Domain.Entities.PasswordResetToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -347,6 +390,87 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("FindTheBug.Domain.Entities.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsSystemRole")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("FindTheBug.Domain.Entities.RoleModulePermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("CanCreate")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("CanDelete")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("CanEdit")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("CanView")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ModuleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleId");
+
+                    b.HasIndex("RoleId", "ModuleId")
+                        .IsUnique();
+
+                    b.ToTable("RoleModulePermissions");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.TestEntry", b =>
@@ -517,6 +641,9 @@ namespace FindTheBug.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("AllowUserLogin")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -524,7 +651,6 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("FailedLoginAttempts")
@@ -550,11 +676,14 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.Property<DateTime?>("LockedOutUntil")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("NIDNumber")
+                        .HasColumnType("text");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Roles")
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -567,6 +696,34 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("FindTheBug.Domain.Entities.UserRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("AssignedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("AssignedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId", "RoleId")
+                        .IsUnique();
+
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.Invoice", b =>
@@ -607,6 +764,25 @@ namespace FindTheBug.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FindTheBug.Domain.Entities.RoleModulePermission", b =>
+                {
+                    b.HasOne("FindTheBug.Domain.Entities.Module", "Module")
+                        .WithMany("RoleModulePermissions")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FindTheBug.Domain.Entities.Role", "Role")
+                        .WithMany("RoleModulePermissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Module");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.TestEntry", b =>
@@ -658,6 +834,25 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.Navigation("TestParameter");
                 });
 
+            modelBuilder.Entity("FindTheBug.Domain.Entities.UserRole", b =>
+                {
+                    b.HasOne("FindTheBug.Domain.Entities.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FindTheBug.Domain.Entities.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FindTheBug.Domain.Entities.DiagnosticTest", b =>
                 {
                     b.Navigation("Parameters");
@@ -670,11 +865,23 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.Navigation("InvoiceItems");
                 });
 
+            modelBuilder.Entity("FindTheBug.Domain.Entities.Module", b =>
+                {
+                    b.Navigation("RoleModulePermissions");
+                });
+
             modelBuilder.Entity("FindTheBug.Domain.Entities.Patient", b =>
                 {
                     b.Navigation("Invoices");
 
                     b.Navigation("TestEntries");
+                });
+
+            modelBuilder.Entity("FindTheBug.Domain.Entities.Role", b =>
+                {
+                    b.Navigation("RoleModulePermissions");
+
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.TestEntry", b =>
@@ -692,6 +899,8 @@ namespace FindTheBug.Infrastructure.Migrations
             modelBuilder.Entity("FindTheBug.Domain.Entities.User", b =>
                 {
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }
