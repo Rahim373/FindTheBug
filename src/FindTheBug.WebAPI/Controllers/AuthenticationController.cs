@@ -6,14 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
 
-[ApiController]
-[Route("api/token")]
-public class AuthenticationController(ISender mediator) : ControllerBase
+public class AuthenticationController(ISender mediator) : BaseApiController
 {
     /// <summary>
     /// Login with email and password to get access and refresh tokens
     /// </summary>
     [HttpPost]
+    [Route("/api/token")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
     {

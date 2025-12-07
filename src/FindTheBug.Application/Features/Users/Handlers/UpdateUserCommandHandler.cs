@@ -68,7 +68,6 @@ public class UpdateUserCommandHandler(
             {
                 var userRole = new UserRole
                 {
-                    Id = Guid.NewGuid(),
                     UserId = user.Id,
                     RoleId = roleId,
                     AssignedAt = DateTime.UtcNow

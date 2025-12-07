@@ -24,7 +24,6 @@ public class CreateRoleCommandHandler(IUnitOfWork unitOfWork)
 
         var role = new Role
         {
-            Id = Guid.NewGuid(),
             Name = request.Name,
             Description = request.Description,
             IsActive = request.IsActive,

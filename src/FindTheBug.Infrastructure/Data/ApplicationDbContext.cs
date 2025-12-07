@@ -69,9 +69,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         
         ConfigureLabManagementEntities(modelBuilder);
         ConfigureRBACEntities(modelBuilder);
-        
-        // Seed data
-        modelBuilder.SeedRBACData();
     }
 
     private static void ConfigureLabManagementEntities(ModelBuilder modelBuilder)

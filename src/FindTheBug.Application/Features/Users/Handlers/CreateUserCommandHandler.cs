@@ -42,7 +42,6 @@ public class CreateUserCommandHandler(
 
         var user = new User
         {
-            Id = Guid.NewGuid(),
             Email = request.Email,
             PasswordHash = passwordHash,
             FirstName = request.FirstName,
@@ -62,7 +61,6 @@ public class CreateUserCommandHandler(
             {
                 var userRole = new UserRole
                 {
-                    Id = Guid.NewGuid(),
                     UserId = created.Id,
                     RoleId = roleId,
                     AssignedAt = DateTime.UtcNow
