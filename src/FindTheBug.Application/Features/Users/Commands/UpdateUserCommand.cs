@@ -1,5 +1,5 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.Users.DTOs;
 
 namespace FindTheBug.Application.Features.Users.Commands;
 
@@ -14,4 +14,4 @@ public record UpdateUserCommand(
     bool IsActive,
     bool AllowUserLogin,
     string? Password
-) : ICommand<User>;
+) : ICommand<UserResponseDto>;

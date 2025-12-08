@@ -2,51 +2,33 @@ using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Features.Users.Commands;
+using FindTheBug.Application.Features.Users.DTOs;
 using FindTheBug.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Application.Features.Users.Handlers;
 
-public class CreateUserCommandHandler(
-    IUnitOfWork unitOfWork,
-    IPasswordHasher passwordHasher) 
-    : ICommandHandler<CreateUserCommand, User>
+public class CreateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
+    : ICommandHandler<CreateUserCommand, UserResponseDto>
 {
-    public async Task<ErrorOr<User>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<UserResponseDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        // Validate phone uniqueness (required field)
-        var existingUserByPhone = await unitOfWork.Repository<User>()
-            .GetQueryable()
-            .FirstOrDefaultAsync(u => u.Phone == request.Phone, cancellationToken);
-
-        if (existingUserByPhone != null)
+        // Check if email exists
+        if (!string.IsNullOrEmpty(request.Email))
         {
-            return Error.Conflict("User.PhoneExists", "A user with this phone number already exists.");
-        }
-
-        // Validate email uniqueness if email is provided
-        if (!string.IsNullOrWhiteSpace(request.Email))
-        {
-            var existingUserByEmail = await unitOfWork.Repository<User>()
-                .GetQueryable()
+            var existing = await unitOfWork.Repository<User>().GetQueryable()
                 .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
-
-            if (existingUserByEmail != null)
-            {
-                return Error.Conflict("User.EmailExists", "A user with this email already exists.");
-            }
+            if (existing != null)
+                return Error.Conflict("User.EmailExists", "Email already exists");
         }
-
-        // Hash the password
-        var passwordHash = passwordHasher.HashPassword(request.Password);
 
         var user = new User
         {
             Email = request.Email,
-            PasswordHash = passwordHash,
+            PasswordHash = passwordHasher.Hash(request.Password),
             FirstName = request.FirstName,
             LastName = request.LastName,
-            Phone = request.Phone!,
+            Phone = request.Phone,
             NIDNumber = request.NIDNumber,
             IsActive = request.IsActive,
             AllowUserLogin = request.AllowUserLogin
@@ -54,21 +36,30 @@ public class CreateUserCommandHandler(
 
         var created = await unitOfWork.Repository<User>().AddAsync(user, cancellationToken);
 
-        // Create UserRole entries
-        if (request.RoleIds != null && request.RoleIds.Any())
+        // Add roles
+        foreach (var roleId in request.RoleIds)
         {
-            foreach (var roleId in request.RoleIds)
+            await unitOfWork.Repository<UserRole>().AddAsync(new UserRole
             {
-                var userRole = new UserRole
-                {
-                    UserId = created.Id,
-                    RoleId = roleId,
-                    AssignedAt = DateTime.UtcNow
-                };
-                await unitOfWork.Repository<UserRole>().AddAsync(userRole, cancellationToken);
-            }
+                UserId = created.Id,
+                RoleId = roleId
+            }, cancellationToken);
         }
 
-        return created;
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return new UserResponseDto
+        {
+            Id = created.Id,
+            Email = created.Email,
+            FirstName = created.FirstName,
+            LastName = created.LastName,
+            Phone = created.Phone,
+            NIDNumber = created.NIDNumber,
+            IsActive = created.IsActive,
+            AllowUserLogin = created.AllowUserLogin,
+            CreatedAt = created.CreatedAt,
+            UpdatedAt = created.UpdatedAt
+        };
     }
 }

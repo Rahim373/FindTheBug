@@ -1,13 +1,6 @@
-using MediatR;
+using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.Modules.DTOs;
 
 namespace FindTheBug.Application.Features.Modules.Queries;
 
-public record GetAllModulesQuery : IRequest<List<ModuleDto>>;
-
-public record ModuleDto(
-    Guid Id,
-    string Name,
-    string? DisplayName,
-    string? Description,
-    bool IsActive
-);
+public record GetAllModulesQuery() : IQuery<List<ModuleDto>>;

@@ -1,5 +1,5 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.Users.DTOs;
 
 namespace FindTheBug.Application.Features.Users.Commands;
 
@@ -13,4 +13,4 @@ public record CreateUserCommand(
     List<Guid> RoleIds,
     bool IsActive,
     bool AllowUserLogin
-) : ICommand<User>;
+) : ICommand<UserResponseDto>;

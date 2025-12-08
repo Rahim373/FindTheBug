@@ -1,6 +1,6 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.Patients.DTOs;
 
 namespace FindTheBug.Application.Features.Patients.Queries;
 
-public record GetPatientByIdQuery(Guid Id) : IQuery<Patient>;
+public record GetPatientByIdQuery(Guid Id) : IQuery<PatientResponseDto>;

@@ -1,11 +1,11 @@
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Common.Models;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.Users.DTOs;
 
 namespace FindTheBug.Application.Features.Users.Queries;
 
 public record GetAllUsersQuery(
-    string? Search = null,
-    int PageNumber = 1,
-    int PageSize = 10
-) : IQuery<PagedResult<User>>;
+    string? Search,
+    int PageNumber,
+    int PageSize
+) : IQuery<PagedResult<UserListItemDto>>;

@@ -1,14 +1,12 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.Patients.DTOs;
 
 namespace FindTheBug.Application.Features.Patients.Commands;
 
 public record CreatePatientCommand(
-    string FirstName,
-    string LastName,
+    string Name,
     string MobileNumber,
-    DateTime? DateOfBirth,
+    int? Age,
     string? Gender,
-    string? Email,
     string? Address
-) : ICommand<Patient>;
+) : ICommand<PatientResponseDto>;
