@@ -56,22 +56,27 @@ export class RoleService {
       params = params.set('search', search);
     }
 
-    return firstValueFrom(this.http.get<PagedResult<Role>>(this.apiUrl, { params }));
+    const response = await firstValueFrom(this.http.get<any>(this.apiUrl, { params }));
+    return response?.data || response;
   }
 
   async getRoleByIdAsync(id: string): Promise<Role> {
-    return firstValueFrom(this.http.get<Role>(`${this.apiUrl}/${id}`));
+    const response = await firstValueFrom(this.http.get<any>(`${this.apiUrl}/${id}`));
+    return response?.data || response;
   }
 
   async createRoleAsync(request: CreateRoleRequest): Promise<Role> {
-    return firstValueFrom(this.http.post<Role>(this.apiUrl, request));
+    const response = await firstValueFrom(this.http.post<any>(this.apiUrl, request));
+    return response?.data || response;
   }
 
   async updateRoleAsync(id: string, request: UpdateRoleRequest): Promise<Role> {
-    return firstValueFrom(this.http.put<Role>(`${this.apiUrl}/${id}`, request));
+    const response = await firstValueFrom(this.http.put<any>(`${this.apiUrl}/${id}`, request));
+    return response?.data || response;
   }
 
   async deleteRoleAsync(id: string): Promise<void> {
-    return firstValueFrom(this.http.delete<void>(`${this.apiUrl}/${id}`));
+    const response = await firstValueFrom(this.http.delete<any>(`${this.apiUrl}/${id}`));
+    return response?.data || response;
   }
 }

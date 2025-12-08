@@ -11,12 +11,6 @@ export interface Module {
     isActive: boolean;
 }
 
-interface ApiResponse<T> {
-    data?: T;
-    success?: boolean;
-    message?: string;
-}
-
 @Injectable({
     providedIn: 'root'
 })
@@ -28,24 +22,17 @@ export class ModuleService {
     async getModulesAsync(): Promise<Module[]> {
         try {
             const response = await firstValueFrom(this.http.get<any>(this.apiUrl));
-            return this.extractData(response);
+
+            // Handle ResultWrapper format: {isSuccess: true, data: [...]}
+            if (response?.data) {
+                return Array.isArray(response.data) ? response.data : [];
+            }
+
+            // Fallback to direct array response
+            return Array.isArray(response) ? response : [];
         } catch (error) {
             console.error('Error fetching modules:', error);
             throw error;
         }
-    }
-
-    private extractData(response: any): Module[] {
-        // Handle wrapped response {data: [...]}
-        if (response && response.data && Array.isArray(response.data)) {
-            return response.data;
-        }
-        // Handle direct array response [...]
-        if (Array.isArray(response)) {
-            return response;
-        }
-        // Fallback to empty array
-        console.warn('Unexpected module response format:', response);
-        return [];
     }
 }

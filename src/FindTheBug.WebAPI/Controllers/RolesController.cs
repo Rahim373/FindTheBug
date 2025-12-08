@@ -1,16 +1,13 @@
 using FindTheBug.Application.Features.Roles.Commands;
 using FindTheBug.Application.Features.Roles.Queries;
 using FindTheBug.WebAPI.Contracts.Requests;
+using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize]
-public class RolesController(ISender mediator) : ControllerBase
+public class RolesController(ISender mediator, IMapper mapper) : BaseApiController
 {
     [HttpGet]
     public async Task<IActionResult> GetAll(
@@ -21,7 +18,10 @@ public class RolesController(ISender mediator) : ControllerBase
     {
         var query = new GetAllRolesQuery(pageNumber, pageSize, search);
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            roles => Ok(roles),
+            errors => Problem(errors));
     }
 
     [HttpGet("active")]
@@ -29,7 +29,10 @@ public class RolesController(ISender mediator) : ControllerBase
     {
         var query = new GetActiveRolesQuery();
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            roles => Ok(roles),
+            errors => Problem(errors));
     }
 
     [HttpGet("{id:guid}")]
@@ -37,43 +40,35 @@ public class RolesController(ISender mediator) : ControllerBase
     {
         var query = new GetRoleByIdQuery(id);
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            role => Ok(role),
+            errors => Problem(errors));
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRoleRequest request, CancellationToken cancellationToken = default)
     {
-        var modulePermissions = request.ModulePermissions?.Select(mp => new ModulePermissionDto(
-            mp.ModuleId,
-            mp.CanView,
-            mp.CanCreate,
-            mp.CanEdit,
-            mp.CanDelete
-        )).ToList();
-
-        var command = new CreateRoleCommand(
-            request.Name,
-            request.Description,
-            request.IsActive,
-            modulePermissions
-        );
-
+        var command = mapper.Map<CreateRoleCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            role => Ok(role),
+            errors => Problem(errors));
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateRoleRequest request, CancellationToken cancellationToken = default)
     {
-        var command = new UpdateRoleCommand(
-            id,
-            request.Name,
-            request.Description,
-            request.IsActive
-        );
-
+        var command = mapper.Map<UpdateRoleCommand>(request);
+        // Ensure ID from route is used
+        command = command with { Id = id };
+        
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            role => Ok(role),
+            errors => Problem(errors));
     }
 
     [HttpDelete("{id:guid}")]
@@ -81,6 +76,9 @@ public class RolesController(ISender mediator) : ControllerBase
     {
         var command = new DeleteRoleCommand(id);
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            _ => NoContent(),
+            errors => Problem(errors));
     }
 }

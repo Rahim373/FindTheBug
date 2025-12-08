@@ -24,6 +24,12 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<Glob
 
     private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
+        // Don't try to write if the response has already started
+        if (context.Response.HasStarted)
+        {
+            return;
+        }
+
         var (statusCode, type, title, errors) = exception switch
         {
             ValidationException validationEx => (

@@ -1,4 +1,5 @@
 using FindTheBug.WebAPI.Filters;
+using FindTheBug.WebAPI.Mappings;
 
 namespace FindTheBug.WebAPI.Installers;
 
@@ -12,5 +13,8 @@ public class MvcInstaller : IInstaller
         });
 
         services.AddHttpContextAccessor();
+        
+        // Add Mapster
+        services.AddMapster();
     }
 }
