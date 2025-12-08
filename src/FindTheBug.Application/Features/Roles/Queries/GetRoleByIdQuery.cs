@@ -1,6 +1,6 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.Roles.DTOs;
 
 namespace FindTheBug.Application.Features.Roles.Queries;
 
-public record GetRoleByIdQuery(Guid Id) : IQuery<Role>;
+public record GetRoleByIdQuery(Guid Id) : IQuery<RoleResponseDto>;

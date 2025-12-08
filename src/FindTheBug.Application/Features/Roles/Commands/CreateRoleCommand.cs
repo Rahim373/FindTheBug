@@ -1,5 +1,5 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.Roles.DTOs;
 
 namespace FindTheBug.Application.Features.Roles.Commands;
 
@@ -8,4 +8,4 @@ public record CreateRoleCommand(
     string? Description,
     bool IsActive,
     List<ModulePermissionDto>? ModulePermissions = null
-) : ICommand<Role>;
+) : ICommand<RoleResponseDto>;
