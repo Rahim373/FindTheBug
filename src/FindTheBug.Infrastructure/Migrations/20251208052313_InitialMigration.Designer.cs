@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FindTheBug.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251207115636_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251208052313_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,8 +51,7 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<bool>("RequiresFasting")
                         .HasColumnType("boolean");
@@ -73,9 +72,6 @@ namespace FindTheBug.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TestCode")
-                        .IsUnique();
-
                     b.ToTable("DiagnosticTests");
                 });
 
@@ -92,8 +88,7 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<decimal>("DiscountAmount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("timestamp with time zone");
@@ -122,16 +117,13 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<decimal>("SubTotal")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("TaxAmount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -140,9 +132,6 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("InvoiceNumber")
-                        .IsUnique();
 
                     b.HasIndex("PatientId");
 
@@ -156,8 +145,7 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -170,8 +158,7 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<decimal>("DiscountAmount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("DiscountPercentage")
                         .HasColumnType("numeric");
@@ -186,8 +173,7 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -217,21 +203,17 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("text");
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -240,9 +222,6 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Modules");
                 });
@@ -341,12 +320,6 @@ namespace FindTheBug.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MobileNumber")
-                        .IsUnique();
-
-                    b.HasIndex("PatientCode")
-                        .IsUnique();
-
                     b.ToTable("Patients");
                 });
 
@@ -405,8 +378,7 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -416,8 +388,7 @@ namespace FindTheBug.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -426,9 +397,6 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
@@ -467,8 +435,7 @@ namespace FindTheBug.Infrastructure.Migrations
 
                     b.HasIndex("ModuleId");
 
-                    b.HasIndex("RoleId", "ModuleId")
-                        .IsUnique();
+                    b.HasIndex("RoleId");
 
                     b.ToTable("RoleModulePermissions");
                 });
@@ -525,9 +492,6 @@ namespace FindTheBug.Infrastructure.Migrations
 
                     b.HasIndex("DiagnosticTestId");
 
-                    b.HasIndex("EntryNumber")
-                        .IsUnique();
-
                     b.HasIndex("PatientId");
 
                     b.ToTable("TestEntries");
@@ -560,12 +524,10 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<decimal?>("ReferenceRangeMax")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("numeric(18,4)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal?>("ReferenceRangeMin")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("numeric(18,4)");
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Unit")
                         .HasColumnType("text");
@@ -720,8 +682,7 @@ namespace FindTheBug.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId", "RoleId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
                 });
@@ -731,7 +692,7 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.HasOne("FindTheBug.Domain.Entities.Patient", "Patient")
                         .WithMany("Invoices")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Patient");
@@ -747,8 +708,7 @@ namespace FindTheBug.Infrastructure.Migrations
 
                     b.HasOne("FindTheBug.Domain.Entities.TestEntry", "TestEntry")
                         .WithMany("InvoiceItems")
-                        .HasForeignKey("TestEntryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("TestEntryId");
 
                     b.Navigation("Invoice");
 
@@ -790,13 +750,13 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.HasOne("FindTheBug.Domain.Entities.DiagnosticTest", "DiagnosticTest")
                         .WithMany("TestEntries")
                         .HasForeignKey("DiagnosticTestId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FindTheBug.Domain.Entities.Patient", "Patient")
                         .WithMany("TestEntries")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("DiagnosticTest");
@@ -826,7 +786,7 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.HasOne("FindTheBug.Domain.Entities.TestParameter", "TestParameter")
                         .WithMany("TestResults")
                         .HasForeignKey("TestParameterId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("TestEntry");

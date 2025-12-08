@@ -28,8 +28,8 @@ public class DbInitializer
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            // Apply migrations
-            if (context.Database.IsNpgsql() && context.Database.GetPendingMigrations().Any())
+            // Apply migrations - this will create the database if it doesn't exist
+            if (context.Database.IsNpgsql())
             {
                 await context.Database.MigrateAsync();
             }
