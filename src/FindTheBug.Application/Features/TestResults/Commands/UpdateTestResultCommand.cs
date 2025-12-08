@@ -1,5 +1,5 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.TestResults.DTOs;
 
 namespace FindTheBug.Application.Features.TestResults.Commands;
 
@@ -8,4 +8,4 @@ public record UpdateTestResultCommand(
     string ResultValue,
     bool IsAbnormal,
     string? Notes
-) : ICommand<TestResult>;
+) : ICommand<TestResultResponseDto>;

@@ -1,13 +1,10 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.TestEntries.DTOs;
 
 namespace FindTheBug.Application.Features.TestEntries.Commands;
 
 public record CreateTestEntryCommand(
     Guid PatientId,
     Guid DiagnosticTestId,
-    DateTime? SampleCollectionDate,
-    string Priority,
-    string? ReferredBy,
-    string? Notes
-) : ICommand<TestEntry>;
+    DateTime EntryDate
+) : ICommand<TestEntryResponseDto>;

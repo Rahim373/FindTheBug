@@ -1,7 +1,6 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.TestParameters.DTOs;
 
 namespace FindTheBug.Application.Features.TestParameters.Queries;
 
-public record GetAllTestParametersQuery(Guid? DiagnosticTestId = null) 
-    : IQuery<IEnumerable<TestParameter>>;
+public record GetAllTestParametersQuery(Guid? DiagnosticTestId) : IQuery<List<TestParameterResponseDto>>;

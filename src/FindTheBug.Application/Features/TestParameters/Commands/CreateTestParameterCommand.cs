@@ -1,5 +1,5 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.TestParameters.DTOs;
 
 namespace FindTheBug.Application.Features.TestParameters.Commands;
 
@@ -11,4 +11,4 @@ public record CreateTestParameterCommand(
     decimal? ReferenceRangeMax,
     string DataType,
     int DisplayOrder
-) : ICommand<TestParameter>;
+) : ICommand<TestParameterResponseDto>;

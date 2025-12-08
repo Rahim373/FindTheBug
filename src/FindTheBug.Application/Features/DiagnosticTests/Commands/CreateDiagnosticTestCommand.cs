@@ -1,14 +1,11 @@
 using FindTheBug.Application.Common.Messaging;
-using FindTheBug.Domain.Entities;
+using FindTheBug.Application.Features.DiagnosticTests.DTOs;
 
 namespace FindTheBug.Application.Features.DiagnosticTests.Commands;
 
 public record CreateDiagnosticTestCommand(
-    string TestCode,
     string TestName,
-    string? Description,
-    string Category,
+    string? TestCode,
     decimal Price,
-    int? Duration,
-    bool RequiresFasting
-) : ICommand<DiagnosticTest>;
+    string? Description
+) : ICommand<DiagnosticTestResponseDto>;
