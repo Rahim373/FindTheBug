@@ -1,6 +1,8 @@
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Domain.Common;
 using FindTheBug.Domain.Entities;
+using FindTheBug.Infrastructure.Mappings;
+using FindTheBug.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Infrastructure.Data;
@@ -40,7 +42,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
         foreach (var entry in entries)
         {
-            var entity = (BaseAuditableEntity)entry.Entity;
+            var entity = (BaseAuditableEntity) entry.Entity;
             
             if (entry.State == EntityState.Added)
             {
@@ -59,150 +61,24 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         base.OnModelCreating(modelBuilder);
         
-        //ConfigureLabManagementEntities(modelBuilder);
-        //ConfigureRBACEntities(modelBuilder);
+        // Apply all entity mappings dynamically using reflection
+        ApplyMappings(modelBuilder);
     }
 
-    private static void ConfigureLabManagementEntities(ModelBuilder modelBuilder)
+    private void ApplyMappings(ModelBuilder modelBuilder)
     {
-        // DiagnosticTest configuration
-        modelBuilder.Entity<DiagnosticTest>(entity =>
-        {
-            entity.HasIndex(e => new { e.TestCode }).IsUnique();
-            entity.Property(e => e.Price).HasPrecision(18, 2);
-        });
+        var mappingTypes = typeof(DiagnosticTestMapping).Assembly
+            .GetTypes()
+            .Where(t => t.GetInterfaces().Any(i => 
+                i.IsGenericType && 
+                i.GetGenericTypeDefinition() == typeof(IMapping<>)))
+            .ToList();
 
-        // Patient configuration
-        modelBuilder.Entity<Patient>(entity =>
+        foreach (var mappingType in mappingTypes)
         {
-            entity.HasIndex(e => new { e.MobileNumber }).IsUnique();
-            entity.HasIndex(e => new { e.PatientCode }).IsUnique();
-        });
-
-        // TestEntry configuration
-        modelBuilder.Entity<TestEntry>(entity =>
-        {
-            entity.HasIndex(e => new { e.EntryNumber }).IsUnique();
-            entity.HasOne(e => e.Patient)
-                .WithMany(p => p.TestEntries)
-                .HasForeignKey(e => e.PatientId)
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            entity.HasOne(e => e.DiagnosticTest)
-                .WithMany(t => t.TestEntries)
-                .HasForeignKey(e => e.DiagnosticTestId)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
-
-        // TestParameter configuration
-        modelBuilder.Entity<TestParameter>(entity =>
-        {
-            entity.HasOne(e => e.DiagnosticTest)
-                .WithMany(t => t.Parameters)
-                .HasForeignKey(e => e.DiagnosticTestId)
-                .OnDelete(DeleteBehavior.Cascade);
-            
-            entity.Property(e => e.ReferenceRangeMin).HasPrecision(18, 4);
-            entity.Property(e => e.ReferenceRangeMax).HasPrecision(18, 4);
-        });
-
-        // TestResult configuration
-        modelBuilder.Entity<TestResult>(entity =>
-        {
-            entity.HasOne(e => e.TestEntry)
-                .WithMany(t => t.TestResults)
-                .HasForeignKey(e => e.TestEntryId)
-                .OnDelete(DeleteBehavior.Cascade);
-            
-            entity.HasOne(e => e.TestParameter)
-                .WithMany(p => p.TestResults)
-                .HasForeignKey(e => e.TestParameterId)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
-
-        // Invoice configuration
-        modelBuilder.Entity<Invoice>(entity =>
-        {
-            entity.HasIndex(e => new { e.InvoiceNumber }).IsUnique();
-            entity.HasOne(e => e.Patient)
-                .WithMany(p => p.Invoices)
-                .HasForeignKey(e => e.PatientId)
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            entity.Property(e => e.SubTotal).HasPrecision(18, 2);
-            entity.Property(e => e.DiscountAmount).HasPrecision(18, 2);
-            entity.Property(e => e.TaxAmount).HasPrecision(18, 2);
-            entity.Property(e => e.TotalAmount).HasPrecision(18, 2);
-        });
-
-        // InvoiceItem configuration
-        modelBuilder.Entity<InvoiceItem>(entity =>
-        {
-            entity.HasOne(e => e.Invoice)
-                .WithMany(i => i.InvoiceItems)
-                .HasForeignKey(e => e.InvoiceId)
-                .OnDelete(DeleteBehavior.Cascade);
-            
-            entity.HasOne(e => e.TestEntry)
-                .WithMany(t => t.InvoiceItems)
-                .HasForeignKey(e => e.TestEntryId)
-                .OnDelete(DeleteBehavior.SetNull);
-            
-            entity.Property(e => e.UnitPrice).HasPrecision(18, 2);
-            entity.Property(e => e.Amount).HasPrecision(18, 2);
-            entity.Property(e => e.DiscountAmount).HasPrecision(18, 2);
-        });
-    }
-
-    private static void ConfigureRBACEntities(ModelBuilder modelBuilder)
-    {
-        // Module configuration
-        modelBuilder.Entity<Module>(entity =>
-        {
-            entity.HasIndex(e => e.Name).IsUnique();
-            entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
-            entity.Property(e => e.DisplayName).HasMaxLength(100).IsRequired();
-            entity.Property(e => e.Description).HasMaxLength(500);
-        });
-
-        // Role configuration
-        modelBuilder.Entity<Role>(entity =>
-        {
-            entity.HasIndex(e => e.Name).IsUnique();
-            entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
-            entity.Property(e => e.Description).HasMaxLength(500);
-        });
-
-        // UserRole configuration (many-to-many)
-        modelBuilder.Entity<UserRole>(entity =>
-        {
-            entity.HasIndex(e => new { e.UserId, e.RoleId }).IsUnique();
-            
-            entity.HasOne(ur => ur.User)
-                .WithMany(u => u.UserRoles)
-                .HasForeignKey(ur => ur.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-            
-            entity.HasOne(ur => ur.Role)
-                .WithMany(r => r.UserRoles)
-                .HasForeignKey(ur => ur.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        // RoleModulePermission configuration
-        modelBuilder.Entity<RoleModulePermission>(entity =>
-        {
-            entity.HasIndex(e => new { e.RoleId, e.ModuleId }).IsUnique();
-            
-            entity.HasOne(rmp => rmp.Role)
-                .WithMany(r => r.RoleModulePermissions)
-                .HasForeignKey(rmp => rmp.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
-            
-            entity.HasOne(rmp => rmp.Module)
-                .WithMany(m => m.RoleModulePermissions)
-                .HasForeignKey(rmp => rmp.ModuleId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
+            var mappingInstance = Activator.CreateInstance(mappingType);
+            var configureMethod = mappingType.GetMethod("Configure");
+            configureMethod?.Invoke(mappingInstance, new object[] { modelBuilder });
+        }
     }
 }
