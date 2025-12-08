@@ -8,7 +8,7 @@ namespace FindTheBug.Application.Features.Authentication.Handlers;
 
 public class ResetPasswordCommandHandler(
     IUnitOfWork unitOfWork,
-    IPasswordHasher passwordHasher) 
+    IPasswordHasher passwordHasher)
     : ICommandHandler<ResetPasswordCommand, bool>
 {
     public async Task<ErrorOr<bool>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
@@ -24,7 +24,7 @@ public class ResetPasswordCommandHandler(
         {
             if (resetToken.IsUsed)
                 return Error.Validation("Authentication.TokenUsed", "Reset token has already been used");
-            
+
             return Error.Validation("Authentication.TokenExpired", "Reset token has expired");
         }
 
@@ -52,7 +52,7 @@ public class ResetPasswordCommandHandler(
         // Revoke all refresh tokens for security
         var refreshTokens = await unitOfWork.Repository<RefreshToken>().GetAllAsync(cancellationToken);
         var userTokens = refreshTokens.Where(rt => rt.UserId == user.Id && rt.IsActive).ToList();
-        
+
         foreach (var token in userTokens)
         {
             token.RevokedAt = DateTime.UtcNow;

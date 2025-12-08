@@ -6,7 +6,7 @@ using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Application.Features.TestParameters.Handlers;
 
-public class DeleteTestParameterCommandHandler(IUnitOfWork unitOfWork) 
+public class DeleteTestParameterCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<DeleteTestParameterCommand, bool>
 {
     public async Task<ErrorOr<bool>> Handle(DeleteTestParameterCommand request, CancellationToken cancellationToken)

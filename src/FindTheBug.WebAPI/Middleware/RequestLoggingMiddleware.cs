@@ -49,7 +49,7 @@ public class RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggi
     private static string GetOrCreateCorrelationId(HttpContext context)
     {
         const string correlationIdKey = "CorrelationId";
-        
+
         if (context.Items.TryGetValue(correlationIdKey, out var correlationId) && correlationId is string id)
         {
             return id;

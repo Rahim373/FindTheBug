@@ -20,10 +20,10 @@ public class TestResultsController(ISender mediator, IMapper mapper) : BaseApiCo
     {
         var query = new GetTestResultsByEntryQuery(entryId);
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             testResults => Ok(testResults),
-            errors => Problem(errors));
+            Problem);
     }
 
     /// <summary>
@@ -33,10 +33,10 @@ public class TestResultsController(ISender mediator, IMapper mapper) : BaseApiCo
     public async Task<IActionResult> Create([FromBody] CreateTestResultCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             testResult => Ok(testResult),
-            errors => Problem(errors));
+            Problem);
     }
 
     /// <summary>
@@ -47,27 +47,26 @@ public class TestResultsController(ISender mediator, IMapper mapper) : BaseApiCo
     {
         var command = mapper.Map<UpdateTestResultCommand>(request);
         command = command with { Id = id };
-        
+
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             testResult => Ok(testResult),
-            errors => Problem(errors));
+            Problem);
     }
 
     /// <summary>
     /// Verify test results
     /// </summary>
-    [HttpPost("{id}/verify")]
-    public async Task<IActionResult> Verify(Guid id, [FromBody] VerifyRequest request, CancellationToken cancellationToken)
+    [HttpPost("{testEntryId}/verify")]
+    public async Task<IActionResult> Verify(Guid testEntryId, [FromBody] VerifyRequest request, CancellationToken cancellationToken)
     {
-        var command = mapper.Map<VerifyTestResultsCommand>(request);
-        command = command with { Id = id };
-        
+        var command = new VerifyTestResultsCommand( testEntryId, request.VerifiedBy);
+
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             success => Ok(success),
-            errors => Problem(errors));
+            Problem);
     }
 }

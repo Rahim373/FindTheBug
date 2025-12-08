@@ -2,29 +2,41 @@ using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Features.TestEntries.Commands;
+using FindTheBug.Application.Features.TestEntries.DTOs;
 using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Application.Features.TestEntries.Handlers;
 
-public class CreateTestEntryCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CreateTestEntryCommand, TestEntry>
+public class CreateTestEntryCommandHandler(IUnitOfWork unitOfWork)
+    : ICommandHandler<CreateTestEntryCommand, TestEntryResponseDto>
 {
-    public async Task<ErrorOr<TestEntry>> Handle(CreateTestEntryCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<TestEntryResponseDto>> Handle(CreateTestEntryCommand request, CancellationToken cancellationToken)
     {
         var entry = new TestEntry
         {
-            Id = Guid.NewGuid(),
             PatientId = request.PatientId,
             DiagnosticTestId = request.DiagnosticTestId,
-            EntryNumber = $"TE-{DateTime.UtcNow:yyyy}-{Guid.NewGuid().ToString()[..8].ToUpper()}",
-            EntryDate = DateTime.UtcNow,
-            SampleCollectionDate = request.SampleCollectionDate,
-            Status = "Registered",
-            Priority = request.Priority,
-            ReferredBy = request.ReferredBy,
-            Notes = request.Notes
+            EntryDate = request.EntryDate,
+            Status = "Pending"
         };
 
         var created = await unitOfWork.Repository<TestEntry>().AddAsync(entry, cancellationToken);
-        return created;
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Load related entities
+        var patient = await unitOfWork.Repository<Patient>().GetByIdAsync(created.PatientId, cancellationToken);
+        var test = await unitOfWork.Repository<DiagnosticTest>().GetByIdAsync(created.DiagnosticTestId, cancellationToken);
+
+        return new TestEntryResponseDto
+        {
+            Id = created.Id,
+            PatientId = created.PatientId,
+            PatientName = patient?.FirstName ?? string.Empty,
+            DiagnosticTestId = created.DiagnosticTestId,
+            TestName = test?.TestName ?? string.Empty,
+            EntryDate = created.EntryDate,
+            Status = created.Status,
+            CreatedAt = created.CreatedAt
+        };
     }
 }

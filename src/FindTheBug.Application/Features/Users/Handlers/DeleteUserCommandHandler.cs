@@ -6,7 +6,7 @@ using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Application.Features.Users.Handlers;
 
-public class DeleteUserCommandHandler(IUnitOfWork unitOfWork) 
+public class DeleteUserCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<DeleteUserCommand, bool>
 {
     public async Task<ErrorOr<bool>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)

@@ -13,7 +13,7 @@ public class MvcInstaller : IInstaller
         });
 
         services.AddHttpContextAccessor();
-        
+
         // Add Mapster
         services.AddMapster();
     }

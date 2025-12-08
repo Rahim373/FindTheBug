@@ -197,7 +197,7 @@ public class DbInitializer
     {
         var superUserConfig = _configuration.GetSection("SuperUser");
         var email = superUserConfig["Email"];
-        
+
         if (string.IsNullOrEmpty(email))
         {
             _logger.LogWarning("SuperUser email not configured. Skipping seeding.");

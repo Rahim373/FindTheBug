@@ -13,14 +13,14 @@ public class LoginCommandHandler(
     IUnitOfWork unitOfWork,
     IPasswordHasher passwordHasher,
     IAuthenticationService authService,
-    IHttpContextAccessor httpContextAccessor) 
+    IHttpContextAccessor httpContextAccessor)
     : ICommandHandler<LoginCommand, LoginResponse>
 {
     public async Task<ErrorOr<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         // Get user by email or phone
         var users = await unitOfWork.Repository<User>().GetAllAsync(cancellationToken);
-        var user = users.FirstOrDefault(u => 
+        var user = users.FirstOrDefault(u =>
             (u.Email != null && u.Email.ToLower() == request.EmailOrPhone.ToLower()) ||
             u.Phone == request.EmailOrPhone);
 
@@ -41,7 +41,7 @@ public class LoginCommandHandler(
                 user.LockedOutUntil = DateTime.UtcNow.AddMinutes(15);
             }
             await unitOfWork.Repository<User>().UpdateAsync(user, cancellationToken);
-            
+
             return Error.Unauthorized("Authentication.InvalidCredentials", "Invalid email/phone or password");
         }
 

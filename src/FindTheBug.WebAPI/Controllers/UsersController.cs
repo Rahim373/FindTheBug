@@ -28,7 +28,7 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
     {
         var query = new GetAllUsersQuery(search, pageNumber, pageSize);
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             users => Ok(users),
             errors => Problem(errors));
@@ -42,7 +42,7 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
     {
         var query = new GetUserByIdQuery(id);
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             user => Ok(user),
             errors => Problem(errors));
@@ -56,7 +56,7 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
     {
         var command = mapper.Map<CreateUserCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             user => Ok(user),
             errors => Problem(errors));
@@ -71,9 +71,9 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
         var command = mapper.Map<UpdateUserCommand>(request);
         // Ensure ID from route is used
         command = command with { Id = id };
-        
+
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             user => Ok(user),
             errors => Problem(errors));
@@ -87,7 +87,7 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
     {
         var command = new DeleteUserCommand(id);
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             _ => NoContent(),
             errors => Problem(errors));

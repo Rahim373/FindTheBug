@@ -14,7 +14,7 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
     public IRepository<T> Repository<T>() where T : class
     {
         var type = typeof(T);
-        
+
         if (!_repositories.ContainsKey(type))
         {
             var repositoryType = typeof(Repository<>).MakeGenericType(type);

@@ -11,7 +11,7 @@ public class ModulesController(ISender mediator) : BaseApiController
     {
         var query = new GetAllModulesQuery();
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             modules => Ok(modules),
             errors => Problem(errors));

@@ -2,63 +2,38 @@ using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Features.Invoices.Commands;
+using FindTheBug.Application.Features.Invoices.DTOs;
 using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Application.Features.Invoices.Handlers;
 
-public class CreateInvoiceCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CreateInvoiceCommand, Invoice>
+public class CreateInvoiceCommandHandler(IUnitOfWork unitOfWork)
+    : ICommandHandler<CreateInvoiceCommand, InvoiceResponseDto>
 {
-    public async Task<ErrorOr<Invoice>> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<InvoiceResponseDto>> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
     {
-        await unitOfWork.BeginTransactionAsync(cancellationToken);
-
         var invoice = new Invoice
         {
-            Id = Guid.NewGuid(),
+            InvoiceNumber = $"INV-{DateTime.Now:yyyyMMdd}-{Guid.NewGuid().ToString()[..8]}",
             PatientId = request.PatientId,
-            InvoiceNumber = $"INV-{DateTime.UtcNow:yyyy}-{Guid.NewGuid().ToString()[..8].ToUpper()}",
-            InvoiceDate = DateTime.UtcNow,
-            Status = "Draft",
-            PaymentMethod = request.PaymentMethod,
-            Notes = request.Notes
+            TotalAmount = request.TotalAmount,
+            InvoiceDate = DateTime.UtcNow
         };
 
-        var invoiceItems = request.Items.Select(item =>
+        var created = await unitOfWork.Repository<Invoice>().AddAsync(invoice, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        var patient = await unitOfWork.Repository<Patient>().GetByIdAsync(created.PatientId, cancellationToken);
+
+        return new InvoiceResponseDto
         {
-            var amount = item.Quantity * item.UnitPrice;
-            var discountAmount = item.DiscountPercentage.HasValue
-                ? amount * (item.DiscountPercentage.Value / 100)
-                : 0;
-
-            return new InvoiceItem
-            {
-                Id = Guid.NewGuid(),
-                InvoiceId = invoice.Id,
-                TestEntryId = item.TestEntryId,
-                Description = item.Description,
-                Quantity = item.Quantity,
-                UnitPrice = item.UnitPrice,
-                Amount = amount,
-                DiscountPercentage = item.DiscountPercentage.GetValueOrDefault(),
-                DiscountAmount = discountAmount
-            };
-        }).ToList();
-
-        var subTotal = invoiceItems.Sum(i => i.Amount - i.DiscountAmount);
-        invoice.SubTotal = subTotal;
-        invoice.DiscountAmount = request.DiscountAmount ?? 0;
-        invoice.TaxAmount = request.TaxAmount ?? 0;
-        invoice.TotalAmount = subTotal - invoice.DiscountAmount + invoice.TaxAmount;
-
-        var createdInvoice = await unitOfWork.Repository<Invoice>().AddAsync(invoice, cancellationToken);
-
-        foreach (var item in invoiceItems)
-        {
-            await unitOfWork.Repository<InvoiceItem>().AddAsync(item, cancellationToken);
-        }
-
-        await unitOfWork.CommitTransactionAsync(cancellationToken);
-
-        return createdInvoice;
+            Id = created.Id,
+            InvoiceNumber = created.InvoiceNumber,
+            PatientId = created.PatientId,
+            PatientName = patient?.FirstName ?? string.Empty,
+            TotalAmount = created.TotalAmount,
+            InvoiceDate = created.InvoiceDate,
+            CreatedAt = created.CreatedAt
+        };
     }
 }

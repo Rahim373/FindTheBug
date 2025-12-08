@@ -1,5 +1,5 @@
-using System.Reflection;
 using FindTheBug.Domain.Common;
+using System.Reflection;
 
 namespace FindTheBug.ArchitectureTests;
 

@@ -6,7 +6,7 @@ using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Application.Features.Roles.Handlers;
 
-public class DeleteRoleCommandHandler(IUnitOfWork unitOfWork) 
+public class DeleteRoleCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<DeleteRoleCommand, bool>
 {
     public async Task<ErrorOr<bool>> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)

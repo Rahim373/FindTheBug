@@ -12,8 +12,8 @@ public class NamingConventionTests
 
         // Act
         var commandTypes = assembly.GetTypes()
-            .Where(t => t.Namespace?.Contains("Commands") == true && 
-                       t.IsClass && 
+            .Where(t => t.Namespace?.Contains("Commands") == true &&
+                       t.IsClass &&
                        !t.IsAbstract &&
                        !t.Name.EndsWith("Handler"))
             .Where(t => !t.Name.EndsWith("Command"))
@@ -32,7 +32,7 @@ public class NamingConventionTests
 
         // Act
         var queryTypes = assembly.GetTypes()
-            .Where(t => t.Namespace?.Contains("Queries") == true && 
+            .Where(t => t.Namespace?.Contains("Queries") == true &&
                        t.IsClass &&
                        !t.IsAbstract &&
                        !t.Name.EndsWith("Handler"))
@@ -52,8 +52,8 @@ public class NamingConventionTests
 
         // Act
         var handlerTypes = assembly.GetTypes()
-            .Where(t => (t.Name.Contains("Command") || t.Name.Contains("Query")) && 
-                       t.IsClass && 
+            .Where(t => (t.Name.Contains("Command") || t.Name.Contains("Query")) &&
+                       t.IsClass &&
                        !t.IsAbstract &&
                        t.Name.Contains("Handler"))
             .Where(t => !t.Name.EndsWith("Handler"))
@@ -89,8 +89,8 @@ public class NamingConventionTests
     public void Interfaces_Should_StartWithI()
     {
         // Arrange
-        var assemblies = new[] 
-        { 
+        var assemblies = new[]
+        {
             AssemblyReference.DomainAssembly,
             AssemblyReference.ApplicationAssembly
         };

@@ -44,7 +44,7 @@ public class UpdateRoleCommandHandler(IUnitOfWork unitOfWork)
         role.IsActive = request.IsActive;
         role.UpdatedAt = DateTime.UtcNow;
 
-        unitOfWork.Repository<Role>().Update(role);
+        await unitOfWork.Repository<Role>().UpdateAsync(role);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Return DTO

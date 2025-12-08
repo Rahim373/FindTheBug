@@ -9,7 +9,7 @@ namespace FindTheBug.Application.Features.Authentication.Handlers;
 
 public class RevokeTokenCommandHandler(
     IUnitOfWork unitOfWork,
-    IHttpContextAccessor httpContextAccessor) 
+    IHttpContextAccessor httpContextAccessor)
     : ICommandHandler<RevokeTokenCommand, bool>
 {
     public async Task<ErrorOr<bool>> Handle(RevokeTokenCommand request, CancellationToken cancellationToken)

@@ -22,7 +22,7 @@ public class CreatePatientCommandHandler(IUnitOfWork unitOfWork)
 
         var patient = new Patient
         {
-            Name = request.Name,
+            FirstName = request.Name,
             MobileNumber = request.MobileNumber,
             Age = request.Age,
             Gender = request.Gender,
@@ -35,7 +35,7 @@ public class CreatePatientCommandHandler(IUnitOfWork unitOfWork)
         return new PatientResponseDto
         {
             Id = created.Id,
-            Name = created.Name,
+            Name = created.FirstName,
             MobileNumber = created.MobileNumber,
             Age = created.Age,
             Gender = created.Gender,

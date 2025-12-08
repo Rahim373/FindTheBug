@@ -14,7 +14,7 @@ public class GetAllUsersQueryHandler(IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<PagedResult<UserListItemDto>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
-        var query = unitOfWork.Repository<User>().GetQueryable()
+        IQueryable<User> query = unitOfWork.Repository<User>().GetQueryable()
             .Include(u => u.UserRoles);
 
         // Apply search filter

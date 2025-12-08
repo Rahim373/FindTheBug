@@ -71,8 +71,8 @@ public class RepositoryTests
 
         // Act
         var handlerTypes = assembly.GetTypes()
-            .Where(t => t.Name.EndsWith("Handler") && 
-                       !t.IsAbstract && 
+            .Where(t => t.Name.EndsWith("Handler") &&
+                       !t.IsAbstract &&
                        !t.IsInterface)
             .ToList();
 
@@ -81,7 +81,7 @@ public class RepositoryTests
             .Where(t =>
             {
                 var constructors = t.GetConstructors();
-                return constructors.Any() && 
+                return constructors.Any() &&
                        !constructors.Any(c => c.GetParameters()
                            .Any(p => p.ParameterType.Name == "IUnitOfWork"));
             })
@@ -91,7 +91,7 @@ public class RepositoryTests
         // Assert - Allow some handlers without IUnitOfWork (e.g., simple queries)
         // This is a soft check - we expect most handlers to use IUnitOfWork
         var percentageWithUnitOfWork = (handlerTypes.Count - handlersWithoutUnitOfWork.Count) * 100.0 / handlerTypes.Count;
-        
+
         Assert.True(percentageWithUnitOfWork >= 70,
             $"At least 70% of handlers should use IUnitOfWork. Current: {percentageWithUnitOfWork:F1}%. Handlers without: {string.Join(", ", handlersWithoutUnitOfWork)}");
     }

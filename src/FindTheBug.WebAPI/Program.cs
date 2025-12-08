@@ -1,6 +1,6 @@
-using FindTheBug.WebAPI.Middleware;
 using FindTheBug.WebAPI.Extensions;
 using FindTheBug.WebAPI.Installers;
+using FindTheBug.WebAPI.Middleware;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Prometheus;
@@ -72,10 +72,10 @@ app.UseCors("AllowAngularApp");
 try
 {
     Log.Information("Starting FindTheBug application");
-    
+
     // Initialize Database
     app.UseDatabaseInitializer().GetAwaiter();
-    
+
     app.Run();
 }
 catch (Exception ex)

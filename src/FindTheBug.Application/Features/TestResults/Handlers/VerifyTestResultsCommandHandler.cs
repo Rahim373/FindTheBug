@@ -6,7 +6,7 @@ using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Application.Features.TestResults.Handlers;
 
-public class VerifyTestResultsCommandHandler(IUnitOfWork unitOfWork) 
+public class VerifyTestResultsCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<VerifyTestResultsCommand, bool>
 {
     public async Task<ErrorOr<bool>> Handle(VerifyTestResultsCommand request, CancellationToken cancellationToken)

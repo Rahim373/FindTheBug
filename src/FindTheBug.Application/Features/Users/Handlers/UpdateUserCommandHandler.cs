@@ -38,12 +38,12 @@ public class UpdateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher pa
         user.AllowUserLogin = request.AllowUserLogin;
 
         if (!string.IsNullOrEmpty(request.Password))
-            user.PasswordHash = passwordHasher.Hash(request.Password);
+            user.PasswordHash = passwordHasher.HashPassword(request.Password);
 
         // Update roles
         var existingRoles = user.UserRoles.ToList();
         foreach (var role in existingRoles)
-            unitOfWork.Repository<UserRole>().Delete(role);
+            await unitOfWork.Repository<UserRole>().DeleteAsync(role.Id);
 
         foreach (var roleId in request.RoleIds)
         {
@@ -54,7 +54,7 @@ public class UpdateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher pa
             }, cancellationToken);
         }
 
-        unitOfWork.Repository<User>().Update(user);
+        await unitOfWork.Repository<User>().UpdateAsync(user);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new UserResponseDto

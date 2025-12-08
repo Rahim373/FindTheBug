@@ -1,5 +1,5 @@
-using FindTheBug.Infrastructure.Common;
 using FindTheBug.Domain.Entities;
+using FindTheBug.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Infrastructure.Mappings;
@@ -14,26 +14,26 @@ public class PasswordResetTokenMapping : IMapping<PasswordResetToken>
         modelBuilder.Entity<PasswordResetToken>(entity =>
         {
             entity.HasKey(e => e.Id);
-            
+
             entity.Property(e => e.Email)
                 .IsRequired()
                 .HasColumnType("text");
-                
+
             entity.Property(e => e.Token)
                 .IsRequired()
                 .HasColumnType("text");
-                
+
             entity.Property(e => e.ExpiresAt)
                 .IsRequired()
                 .HasColumnType("timestamp with time zone");
-                
+
             entity.Property(e => e.CreatedAt)
                 .IsRequired()
                 .HasColumnType("timestamp with time zone");
-                
+
             entity.Property(e => e.UsedAt)
                 .HasColumnType("timestamp with time zone");
-                
+
             entity.Property(e => e.IpAddress)
                 .HasColumnType("text");
 

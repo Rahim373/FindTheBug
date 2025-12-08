@@ -1,5 +1,5 @@
-using FluentValidation;
 using FindTheBug.Application.Features.Users.Commands;
+using FluentValidation;
 
 namespace FindTheBug.Application.Features.Users.Validators;
 

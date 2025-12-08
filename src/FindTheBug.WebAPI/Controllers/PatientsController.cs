@@ -20,7 +20,7 @@ public class PatientsController(ISender mediator) : BaseApiController
     {
         var query = new GetAllPatientsQuery(search);
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             patients => Ok(patients),
             errors => Problem(errors));
@@ -34,7 +34,7 @@ public class PatientsController(ISender mediator) : BaseApiController
     {
         var query = new GetPatientByIdQuery(id);
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             patient => Ok(patient),
             errors => Problem(errors));
@@ -47,7 +47,7 @@ public class PatientsController(ISender mediator) : BaseApiController
     public async Task<IActionResult> Create([FromBody] CreatePatientCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             patient => Ok(patient),
             errors => Problem(errors));

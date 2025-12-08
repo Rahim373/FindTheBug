@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Application.Features.Roles.Handlers;
 
-public class GetRoleByIdQueryHandler(IUnitOfWork unitOfWork) 
+public class GetRoleByIdQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetRoleByIdQuery, RoleResponseDto>
 {
     public async Task<ErrorOr<RoleResponseDto>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)

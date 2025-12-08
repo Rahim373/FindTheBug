@@ -16,7 +16,7 @@ public class TestEntriesController(ISender mediator) : BaseApiController
     public async Task<IActionResult> Create([FromBody] CreateTestEntryCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             testEntry => Ok(testEntry),
             errors => Problem(errors));

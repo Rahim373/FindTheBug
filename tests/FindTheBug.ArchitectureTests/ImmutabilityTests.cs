@@ -12,8 +12,8 @@ public class ImmutabilityTests
 
         // Act
         var commandTypes = assembly.GetTypes()
-            .Where(t => t.Name.EndsWith("Command") && 
-                       !t.IsAbstract && 
+            .Where(t => t.Name.EndsWith("Command") &&
+                       !t.IsAbstract &&
                        !t.IsInterface &&
                        t.Namespace?.StartsWith("FindTheBug.Application.Features") == true)
             .ToList();
@@ -35,8 +35,8 @@ public class ImmutabilityTests
 
         // Act
         var queryTypes = assembly.GetTypes()
-            .Where(t => t.Name.EndsWith("Query") && 
-                       !t.IsAbstract && 
+            .Where(t => t.Name.EndsWith("Query") &&
+                       !t.IsAbstract &&
                        !t.IsInterface &&
                        t.Namespace?.StartsWith("FindTheBug.Application.Features") == true)
             .ToList();

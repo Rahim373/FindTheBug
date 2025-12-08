@@ -19,18 +19,18 @@ public class GetAllPatientsQueryHandler(IUnitOfWork unitOfWork)
         {
             var searchLower = request.Search.ToLower();
             query = query.Where(p =>
-                p.Name.ToLower().Contains(searchLower) ||
+                p.FirstName.ToLower().Contains(searchLower) ||
                 p.MobileNumber.Contains(request.Search));
         }
 
         var patients = await query
-            .OrderBy(p => p.Name)
+            .OrderBy(p => p.FirstName)
             .ToListAsync(cancellationToken);
 
         var patientDtos = patients.Select(p => new PatientListItemDto
         {
             Id = p.Id,
-            Name = p.Name,
+            Name = p.FirstName,
             MobileNumber = p.MobileNumber,
             Age = p.Age,
             Gender = p.Gender

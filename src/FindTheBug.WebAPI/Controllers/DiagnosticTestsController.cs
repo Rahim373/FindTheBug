@@ -16,7 +16,7 @@ public class DiagnosticTestsController(ISender mediator) : BaseApiController
     public async Task<IActionResult> Create([FromBody] CreateDiagnosticTestCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             test => Ok(test),
             errors => Problem(errors));

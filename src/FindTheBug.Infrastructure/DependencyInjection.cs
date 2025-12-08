@@ -38,7 +38,7 @@ public static class DependencyInjection
 
         // Register metrics service
         services.AddSingleton<IMetricsService, MetricsService>();
-        
+
         // Register authentication services
         services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();

@@ -12,7 +12,7 @@ namespace FindTheBug.Application.Features.Authentication.Handlers;
 public class RefreshTokenCommandHandler(
     IUnitOfWork unitOfWork,
     IAuthenticationService authService,
-    IHttpContextAccessor httpContextAccessor) 
+    IHttpContextAccessor httpContextAccessor)
     : ICommandHandler<RefreshTokenCommand, RefreshTokenResponse>
 {
     public async Task<ErrorOr<RefreshTokenResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ public class RefreshTokenCommandHandler(
         {
             if (refreshToken.IsRevoked)
                 return Error.Unauthorized("Authentication.TokenRevoked", "Refresh token has been revoked");
-            
+
             return Error.Unauthorized("Authentication.TokenExpired", "Refresh token has expired");
         }
 

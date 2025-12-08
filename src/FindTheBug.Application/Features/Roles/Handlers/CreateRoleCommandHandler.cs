@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Application.Features.Roles.Handlers;
 
-public class CreateRoleCommandHandler(IUnitOfWork unitOfWork) 
+public class CreateRoleCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateRoleCommand, RoleResponseDto>
 {
     public async Task<ErrorOr<RoleResponseDto>> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
@@ -52,7 +52,7 @@ public class CreateRoleCommandHandler(IUnitOfWork unitOfWork)
                 };
 
                 await unitOfWork.Repository<RoleModulePermission>().AddAsync(roleModulePermission, cancellationToken);
-                
+
                 modulePermissions.Add(new ModulePermissionDto
                 {
                     ModuleId = mp.ModuleId,

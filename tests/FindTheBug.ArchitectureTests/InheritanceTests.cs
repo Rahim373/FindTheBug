@@ -12,8 +12,8 @@ public class InheritanceTests
 
         // Act - Use simpler check
         var commandTypes = assembly.GetTypes()
-            .Where(t => t.Name.EndsWith("Command") && 
-                       !t.IsAbstract && 
+            .Where(t => t.Name.EndsWith("Command") &&
+                       !t.IsAbstract &&
                        !t.IsInterface &&
                        t.Namespace?.Contains("Commands") == true)
             .ToList();
@@ -35,8 +35,8 @@ public class InheritanceTests
 
         // Act
         var queryTypes = assembly.GetTypes()
-            .Where(t => t.Name.EndsWith("Query") && 
-                       !t.IsAbstract && 
+            .Where(t => t.Name.EndsWith("Query") &&
+                       !t.IsAbstract &&
                        !t.IsInterface &&
                        t.Namespace?.Contains("Queries") == true)
             .ToList();
@@ -119,8 +119,8 @@ public class InheritanceTests
 
         // Act
         var entityTypes = assembly.GetTypes()
-            .Where(t => t.Namespace == "FindTheBug.Domain.Entities" && 
-                       t.IsClass && 
+            .Where(t => t.Namespace == "FindTheBug.Domain.Entities" &&
+                       t.IsClass &&
                        !t.IsAbstract)
             .ToList();
 

@@ -20,7 +20,7 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     {
         var query = new GetAllTestParametersQuery(diagnosticTestId);
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             parameters => Ok(parameters),
             errors => Problem(errors));
@@ -33,7 +33,7 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     public async Task<IActionResult> Create([FromBody] CreateTestParameterCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             parameter => Ok(parameter),
             errors => Problem(errors));
@@ -47,9 +47,9 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     {
         var command = mapper.Map<UpdateTestParameterCommand>(request);
         command = command with { Id = id };
-        
+
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             parameter => Ok(parameter),
             errors => Problem(errors));
@@ -63,7 +63,7 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     {
         var command = new DeleteTestParameterCommand(id);
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             _ => NoContent(),
             errors => Problem(errors));

@@ -8,7 +8,7 @@ namespace FindTheBug.Application.Features.Authentication.Handlers;
 
 public class ChangePasswordCommandHandler(
     IUnitOfWork unitOfWork,
-    IPasswordHasher passwordHasher) 
+    IPasswordHasher passwordHasher)
     : ICommandHandler<ChangePasswordCommand, bool>
 {
     public async Task<ErrorOr<bool>> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
@@ -36,7 +36,7 @@ public class ChangePasswordCommandHandler(
         // Revoke all refresh tokens for security
         var refreshTokens = await unitOfWork.Repository<RefreshToken>().GetAllAsync(cancellationToken);
         var userTokens = refreshTokens.Where(rt => rt.UserId == user.Id && rt.IsActive).ToList();
-        
+
         foreach (var token in userTokens)
         {
             token.RevokedAt = DateTime.UtcNow;

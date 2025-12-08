@@ -95,7 +95,7 @@ public class JwtAuthenticationService : IAuthenticationService
     {
         var principal = ValidateToken(token);
         var userIdClaim = principal?.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        
+
         return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
     }
 }

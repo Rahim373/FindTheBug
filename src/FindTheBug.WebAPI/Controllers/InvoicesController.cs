@@ -17,7 +17,7 @@ public class InvoicesController(ISender mediator) : BaseApiController
     public async Task<IActionResult> Create([FromBody] CreateInvoiceCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             invoice => Ok(invoice),
             errors => Problem(errors));

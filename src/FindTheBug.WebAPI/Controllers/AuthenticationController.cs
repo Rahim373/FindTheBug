@@ -16,7 +16,7 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             authResult => Ok(authResult),
             errors => Problem(errors));
@@ -30,7 +30,7 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             authResult => Ok(authResult),
             errors => Problem(errors));
@@ -43,7 +43,7 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             success => Ok(success),
             errors => Problem(errors));
@@ -57,7 +57,7 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             success => Ok(success),
             errors => Problem(errors));
@@ -71,7 +71,7 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             success => Ok(success),
             errors => Problem(errors));
@@ -84,7 +84,7 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             success => Ok(success),
             errors => Problem(errors));

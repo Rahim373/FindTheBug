@@ -1,7 +1,7 @@
-using System.Net;
-using System.Text.Json;
 using FindTheBug.Application.Exceptions;
 using FindTheBug.Domain.Exceptions;
+using System.Net;
+using System.Text.Json;
 
 namespace FindTheBug.WebAPI.Middleware;
 

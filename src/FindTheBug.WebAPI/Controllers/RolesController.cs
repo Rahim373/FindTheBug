@@ -18,7 +18,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     {
         var query = new GetAllRolesQuery(pageNumber, pageSize, search);
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             roles => Ok(roles),
             errors => Problem(errors));
@@ -29,7 +29,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     {
         var query = new GetActiveRolesQuery();
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             roles => Ok(roles),
             errors => Problem(errors));
@@ -40,7 +40,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     {
         var query = new GetRoleByIdQuery(id);
         var result = await mediator.Send(query, cancellationToken);
-        
+
         return result.Match(
             role => Ok(role),
             errors => Problem(errors));
@@ -51,7 +51,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     {
         var command = mapper.Map<CreateRoleCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             role => Ok(role),
             errors => Problem(errors));
@@ -63,9 +63,9 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
         var command = mapper.Map<UpdateRoleCommand>(request);
         // Ensure ID from route is used
         command = command with { Id = id };
-        
+
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             role => Ok(role),
             errors => Problem(errors));
@@ -76,7 +76,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     {
         var command = new DeleteRoleCommand(id);
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             _ => NoContent(),
             errors => Problem(errors));

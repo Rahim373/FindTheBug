@@ -16,12 +16,12 @@ public class ErrorOrActionFilter : IActionFilter
         if (context.Result is ObjectResult objectResult && objectResult.Value is not null)
         {
             var resultType = objectResult.Value.GetType();
-            
+
             // Check if the result implements IErrorOr
             if (resultType.IsGenericType)
             {
                 var genericTypeDef = resultType.GetGenericTypeDefinition();
-                
+
                 // Check if it's ErrorOr<T>
                 if (genericTypeDef.FullName?.StartsWith("ErrorOr.ErrorOr") == true)
                 {
@@ -30,7 +30,7 @@ public class ErrorOrActionFilter : IActionFilter
                     if (isErrorProperty is not null)
                     {
                         var isError = (bool)isErrorProperty.GetValue(objectResult.Value)!;
-                        
+
                         if (isError)
                         {
                             // Handle error case
@@ -68,7 +68,7 @@ public class ErrorOrActionFilter : IActionFilter
                                             Title = firstError.Description,
                                             Status = statusCode
                                         };
-                                        
+
                                         problemDetails.Extensions["errors"] = errorsList.Select(e => new { e.Code, e.Description }).ToList();
                                         problemDetails.Extensions["traceId"] = context.HttpContext.TraceIdentifier;
 

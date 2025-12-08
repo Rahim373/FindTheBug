@@ -34,7 +34,7 @@ public class EmailService : IEmailService
     public async Task SendPasswordResetEmailAsync(string toEmail, string resetToken, CancellationToken cancellationToken = default)
     {
         var resetUrl = $"{_configuration["AppUrl"]}/reset-password?token={Uri.EscapeDataString(resetToken)}";
-        
+
         var subject = "Password Reset Request";
         var body = $@"
             <html>

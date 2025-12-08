@@ -2,27 +2,42 @@ using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Features.TestParameters.Commands;
+using FindTheBug.Application.Features.TestParameters.DTOs;
 using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Application.Features.TestParameters.Handlers;
 
-public class UpdateTestParameterCommandHandler(IUnitOfWork unitOfWork) 
-    : ICommandHandler<UpdateTestParameterCommand, TestParameter>
+public class UpdateTestParameterCommandHandler(IUnitOfWork unitOfWork)
+    : ICommandHandler<UpdateTestParameterCommand, TestParameterResponseDto>
 {
-    public async Task<ErrorOr<TestParameter>> Handle(UpdateTestParameterCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<TestParameterResponseDto>> Handle(UpdateTestParameterCommand request, CancellationToken cancellationToken)
     {
-        var existing = await unitOfWork.Repository<TestParameter>().GetByIdAsync(request.Id, cancellationToken);
-        if (existing is null)
-            return Error.NotFound("TestParameter.NotFound", $"Test parameter with ID {request.Id} not found");
+        var parameter = await unitOfWork.Repository<TestParameter>().GetByIdAsync(request.Id, cancellationToken);
 
-        existing.ParameterName = request.ParameterName;
-        existing.Unit = request.Unit;
-        existing.ReferenceRangeMin = request.ReferenceRangeMin;
-        existing.ReferenceRangeMax = request.ReferenceRangeMax;
-        existing.DataType = request.DataType;
-        existing.DisplayOrder = request.DisplayOrder;
+        if (parameter == null)
+            return Error.NotFound("TestParameter.NotFound", "Test parameter not found");
 
-        await unitOfWork.Repository<TestParameter>().UpdateAsync(existing, cancellationToken);
-        return existing;
+        parameter.ParameterName = request.ParameterName;
+        parameter.Unit = request.Unit;
+        parameter.ReferenceRangeMin = request.ReferenceRangeMin;
+        parameter.ReferenceRangeMax = request.ReferenceRangeMax;
+        parameter.DataType = request.DataType;
+        parameter.DisplayOrder = request.DisplayOrder;
+
+        await unitOfWork.Repository<TestParameter>().UpdateAsync(parameter);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return new TestParameterResponseDto
+        {
+            Id = parameter.Id,
+            DiagnosticTestId = parameter.DiagnosticTestId,
+            ParameterName = parameter.ParameterName,
+            Unit = parameter.Unit,
+            ReferenceRangeMin = parameter.ReferenceRangeMin,
+            ReferenceRangeMax = parameter.ReferenceRangeMax,
+            DataType = parameter.DataType,
+            DisplayOrder = parameter.DisplayOrder,
+            CreatedAt = parameter.CreatedAt
+        };
     }
 }

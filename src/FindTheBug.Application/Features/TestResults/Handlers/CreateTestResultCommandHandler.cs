@@ -2,27 +2,42 @@ using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Features.TestResults.Commands;
+using FindTheBug.Application.Features.TestResults.DTOs;
 using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Application.Features.TestResults.Handlers;
 
-public class CreateTestResultCommandHandler(IUnitOfWork unitOfWork) 
-    : ICommandHandler<CreateTestResultCommand, TestResult>
+public class CreateTestResultCommandHandler(IUnitOfWork unitOfWork)
+    : ICommandHandler<CreateTestResultCommand, TestResultResponseDto>
 {
-    public async Task<ErrorOr<TestResult>> Handle(CreateTestResultCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<TestResultResponseDto>> Handle(CreateTestResultCommand request, CancellationToken cancellationToken)
     {
-        var testResult = new TestResult
+        var result = new TestResult
         {
-            Id = Guid.NewGuid(),
             TestEntryId = request.TestEntryId,
             TestParameterId = request.TestParameterId,
             ResultValue = request.ResultValue,
             IsAbnormal = request.IsAbnormal,
-            Notes = request.Notes,
-            ResultDate = DateTime.UtcNow
+            Notes = request.Notes
         };
 
-        var created = await unitOfWork.Repository<TestResult>().AddAsync(testResult, cancellationToken);
-        return created;
+        var created = await unitOfWork.Repository<TestResult>().AddAsync(result, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Load parameter name
+        var parameter = await unitOfWork.Repository<TestParameter>()
+            .GetByIdAsync(created.TestParameterId, cancellationToken);
+
+        return new TestResultResponseDto
+        {
+            Id = created.Id,
+            TestEntryId = created.TestEntryId,
+            TestParameterId = created.TestParameterId,
+            ParameterName = parameter?.ParameterName ?? string.Empty,
+            ResultValue = created.ResultValue,
+            IsAbnormal = created.IsAbnormal,
+            Notes = created.Notes,
+            CreatedAt = created.CreatedAt
+        };
     }
 }

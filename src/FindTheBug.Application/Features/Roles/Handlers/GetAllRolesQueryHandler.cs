@@ -5,17 +5,16 @@ using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Roles.DTOs;
 using FindTheBug.Application.Features.Roles.Queries;
 using FindTheBug.Domain.Entities;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Application.Features.Roles.Handlers;
 
-public class GetAllRolesQueryHandler(IUnitOfWork unitOfWork) 
+public class GetAllRolesQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllRolesQuery, PagedResult<RoleListItemDto>>
 {
     public async Task<ErrorOr<PagedResult<RoleListItemDto>>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
     {
-        var query = unitOfWork.Repository<Role>().GetQueryable()
+        IQueryable<Role> query = unitOfWork.Repository<Role>().GetQueryable()
             .Include(r => r.RoleModulePermissions);
 
         // Apply search filter if provided

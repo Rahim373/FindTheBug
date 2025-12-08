@@ -25,7 +25,7 @@ public class CreateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher pa
         var user = new User
         {
             Email = request.Email,
-            PasswordHash = passwordHasher.Hash(request.Password),
+            PasswordHash = passwordHasher.HashPassword(request.Password),
             FirstName = request.FirstName,
             LastName = request.LastName,
             Phone = request.Phone,

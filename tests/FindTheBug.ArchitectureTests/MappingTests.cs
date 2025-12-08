@@ -1,5 +1,5 @@
-using NetArchTest.Rules;
 using FindTheBug.Infrastructure.Common;
+using NetArchTest.Rules;
 
 namespace FindTheBug.ArchitectureTests;
 
@@ -55,10 +55,10 @@ public class MappingTests
 
         // Act
         var mappingClassesWithoutInterface = assembly.GetTypes()
-            .Where(t => t.Name.EndsWith("Mapping") && 
-                       t.IsClass && 
+            .Where(t => t.Name.EndsWith("Mapping") &&
+                       t.IsClass &&
                        !t.IsAbstract &&
-                       !t.GetInterfaces().Any(i => i.IsGenericType && 
+                       !t.GetInterfaces().Any(i => i.IsGenericType &&
                                                   i.GetGenericTypeDefinition() == typeof(IMapping<>)))
             .Select(t => t.FullName)
             .ToList();
@@ -75,10 +75,10 @@ public class MappingTests
 
         // Act
         var mappingClassesWithoutConfigureMethod = assembly.GetTypes()
-            .Where(t => t.Name.EndsWith("Mapping") && 
-                       t.IsClass && 
+            .Where(t => t.Name.EndsWith("Mapping") &&
+                       t.IsClass &&
                        !t.IsAbstract &&
-                       t.GetInterfaces().Any(i => i.IsGenericType && 
+                       t.GetInterfaces().Any(i => i.IsGenericType &&
                                                   i.GetGenericTypeDefinition() == typeof(IMapping<>)))
             .Where(t => t.GetMethod("Configure") == null)
             .Select(t => t.FullName)
@@ -97,26 +97,26 @@ public class MappingTests
 
         // Get all domain entities
         var domainEntities = domainAssembly.GetTypes()
-            .Where(t => t.IsClass && 
+            .Where(t => t.IsClass &&
                        !t.IsAbstract &&
-                       (t.BaseType == typeof(Domain.Common.BaseEntity) || 
+                       (t.BaseType == typeof(Domain.Common.BaseEntity) ||
                         t.BaseType == typeof(Domain.Common.BaseAuditableEntity)) &&
                        t.Namespace == "FindTheBug.Domain.Entities")
             .ToList();
 
         // Get all mapping types
         var mappingTypes = infrastructureAssembly.GetTypes()
-            .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && 
-                                                   i.GetGenericTypeDefinition() == typeof(IMapping<>)) && 
-                       t.IsClass && 
+            .Where(t => t.GetInterfaces().Any(i => i.IsGenericType &&
+                                                   i.GetGenericTypeDefinition() == typeof(IMapping<>)) &&
+                       t.IsClass &&
                        !t.IsAbstract)
             .ToList();
 
         // Find entities without mappings
         var entitiesWithoutMappings = domainEntities
-            .Where(entity => !mappingTypes.Any(mapping => 
+            .Where(entity => !mappingTypes.Any(mapping =>
                 mapping.GetInterfaces()
-                    .Any(i => i.IsGenericType && 
+                    .Any(i => i.IsGenericType &&
                              i.GetGenericTypeDefinition() == typeof(IMapping<>) &&
                              i.GetGenericArguments()[0] == entity)))
             .Select(t => t.Name)

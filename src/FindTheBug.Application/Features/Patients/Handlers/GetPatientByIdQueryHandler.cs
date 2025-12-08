@@ -20,7 +20,7 @@ public class GetPatientByIdQueryHandler(IUnitOfWork unitOfWork)
         return new PatientResponseDto
         {
             Id = patient.Id,
-            Name = patient.Name,
+            Name = patient.FirstName,
             MobileNumber = patient.MobileNumber,
             Age = patient.Age,
             Gender = patient.Gender,

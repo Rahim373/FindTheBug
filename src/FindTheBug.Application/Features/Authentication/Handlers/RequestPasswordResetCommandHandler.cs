@@ -11,7 +11,7 @@ namespace FindTheBug.Application.Features.Authentication.Handlers;
 public class RequestPasswordResetCommandHandler(
     IUnitOfWork unitOfWork,
     IEmailService emailService,
-    IHttpContextAccessor httpContextAccessor) 
+    IHttpContextAccessor httpContextAccessor)
     : ICommandHandler<RequestPasswordResetCommand, bool>
 {
     public async Task<ErrorOr<bool>> Handle(RequestPasswordResetCommand request, CancellationToken cancellationToken)

@@ -14,7 +14,7 @@ public class TemplateRenderService : ITemplateRenderService
         // But for a generic service, we might need a more flexible way to find templates.
         // For now, let's search recursively or assume a convention.
         // Given the current usage: Features/Invoices/Templates/InvoiceTemplate.html
-        
+
         // Let's try to find the file in the base directory recursively
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
         var templateFiles = Directory.GetFiles(baseDir, templateName, SearchOption.AllDirectories);
