@@ -6,161 +6,157 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzPageHeaderModule } from 'ng-zorro-antd/page-header';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { RoleService } from '../../../../core/services/role.service';
 import { ModuleService, Module } from '../../../../core/services/module.service';
-import { ModulePermission } from '../../../../core/models/role.models';
+import { Role, CreateRoleRequest, UpdateRoleRequest, ModulePermission } from '../../../../core/models/role.models';
 
 @Component({
-  selector: 'app-role-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NzFormModule,
-    NzInputModule,
-    NzButtonModule,
-    NzSwitchModule,
-    NzTableModule,
-    NzCardModule,
-    NzPageHeaderModule
-  ],
-  templateUrl: './role-form.component.html',
-  styleUrl: './role-form.component.css'
+    selector: 'app-role-form',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        NzFormModule,
+        NzInputModule,
+        NzButtonModule,
+        NzSwitchModule,
+        NzCheckboxModule,
+        NzTableModule,
+        NzCardModule,
+        NzSpinModule
+    ],
+    templateUrl: './role-form.component.html',
+    styleUrl: './role-form.component.css'
 })
 export class RoleFormComponent implements OnInit {
-  roleForm!: FormGroup;
-  isEditMode = false;
-  roleId?: string;
-  loading = false;
-  submitting = false;
-  modules: Module[] = [];
-  modulePermissions: { [key: string]: ModulePermission } = {};
+    roleForm!: FormGroup;
+    isEditMode = false;
+    roleId?: string;
+    loading = false;
+    submitting = false;
+    modules: Module[] = [];
+    enabledModules: Set<string> = new Set();
 
-  constructor(
-    private fb: FormBuilder,
-    private roleService: RoleService,
-    private moduleService: ModuleService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private message: NzMessageService
-  ) {}
+    constructor(
+        private fb: FormBuilder,
+        private roleService: RoleService,
+        private moduleService: ModuleService,
+        private router: Router,
+        private route: ActivatedRoute,
+        private message: NzMessageService
+    ) { }
 
-  ngOnInit(): void {
-    this.initForm();
-    this.loadModules();
-    this.roleId = this.route.snapshot.paramMap.get('id') || undefined;
-    this.isEditMode = !!this.roleId;
-
-    if (this.isEditMode && this.roleId) {
-      this.loadRole(this.roleId);
+    ngOnInit(): void {
+        this.initForm();
+        this.loadData();
     }
-  }
 
-  loadModules(): void {
-    this.moduleService.getAll().subscribe({
-      next: (modules) => {
-        this.modules = modules;
-        // Initialize module permissions for all modules
-        modules.forEach(module => {
-          this.modulePermissions[module.id] = {
-            moduleId: module.id,
-            canView: false,
-            canCreate: false,
-            canEdit: false,
-            canDelete: false
-          };
+    initForm(): void {
+        this.roleForm = this.fb.group({
+            name: ['', [Validators.required, Validators.maxLength(100)]],
+            description: ['', [Validators.maxLength(500)]],
+            isActive: [true]
         });
-      },
-      error: () => {
-        this.message.error('Failed to load modules');
-      }
-    });
-  }
-
-  getModulePermission(moduleId: string): ModulePermission | undefined {
-    return this.modulePermissions[moduleId];
-  }
-
-  updateModulePermission(moduleId: string, permission: keyof ModulePermission, value: boolean): void {
-    if (this.modulePermissions[moduleId]) {
-      this.modulePermissions[moduleId] = {
-        ...this.modulePermissions[moduleId],
-        [permission]: value
-      };
     }
-  }
 
-  initForm(): void {
-    this.roleForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.maxLength(500)]],
-      isActive: [true]
-    });
-  }
+    async loadData(): Promise<void> {
+        this.loading = true;
+        try {
+            // Check if we're in edit mode first
+            this.roleId = this.route.snapshot.paramMap.get('id') || undefined;
+            this.isEditMode = !!this.roleId;
 
-  loadRole(id: string): void {
-    this.loading = true;
-    this.roleService.getById(id).subscribe({
-      next: (role) => {
-        this.roleForm.patchValue({
-          name: role.name,
-          description: role.description,
-          isActive: role.isActive
-        });
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-        this.message.error('Failed to load role');
+            // Load modules and role data in parallel for better performance
+            const [modules, roleData] = await Promise.all([
+                this.moduleService.getModulesAsync(),
+                this.isEditMode && this.roleId ? this.roleService.getRoleByIdAsync(this.roleId) : Promise.resolve(null)
+            ]);
+
+            this.modules = modules;
+
+            if (roleData) {
+                this.roleForm.patchValue({
+                    name: roleData.name,
+                    description: roleData.description,
+                    isActive: roleData.isActive
+                });
+                // Note: Backend might not return module permissions yet
+            }
+        } catch (error) {
+            console.error('Error loading data:', error);
+            this.message.error('Failed to load data. Please try again.');
+        } finally {
+            this.loading = false;
+        }
+    }
+
+    isModuleEnabled(moduleId: string): boolean {
+        return this.enabledModules.has(moduleId);
+    }
+
+    toggleModule(moduleId: string, enabled: boolean): void {
+        if (enabled) {
+            this.enabledModules.add(moduleId);
+        } else {
+            this.enabledModules.delete(moduleId);
+        }
+    }
+
+    async submitForm(): Promise<void> {
+        if (this.roleForm.invalid) {
+            Object.values(this.roleForm.controls).forEach(control => {
+                if (control.invalid) {
+                    control.markAsDirty();
+                    control.updateValueAndValidity({ onlySelf: true });
+                }
+            });
+            return;
+        }
+
+        this.submitting = true;
+        try {
+            const formValue = this.roleForm.value;
+
+            // Convert enabled modules to permission objects with all permissions enabled
+            const modulePermissions: ModulePermission[] = Array.from(this.enabledModules).map(moduleId => ({
+                moduleId,
+                canView: true,
+                canCreate: true,
+                canEdit: true,
+                canDelete: true
+            }));
+
+            const request: CreateRoleRequest | UpdateRoleRequest = {
+                name: formValue.name,
+                description: formValue.description,
+                isActive: formValue.isActive,
+                modulePermissions
+            };
+
+            if (this.isEditMode && this.roleId) {
+                await this.roleService.updateRoleAsync(this.roleId, request as UpdateRoleRequest);
+                this.message.success('Role updated successfully');
+            } else {
+                await this.roleService.createRoleAsync(request as CreateRoleRequest);
+                this.message.success('Role created successfully');
+            }
+
+            this.router.navigate(['/admin/roles']);
+        } catch (error) {
+            console.error('Error saving role:', error);
+            this.message.error(`Failed to ${this.isEditMode ? 'update' : 'create'} role. Please try again.`);
+        } finally {
+            this.submitting = false;
+        }
+    }
+
+    cancel(): void {
         this.router.navigate(['/admin/roles']);
-      }
-    });
-  }
-
-  submitForm(): void {
-    if (this.roleForm.valid) {
-      this.submitting = true;
-      const formValue = this.roleForm.value;
-
-      const request = {
-        name: formValue.name,
-        description: formValue.description,
-        isActive: formValue.isActive,
-        modulePermissions: Object.values(this.modulePermissions).filter(mp => 
-          mp.canView || mp.canCreate || mp.canEdit || mp.canDelete
-        )
-      };
-
-      const operation = this.isEditMode && this.roleId
-        ? this.roleService.update(this.roleId, request)
-        : this.roleService.create(request);
-
-      operation.subscribe({
-        next: () => {
-          this.message.success(`Role ${this.isEditMode ? 'updated' : 'created'} successfully`);
-          this.router.navigate(['/admin/roles']);
-        },
-        error: () => {
-          this.submitting = false;
-          this.message.error(`Failed to ${this.isEditMode ? 'update' : 'create'} role`);
-        }
-      });
-    } else {
-      Object.values(this.roleForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
-        }
-      });
     }
-  }
-
-  cancel(): void {
-    this.router.navigate(['/admin/roles']);
-  }
 }

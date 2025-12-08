@@ -11,20 +11,20 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
-    selector: 'app-login',
-    standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterLink,
-        NzFormModule,
-        NzInputModule,
-        NzButtonModule,
-        NzCheckboxModule,
-        NzIconModule,
-        NzAlertModule
-    ],
-    template: `
+  selector: 'app-login',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzCheckboxModule,
+    NzIconModule,
+    NzAlertModule
+  ],
+  template: `
     <div class="login-container">
       <h2 class="form-title">Sign In</h2>
       
@@ -86,7 +86,7 @@ import { AuthService } from '../../../core/services/auth.service';
       </form>
     </div>
   `,
-    styles: [`
+  styles: [`
     .form-title {
       text-align: center;
       margin-bottom: 24px;
@@ -116,54 +116,53 @@ import { AuthService } from '../../../core/services/auth.service';
   `]
 })
 export class LoginComponent {
-    private fb = inject(FormBuilder);
-    private authService = inject(AuthService);
-    private router = inject(Router);
-    private route = inject(ActivatedRoute);
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
-    loginForm: FormGroup;
-    isLoading = false;
-    passwordVisible = false;
-    errorMessage: string | null = null;
+  loginForm: FormGroup;
+  isLoading = false;
+  passwordVisible = false;
+  errorMessage: string | null = null;
 
-    constructor() {
-        this.loginForm = this.fb.group({
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required]],
-            remember: [true]
-        });
-    }
+  constructor() {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+      remember: [true]
+    });
+  }
 
-    async submitForm(): Promise<void> {
-        if (this.loginForm.valid) {
-            this.isLoading = true;
-            this.errorMessage = null;
+  async submitForm(): Promise<void> {
+    if (this.loginForm.valid) {
+      this.isLoading = true;
+      this.errorMessage = null;
 
-            try {
-                const { email, password } = this.loginForm.value;
-                const response = await this.authService.login(email, password);
+      try {
+        const { email, password } = this.loginForm.value;
+        const response = await this.authService.login(email, password);
 
-                if (response.isSuccess) {
-                    // Get the returnUrl from query params or default to admin dashboard
-                    debugger
-                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin/dashboard';
-                    await this.router.navigate([returnUrl]);
-                } else {
-                    this.errorMessage = response.errorMessage || 'Login failed. Please check your credentials.';
-                }
-            } catch (error) {
-                this.errorMessage = 'An unexpected error occurred. Please try again later.';
-                console.error('Login error:', error);
-            } finally {
-                this.isLoading = false;
-            }
+        if (response.isSuccess) {
+          // Get the returnUrl from query params or default to admin dashboard
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin/dashboard';
+          await this.router.navigate([returnUrl]);
         } else {
-            Object.values(this.loginForm.controls).forEach(control => {
-                if (control.invalid) {
-                    control.markAsDirty();
-                    control.updateValueAndValidity({ onlySelf: true });
-                }
-            });
+          this.errorMessage = response.errorMessage || 'Login failed. Please check your credentials.';
         }
+      } catch (error) {
+        this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        console.error('Login error:', error);
+      } finally {
+        this.isLoading = false;
+      }
+    } else {
+      Object.values(this.loginForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
     }
+  }
 }

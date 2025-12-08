@@ -21,14 +21,14 @@ export const routes: Routes = [
         component: AdminLayoutComponent,
         canActivate: [authGuard],
         children: [
-            { 
-                path: '', 
-                redirectTo: 'dashboard', 
-                pathMatch: 'full' 
+            {
+                path: '',
+                redirectTo: 'dashboard',
+                pathMatch: 'full'
             },
-            { 
-                path: 'dashboard', 
-                component: DashboardComponent 
+            {
+                path: 'dashboard',
+                component: DashboardComponent
             },
             {
                 path: 'users',
@@ -47,7 +47,7 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/admin/roles/roles-list/roles-list.component').then(c => c.RolesListComponent)
             },
             {
-                path: 'roles/new',
+                path: 'roles/create',
                 loadComponent: () => import('./features/admin/roles/role-form/role-form.component').then(c => c.RoleFormComponent)
             },
             {

@@ -1,19 +1,24 @@
-.page-container {
+.roles-container {
   padding: 24px;
 }
 
-.page-header {
+.header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
 }
 
-.page-header h2 {
+.header-row h2 {
   margin: 0;
+  font-size: 24px;
+  font-weight: 600;
 }
 
-.search-bar {
+.search-row {
   margin-bottom: 16px;
+}
+
+.search-input {
   max-width: 400px;
 }
