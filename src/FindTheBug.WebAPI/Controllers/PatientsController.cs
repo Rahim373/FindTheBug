@@ -8,9 +8,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Patient management endpoints
 /// </summary>
-[ApiController]
-[Route("api/[controller]")]
-public class PatientsController(ISender mediator) : ControllerBase
+public class PatientsController(ISender mediator) : BaseApiController
 {
     /// <summary>
     /// Get all patients with optional search
@@ -22,7 +20,10 @@ public class PatientsController(ISender mediator) : ControllerBase
     {
         var query = new GetAllPatientsQuery(search);
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            patients => Ok(patients),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -33,7 +34,10 @@ public class PatientsController(ISender mediator) : ControllerBase
     {
         var query = new GetPatientByIdQuery(id);
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            patient => Ok(patient),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -43,6 +47,9 @@ public class PatientsController(ISender mediator) : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreatePatientCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            patient => Ok(patient),
+            errors => Problem(errors));
     }
 }

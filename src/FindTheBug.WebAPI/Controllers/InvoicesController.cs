@@ -8,9 +8,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Invoice management endpoints
 /// </summary>
-[ApiController]
-[Route("api/[controller]")]
-public class InvoicesController(ISender mediator) : ControllerBase
+public class InvoicesController(ISender mediator) : BaseApiController
 {
     /// <summary>
     /// Create invoice from test entries
@@ -19,7 +17,10 @@ public class InvoicesController(ISender mediator) : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateInvoiceCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            invoice => Ok(invoice),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -38,8 +39,6 @@ public class InvoicesController(ISender mediator) : ControllerBase
 
         return result.Match<IActionResult>(
             pdfBytes => File(pdfBytes, "application/pdf", $"Invoice-{id}.pdf"),
-            errors => NotFound(new { errors })
-        );
+            errors => Problem(errors));
     }
 }
-

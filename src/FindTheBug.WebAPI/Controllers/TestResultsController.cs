@@ -1,6 +1,7 @@
 using FindTheBug.Application.Features.TestResults.Commands;
 using FindTheBug.Application.Features.TestResults.Queries;
 using FindTheBug.WebAPI.Contracts.Requests;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Test result management endpoints
 /// </summary>
-[ApiController]
-[Route("api/[controller]")]
-public class TestResultsController(ISender mediator) : ControllerBase
+public class TestResultsController(ISender mediator, IMapper mapper) : BaseApiController
 {
     /// <summary>
     /// Get test results for a test entry
@@ -21,7 +20,10 @@ public class TestResultsController(ISender mediator) : ControllerBase
     {
         var query = new GetTestResultsByEntryQuery(entryId);
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            testResults => Ok(testResults),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -31,7 +33,10 @@ public class TestResultsController(ISender mediator) : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateTestResultCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            testResult => Ok(testResult),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -40,9 +45,14 @@ public class TestResultsController(ISender mediator) : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTestResultRequest request, CancellationToken cancellationToken)
     {
-        var command = new UpdateTestResultCommand(id, request.ResultValue, request.IsAbnormal, request.Notes);
+        var command = mapper.Map<UpdateTestResultCommand>(request);
+        command = command with { Id = id };
+        
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            testResult => Ok(testResult),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -51,8 +61,13 @@ public class TestResultsController(ISender mediator) : ControllerBase
     [HttpPost("{id}/verify")]
     public async Task<IActionResult> Verify(Guid id, [FromBody] VerifyRequest request, CancellationToken cancellationToken)
     {
-        var command = new VerifyTestResultsCommand(id, request.VerifiedBy);
+        var command = mapper.Map<VerifyTestResultsCommand>(request);
+        command = command with { Id = id };
+        
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            success => Ok(success),
+            errors => Problem(errors));
     }
 }

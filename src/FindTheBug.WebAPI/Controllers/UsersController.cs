@@ -1,8 +1,8 @@
 using FindTheBug.Application.Features.Users.Commands;
 using FindTheBug.Application.Features.Users.Queries;
 using FindTheBug.WebAPI.Contracts.Requests;
+using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -10,10 +10,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// User management endpoints
 /// </summary>
-[ApiController]
-[Route("api/[controller]")]
-[Authorize]
-public class UsersController(ISender mediator) : ControllerBase
+public class UsersController(ISender mediator, IMapper mapper) : BaseApiController
 {
     /// <summary>
     /// Get all users with optional search and pagination
@@ -31,7 +28,10 @@ public class UsersController(ISender mediator) : ControllerBase
     {
         var query = new GetAllUsersQuery(search, pageNumber, pageSize);
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            users => Ok(users),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -42,7 +42,10 @@ public class UsersController(ISender mediator) : ControllerBase
     {
         var query = new GetUserByIdQuery(id);
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            user => Ok(user),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -51,20 +54,12 @@ public class UsersController(ISender mediator) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateUserRequest request, CancellationToken cancellationToken)
     {
-        var command = new CreateUserCommand(
-            request.Email,
-            request.Password,
-            request.FirstName,
-            request.LastName,
-            request.Phone,
-            request.NIDNumber,
-            request.RoleIds,
-            request.IsActive,
-            request.AllowUserLogin
-        );
-
+        var command = mapper.Map<CreateUserCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            user => Ok(user),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -73,21 +68,15 @@ public class UsersController(ISender mediator) : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
     {
-        var command = new UpdateUserCommand(
-            id,
-            request.Email,
-            request.FirstName,
-            request.LastName,
-            request.Phone,
-            request.NIDNumber,
-            request.RoleIds,
-            request.IsActive,
-            request.AllowUserLogin,
-            request.Password
-        );
-
+        var command = mapper.Map<UpdateUserCommand>(request);
+        // Ensure ID from route is used
+        command = command with { Id = id };
+        
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            user => Ok(user),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -98,6 +87,9 @@ public class UsersController(ISender mediator) : ControllerBase
     {
         var command = new DeleteUserCommand(id);
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            _ => NoContent(),
+            errors => Problem(errors));
     }
 }

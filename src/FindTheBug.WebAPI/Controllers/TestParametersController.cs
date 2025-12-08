@@ -1,6 +1,7 @@
 using FindTheBug.Application.Features.TestParameters.Commands;
 using FindTheBug.Application.Features.TestParameters.Queries;
 using FindTheBug.WebAPI.Contracts.Requests;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Test parameter management endpoints
 /// </summary>
-[ApiController]
-[Route("api/[controller]")]
-public class TestParametersController(ISender mediator) : ControllerBase
+public class TestParametersController(ISender mediator, IMapper mapper) : BaseApiController
 {
     /// <summary>
     /// Get all test parameters for a diagnostic test
@@ -21,7 +20,10 @@ public class TestParametersController(ISender mediator) : ControllerBase
     {
         var query = new GetAllTestParametersQuery(diagnosticTestId);
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            parameters => Ok(parameters),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -31,7 +33,10 @@ public class TestParametersController(ISender mediator) : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateTestParameterCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            parameter => Ok(parameter),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -40,17 +45,14 @@ public class TestParametersController(ISender mediator) : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTestParameterRequest request, CancellationToken cancellationToken)
     {
-        var command = new UpdateTestParameterCommand(
-            id,
-            request.ParameterName,
-            request.Unit,
-            request.ReferenceRangeMin,
-            request.ReferenceRangeMax,
-            request.DataType,
-            request.DisplayOrder
-        );
+        var command = mapper.Map<UpdateTestParameterCommand>(request);
+        command = command with { Id = id };
+        
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            parameter => Ok(parameter),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -61,6 +63,9 @@ public class TestParametersController(ISender mediator) : ControllerBase
     {
         var command = new DeleteTestParameterCommand(id);
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            _ => NoContent(),
+            errors => Problem(errors));
     }
 }

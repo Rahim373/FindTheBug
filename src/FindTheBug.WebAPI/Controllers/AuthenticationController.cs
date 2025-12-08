@@ -1,5 +1,4 @@
 using FindTheBug.Application.Features.Authentication.Commands;
-using FindTheBug.WebAPI.Contracts.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +13,13 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     [HttpPost]
     [Route("/api/token")]
     [AllowAnonymous]
-    public async Task<IActionResult>     Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            authResult => Ok(authResult),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -28,23 +30,23 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            authResult => Ok(authResult),
+            errors => Problem(errors));
     }
 
     /// <summary>
     /// Change password for authenticated user
     /// </summary>
     [HttpPost("change-password")]
-    [Authorize]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command, CancellationToken cancellationToken)
     {
-        var userId = GetUserIdFromClaims();
-        if (userId is null)
-            return Unauthorized();
-
-        var command = new ChangePasswordCommand(userId.Value, request.CurrentPassword, request.NewPassword);
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            success => Ok(success),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -55,7 +57,10 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            success => Ok(success),
+            errors => Problem(errors));
     }
 
     /// <summary>
@@ -66,23 +71,22 @@ public class AuthenticationController(ISender mediator) : BaseApiController
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            success => Ok(success),
+            errors => Problem(errors));
     }
 
     /// <summary>
     /// Revoke refresh token (logout)
     /// </summary>
     [HttpPost("revoke")]
-    [Authorize]
     public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
-    }
-
-    private Guid? GetUserIdFromClaims()
-    {
-        var userIdClaim = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
-        return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
+        
+        return result.Match(
+            success => Ok(success),
+            errors => Problem(errors));
     }
 }

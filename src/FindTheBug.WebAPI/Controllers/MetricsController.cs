@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class MetricsController(ISender mediator) : ControllerBase
+public class MetricsController(ISender mediator) : BaseApiController
 {
     /// <summary>
     /// Get current metrics summary
@@ -16,6 +14,9 @@ public class MetricsController(ISender mediator) : ControllerBase
     {
         var query = new GetMetricsSummaryQuery();
         var result = await mediator.Send(query, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            metrics => Ok(metrics),
+            errors => Problem(errors));
     }
 }

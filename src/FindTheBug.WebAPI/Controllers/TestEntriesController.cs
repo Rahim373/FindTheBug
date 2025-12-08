@@ -7,9 +7,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Test entry management endpoints
 /// </summary>
-[ApiController]
-[Route("api/[controller]")]
-public class TestEntriesController(ISender mediator) : ControllerBase
+public class TestEntriesController(ISender mediator) : BaseApiController
 {
     /// <summary>
     /// Register patient for test
@@ -18,6 +16,9 @@ public class TestEntriesController(ISender mediator) : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateTestEntryCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
-        return Ok(result);
+        
+        return result.Match(
+            testEntry => Ok(testEntry),
+            errors => Problem(errors));
     }
 }
