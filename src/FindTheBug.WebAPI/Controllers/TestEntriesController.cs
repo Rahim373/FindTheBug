@@ -1,4 +1,5 @@
 using FindTheBug.Application.Features.TestEntries.Commands;
+using FindTheBug.Application.Features.TestEntries.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,15 +11,22 @@ namespace FindTheBug.WebAPI.Controllers;
 public class TestEntriesController(ISender mediator) : BaseApiController
 {
     /// <summary>
-    /// Register patient for test
+    /// Create a new test entry
     /// </summary>
+    /// <param name="command">Test entry creation request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Created test entry</returns>
+    /// <response code="200">Returns the newly created test entry</response>
+    /// <response code="400">If the request is invalid</response>
     [HttpPost]
+    [ProducesResponseType(typeof(TestEntryResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create([FromBody] CreateTestEntryCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
 
         return result.Match(
-            testEntry => Ok(testEntry),
-            errors => Problem(errors));
+            entry => Ok(entry),
+            Problem);
     }
 }

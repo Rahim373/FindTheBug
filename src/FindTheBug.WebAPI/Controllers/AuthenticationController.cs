@@ -1,92 +1,147 @@
 using FindTheBug.Application.Features.Authentication.Commands;
+using FindTheBug.Application.Features.Authentication.DTOs;
+using FindTheBug.Application.Features.Authentication.Queries;
+using FindTheBug.WebAPI.Contracts.Requests;
+using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
 
-public class AuthenticationController(ISender mediator) : BaseApiController
+/// <summary>
+/// Authentication and authorization endpoints
+/// </summary>
+public class AuthenticationController(ISender mediator, IMapper mapper) : BaseApiController
 {
     /// <summary>
-    /// Login with email and password to get access and refresh tokens
+    /// Authenticate user and get access token
     /// </summary>
-    [HttpPost]
-    [Route("/api/token")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
+    /// <param name="request">Login credentials</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Authentication response with access and refresh tokens</returns>
+    /// <response code="200">Returns the authentication response</response>
+    /// <response code="401">If credentials are invalid</response>
+    /// <response code="400">If the request is invalid</response>
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(AuthenticationResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
+        var command = mapper.Map<LoginCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
 
         return result.Match(
-            authResult => Ok(authResult),
-            errors => Problem(errors));
+            response => Ok(response),
+            Problem);
     }
 
     /// <summary>
     /// Refresh access token using refresh token
     /// </summary>
-    [HttpPost("refresh")]
-    [AllowAnonymous]
-    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command, CancellationToken cancellationToken)
+    /// <param name="request">Refresh token request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>New authentication response with refreshed tokens</returns>
+    /// <response code="200">Returns the new authentication response</response>
+    /// <response code="401">If the refresh token is invalid or expired</response>
+    [HttpPost("refresh-token")]
+    [ProducesResponseType(typeof(AuthenticationResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request, CancellationToken cancellationToken)
     {
+        var command = mapper.Map<RefreshTokenCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
 
         return result.Match(
-            authResult => Ok(authResult),
-            errors => Problem(errors));
+            response => Ok(response),
+            Problem);
+    }
+
+    /// <summary>
+    /// Register a new user account
+    /// </summary>
+    /// <param name="request">Registration details</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Authentication response for the newly registered user</returns>
+    /// <response code="200">Returns the authentication response</response>
+    /// <response code="400">If the request is invalid</response>
+    /// <response code="409">If a user with the same email or phone already exists</response>
+    [HttpPost("register")]
+    [ProducesResponseType(typeof(AuthenticationResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken)
+    {
+        var command = mapper.Map<RegisterCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            response => Ok(response),
+            Problem);
+    }
+
+    /// <summary>
+    /// Request password reset for a user
+    /// </summary>
+    /// <param name="request">Email address for password reset</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Success indicator</returns>
+    /// <response code="200">Password reset email sent successfully</response>
+    /// <response code="404">If the user with the email is not found</response>
+    [HttpPost("request-password-reset")]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetRequest request, CancellationToken cancellationToken)
+    {
+        var command = mapper.Map<RequestPasswordResetCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            success => Ok(success),
+            Problem);
+    }
+
+    /// <summary>
+    /// Reset password using reset token
+    /// </summary>
+    /// <param name="request">Reset token and new password</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Success indicator</returns>
+    /// <response code="200">Password reset successfully</response>
+    /// <response code="400">If the reset token is invalid or expired</response>
+    [HttpPost("reset-password")]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request, CancellationToken cancellationToken)
+    {
+        var command = mapper.Map<ResetPasswordCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            success => Ok(success),
+            Problem);
     }
 
     /// <summary>
     /// Change password for authenticated user
     /// </summary>
+    /// <param name="request">Current and new password</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Success indicator</returns>
+    /// <response code="200">Password changed successfully</response>
+    /// <response code="400">If the current password is incorrect</response>
+    /// <response code="401">If the user is not authenticated</response>
     [HttpPost("change-password")]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken)
     {
+        var command = mapper.Map<ChangePasswordCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
 
         return result.Match(
             success => Ok(success),
-            errors => Problem(errors));
-    }
-
-    /// <summary>
-    /// Request password reset email
-    /// </summary>
-    [HttpPost("request-reset")]
-    [AllowAnonymous]
-    public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetCommand command, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(command, cancellationToken);
-
-        return result.Match(
-            success => Ok(success),
-            errors => Problem(errors));
-    }
-
-    /// <summary>
-    /// Reset password using token from email
-    /// </summary>
-    [HttpPost("reset-password")]
-    [AllowAnonymous]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(command, cancellationToken);
-
-        return result.Match(
-            success => Ok(success),
-            errors => Problem(errors));
-    }
-
-    /// <summary>
-    /// Revoke refresh token (logout)
-    /// </summary>
-    [HttpPost("revoke")]
-    public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenCommand command, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(command, cancellationToken);
-
-        return result.Match(
-            success => Ok(success),
-            errors => Problem(errors));
+            Problem);
     }
 }

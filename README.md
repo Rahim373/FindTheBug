@@ -188,6 +188,37 @@ The Angular app will be available at `http://localhost:4200` and API at `https:/
 - `PUT /api/patients/{id}` - Update patient
 - `DELETE /api/patients/{id}` - Delete patient
 
+### Diagnostic Tests
+
+- `POST /api/diagnostictests` - Create new diagnostic test
+
+### Test Parameters
+
+- `GET /api/testparameters` - Get all test parameters (optional filter by diagnostic test ID)
+- `POST /api/testparameters` - Create new test parameter
+- `PUT /api/testparameters/{id}` - Update test parameter
+- `DELETE /api/testparameters/{id}` - Delete test parameter
+
+### Test Entries
+
+- `POST /api/testentries` - Create new test entry
+
+### Test Results
+
+- `GET /api/testresults/entry/{entryId}` - Get test results for a test entry
+- `POST /api/testresults` - Create test result
+- `PUT /api/testresults/{id}` - Update test result
+- `POST /api/testresults/{testEntryId}/verify` - Verify test results for a test entry
+
+### Invoices
+
+- `POST /api/invoices` - Create new invoice
+- `GET /api/invoices/{id}/pdf` - Generate PDF for an invoice
+
+### Modules
+
+- `GET /api/modules` - Get all modules
+
 ### Authentication
 
 - `POST /api/token` - Login with email and password

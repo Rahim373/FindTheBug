@@ -1,4 +1,5 @@
 using FindTheBug.Application.Features.Invoices.Commands;
+using FindTheBug.Application.Features.Invoices.DTOs;
 using FindTheBug.Application.Features.Invoices.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,34 +12,43 @@ namespace FindTheBug.WebAPI.Controllers;
 public class InvoicesController(ISender mediator) : BaseApiController
 {
     /// <summary>
-    /// Create invoice from test entries
+    /// Create a new invoice
     /// </summary>
+    /// <param name="command">Invoice creation request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Created invoice</returns>
+    /// <response code="200">Returns the newly created invoice</response>
+    /// <response code="400">If the request is invalid</response>
     [HttpPost]
+    [ProducesResponseType(typeof(InvoiceResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create([FromBody] CreateInvoiceCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
 
         return result.Match(
             invoice => Ok(invoice),
-            errors => Problem(errors));
+            Problem);
     }
 
     /// <summary>
-    /// Generate invoice PDF
+    /// Generate PDF for an invoice
     /// </summary>
     /// <param name="id">Invoice ID</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>PDF file</returns>
+    /// <response code="200">Returns the PDF file</response>
+    /// <response code="404">If the invoice is not found</response>
     [HttpGet("{id}/pdf")]
     [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GeneratePdf(Guid id, CancellationToken cancellationToken)
     {
         var query = new GenerateInvoicePdfQuery(id);
         var result = await mediator.Send(query, cancellationToken);
 
-        return result.Match<IActionResult>(
-            pdfBytes => File(pdfBytes, "application/pdf", $"Invoice-{id}.pdf"),
-            errors => Problem(errors));
+        return result.Match(
+            pdf => File(pdf, "application/pdf", $"Invoice-{id}.pdf"),
+            Problem);
     }
 }

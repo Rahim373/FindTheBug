@@ -1,6 +1,6 @@
 using FindTheBug.Application.Features.TestParameters.Commands;
+using FindTheBug.Application.Features.TestParameters.DTOs;
 using FindTheBug.Application.Features.TestParameters.Queries;
-using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +13,16 @@ namespace FindTheBug.WebAPI.Controllers;
 public class TestParametersController(ISender mediator, IMapper mapper) : BaseApiController
 {
     /// <summary>
-    /// Get all test parameters for a diagnostic test
+    /// Get all test parameters with optional filter by diagnostic test
     /// </summary>
+    /// <param name="diagnosticTestId">Optional diagnostic test ID to filter parameters</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>List of test parameters</returns>
+    /// <response code="200">Returns the list of test parameters</response>
+    /// <response code="400">If the request is invalid</response>
     [HttpGet]
+    [ProducesResponseType(typeof(List<TestParameterResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAll([FromQuery] Guid? diagnosticTestId, CancellationToken cancellationToken)
     {
         var query = new GetAllTestParametersQuery(diagnosticTestId);
@@ -23,26 +30,43 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
 
         return result.Match(
             parameters => Ok(parameters),
-            errors => Problem(errors));
+            Problem);
     }
 
     /// <summary>
-    /// Create new test parameter
+    /// Create a new test parameter
     /// </summary>
+    /// <param name="command">Test parameter creation request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Created test parameter</returns>
+    /// <response code="200">Returns the newly created test parameter</response>
+    /// <response code="400">If the request is invalid</response>
     [HttpPost]
+    [ProducesResponseType(typeof(TestParameterResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create([FromBody] CreateTestParameterCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
 
         return result.Match(
             parameter => Ok(parameter),
-            errors => Problem(errors));
+            Problem);
     }
 
     /// <summary>
-    /// Update test parameter
+    /// Update an existing test parameter
     /// </summary>
+    /// <param name="id">Test parameter ID</param>
+    /// <param name="request">Test parameter update request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Updated test parameter</returns>
+    /// <response code="200">Returns the updated test parameter</response>
+    /// <response code="400">If the request is invalid</response>
+    /// <response code="404">If the test parameter is not found</response>
     [HttpPut("{id}")]
+    [ProducesResponseType(typeof(TestParameterResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTestParameterRequest request, CancellationToken cancellationToken)
     {
         var command = mapper.Map<UpdateTestParameterCommand>(request);
@@ -52,13 +76,22 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
 
         return result.Match(
             parameter => Ok(parameter),
-            errors => Problem(errors));
+            Problem);
     }
 
     /// <summary>
-    /// Delete test parameter
+    /// Delete a test parameter
     /// </summary>
+    /// <param name="id">Test parameter ID</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>No content</returns>
+    /// <response code="204">Test parameter successfully deleted</response>
+    /// <response code="404">If the test parameter is not found</response>
+    /// <response code="400">If the test parameter cannot be deleted</response>
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var command = new DeleteTestParameterCommand(id);
@@ -66,6 +99,6 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
 
         return result.Match(
             _ => NoContent(),
-            errors => Problem(errors));
+            Problem);
     }
 }
