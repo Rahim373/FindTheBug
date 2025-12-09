@@ -67,7 +67,7 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     [ProducesResponseType(typeof(TestParameterResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTestParameterRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTestParameterCommand request, CancellationToken cancellationToken)
     {
         var command = mapper.Map<UpdateTestParameterCommand>(request);
         command = command with { Id = id };

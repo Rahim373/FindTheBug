@@ -1,6 +1,5 @@
 using FindTheBug.Application.Features.Authentication.Commands;
-using FindTheBug.Application.Features.Authentication.DTOs;
-using FindTheBug.Application.Features.Authentication.Queries;
+using FindTheBug.Application.Features.Authentication.Contracts;
 using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;
@@ -23,10 +22,10 @@ public class AuthenticationController(ISender mediator, IMapper mapper) : BaseAp
     /// <response code="401">If credentials are invalid</response>
     /// <response code="400">If the request is invalid</response>
     [HttpPost("login")]
-    [ProducesResponseType(typeof(AuthenticationResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Login([FromBody] LoginCommand request, CancellationToken cancellationToken)
     {
         var command = mapper.Map<LoginCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
@@ -45,34 +44,11 @@ public class AuthenticationController(ISender mediator, IMapper mapper) : BaseAp
     /// <response code="200">Returns the new authentication response</response>
     /// <response code="401">If the refresh token is invalid or expired</response>
     [HttpPost("refresh-token")]
-    [ProducesResponseType(typeof(AuthenticationResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RefreshTokenResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         var command = mapper.Map<RefreshTokenCommand>(request);
-        var result = await mediator.Send(command, cancellationToken);
-
-        return result.Match(
-            response => Ok(response),
-            Problem);
-    }
-
-    /// <summary>
-    /// Register a new user account
-    /// </summary>
-    /// <param name="request">Registration details</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Authentication response for the newly registered user</returns>
-    /// <response code="200">Returns the authentication response</response>
-    /// <response code="400">If the request is invalid</response>
-    /// <response code="409">If a user with the same email or phone already exists</response>
-    [HttpPost("register")]
-    [ProducesResponseType(typeof(AuthenticationResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken)
-    {
-        var command = mapper.Map<RegisterCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
 
         return result.Match(
@@ -91,7 +67,7 @@ public class AuthenticationController(ISender mediator, IMapper mapper) : BaseAp
     [HttpPost("request-password-reset")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetCommand request, CancellationToken cancellationToken)
     {
         var command = mapper.Map<RequestPasswordResetCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
@@ -112,7 +88,7 @@ public class AuthenticationController(ISender mediator, IMapper mapper) : BaseAp
     [HttpPost("reset-password")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand request, CancellationToken cancellationToken)
     {
         var command = mapper.Map<ResetPasswordCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
