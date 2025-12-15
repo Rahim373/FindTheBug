@@ -298,6 +298,9 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
+                    b.Property<int?>("Age")
+                        .HasColumnType("integer");
+
                     b.Property<string>("City")
                         .HasColumnType("text");
 

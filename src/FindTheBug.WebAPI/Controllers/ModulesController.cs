@@ -1,5 +1,5 @@
-using FindTheBug.Application.Features.Modules.DTOs;
-using FindTheBug.Application.Features.Modules.Queries;
+using FindTheBug.Application.Features.UserManagement.Modules.DTOs;
+using FindTheBug.Application.Features.UserManagement.Modules.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

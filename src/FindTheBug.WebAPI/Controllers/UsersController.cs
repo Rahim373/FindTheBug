@@ -1,7 +1,7 @@
 using FindTheBug.Application.Common.Models;
-using FindTheBug.Application.Features.Users.Commands;
-using FindTheBug.Application.Features.Users.DTOs;
-using FindTheBug.Application.Features.Users.Queries;
+using FindTheBug.Application.Features.UserManagement.Users.Commands;
+using FindTheBug.Application.Features.UserManagement.Users.DTOs;
+using FindTheBug.Application.Features.UserManagement.Users.Queries;
 using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;

@@ -1,6 +1,6 @@
-using FindTheBug.Application.Features.TestParameters.Commands;
-using FindTheBug.Application.Features.TestParameters.DTOs;
-using FindTheBug.Application.Features.TestParameters.Queries;
+using FindTheBug.Application.Features.Laboratory.TestParameters.Commands;
+using FindTheBug.Application.Features.Laboratory.TestParameters.DTOs;
+using FindTheBug.Application.Features.Laboratory.TestParameters.Queries;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

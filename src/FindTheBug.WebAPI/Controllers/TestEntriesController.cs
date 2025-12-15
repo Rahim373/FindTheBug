@@ -1,5 +1,5 @@
-using FindTheBug.Application.Features.TestEntries.Commands;
-using FindTheBug.Application.Features.TestEntries.DTOs;
+using FindTheBug.Application.Features.Laboratory.TestEntries.Commands;
+using FindTheBug.Application.Features.Laboratory.TestEntries.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

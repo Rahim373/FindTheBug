@@ -5,7 +5,7 @@ export interface User {
   lastName: string;
   phone: string;
   nidNumber?: string;
-  roleIds: string[];
+  roleCount: number;
   isActive: boolean;
   allowUserLogin: boolean;
   lastLoginAt?: Date;

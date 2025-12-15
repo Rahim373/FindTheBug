@@ -6,12 +6,11 @@ public class CorsInstaller : IInstaller
     {
         services.AddCors(options =>
         {
-            options.AddPolicy("AllowAngularApp", policy =>
+            options.AddPolicy("AllowClient", policy =>
             {
-                policy.WithOrigins("http://localhost:4200", "https://localhost:4200", "http://localhost:64461")
+                policy.WithOrigins("*")
                       .AllowAnyMethod()
-                      .AllowAnyHeader()
-                      .AllowCredentials();
+                      .AllowAnyHeader();
             });
         });
     }

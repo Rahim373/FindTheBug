@@ -3,6 +3,7 @@ using FindTheBug.Application.Features.Authentication.Contracts;
 using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -21,10 +22,11 @@ public class AuthenticationController(ISender mediator, IMapper mapper) : BaseAp
     /// <response code="200">Returns the authentication response</response>
     /// <response code="401">If credentials are invalid</response>
     /// <response code="400">If the request is invalid</response>
-    [HttpPost("login")]
+    [HttpPost("/api/token")]
     [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginCommand request, CancellationToken cancellationToken)
     {
         var command = mapper.Map<LoginCommand>(request);

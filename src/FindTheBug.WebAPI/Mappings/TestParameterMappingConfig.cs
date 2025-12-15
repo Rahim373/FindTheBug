@@ -1,4 +1,4 @@
-using FindTheBug.Application.Features.TestParameters.Commands;
+using FindTheBug.Application.Features.Laboratory.TestParameters.Commands;
 using FindTheBug.WebAPI.Contracts.Requests;
 using Mapster;
 

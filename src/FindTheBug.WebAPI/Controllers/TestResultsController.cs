@@ -1,6 +1,6 @@
-using FindTheBug.Application.Features.TestResults.Commands;
-using FindTheBug.Application.Features.TestResults.DTOs;
-using FindTheBug.Application.Features.TestResults.Queries;
+using FindTheBug.Application.Features.Laboratory.TestResults.Commands;
+using FindTheBug.Application.Features.Laboratory.TestResults.DTOs;
+using FindTheBug.Application.Features.Laboratory.TestResults.Queries;
 using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;

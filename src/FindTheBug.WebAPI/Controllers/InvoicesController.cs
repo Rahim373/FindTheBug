@@ -1,6 +1,6 @@
-using FindTheBug.Application.Features.Invoices.Commands;
-using FindTheBug.Application.Features.Invoices.DTOs;
-using FindTheBug.Application.Features.Invoices.Queries;
+using FindTheBug.Application.Features.Billing.Invoices.Commands;
+using FindTheBug.Application.Features.Billing.Invoices.DTOs;
+using FindTheBug.Application.Features.Billing.Invoices.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
