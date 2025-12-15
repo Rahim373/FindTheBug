@@ -22,6 +22,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<InvoiceItem> InvoiceItems => Set<InvoiceItem>();
 
+    // Doctors Management DbSets
+    public DbSet<Doctor> Doctors => Set<Doctor>();
+    public DbSet<DoctorSpeciality> DoctorSpecialities => Set<DoctorSpeciality>();
+    public DbSet<DoctorSpecialityMapping> DoctorSpecialityMappings => Set<DoctorSpecialityMapping>();
+
     // Authentication DbSets
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();

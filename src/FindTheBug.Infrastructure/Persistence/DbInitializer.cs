@@ -28,7 +28,7 @@ public class DbInitializer
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            // Apply migrations - this will create the database if it doesn't exist
+            // Apply migrations - this will create database if it doesn't exist
             if (context.Database.IsNpgsql())
             {
                 await context.Database.MigrateAsync();
@@ -36,6 +36,9 @@ public class DbInitializer
 
             // Seed RBAC data (modules, roles, permissions)
             await SeedRBACDataAsync(context);
+
+            // Seed Doctor Specialities
+            await SeedDoctorSpecialitiesAsync(context);
 
             // Seed SuperUser
             await SeedSuperUserAsync(context, scope.ServiceProvider);
@@ -191,6 +194,75 @@ public class DbInitializer
 
         await context.SaveChangesAsync();
         _logger.LogInformation("Role permissions seeded successfully");
+    }
+
+    private async Task SeedDoctorSpecialitiesAsync(ApplicationDbContext context)
+    {
+        // Seed Doctor Specialities from CSV data
+        var specialityData = new[]
+        {
+            new { Category = "Primary Care & General", Name = "General Practice (MBBS)" },
+            new { Category = "Primary Care & General", Name = "Internal Medicine" },
+            new { Category = "Primary Care & General", Name = "Preventive & Social Medicine" },
+            new { Category = "Medicine Subspecialties", Name = "Cardiology" },
+            new { Category = "Medicine Subspecialties", Name = "Endocrinology" },
+            new { Category = "Medicine Subspecialties", Name = "Gastroenterology" },
+            new { Category = "Medicine Subspecialties", Name = "Hepatology" },
+            new { Category = "Medicine Subspecialties", Name = "Nephrology" },
+            new { Category = "Medicine Subspecialties", Name = "Pulmonology (Respiratory Medicine)" },
+            new { Category = "Medicine Subspecialties", Name = "Neurology" },
+            new { Category = "Medicine Subspecialties", Name = "Rheumatology" },
+            new { Category = "Medicine Subspecialties", Name = "Hematology" },
+            new { Category = "Medicine Subspecialties", Name = "Medical Oncology" },
+            new { Category = "Medicine Subspecialties", Name = "Infectious Diseases" },
+            new { Category = "Surgical Specialties", Name = "General Surgery" },
+            new { Category = "Surgical Specialties", Name = "Orthopedic Surgery" },
+            new { Category = "Surgical Specialties", Name = "Neurosurgery" },
+            new { Category = "Surgical Specialties", Name = "Cardiothoracic Surgery" },
+            new { Category = "Surgical Specialties", Name = "Pediatric Surgery" },
+            new { Category = "Surgical Specialties", Name = "Plastic & Reconstructive Surgery" },
+            new { Category = "Surgical Specialties", Name = "Vascular Surgery" },
+            new { Category = "Surgical Specialties", Name = "Urology" },
+            new { Category = "Women's Health", Name = "Obstetrics & Gynecology" },
+            new { Category = "Women's Health", Name = "Gynecologic Oncology" },
+            new { Category = "Child Health", Name = "Pediatrics" },
+            new { Category = "Child Health", Name = "Neonatology" },
+            new { Category = "ENT & Eye", Name = "Otolaryngology (ENT)" },
+            new { Category = "ENT & Eye", Name = "Ophthalmology" },
+            new { Category = "Mental Health", Name = "Psychiatry" },
+            new { Category = "Emergency & Critical Care", Name = "Anesthesiology" },
+            new { Category = "Emergency & Critical Care", Name = "Critical Care Medicine" },
+            new { Category = "Diagnostics & Imaging", Name = "Radiology & Imaging" },
+            new { Category = "Diagnostics & Imaging", Name = "Pathology" },
+            new { Category = "Diagnostics & Imaging", Name = "Histopathology" },
+            new { Category = "Diagnostics & Imaging", Name = "Microbiology" },
+            new { Category = "Diagnostics & Imaging", Name = "Biochemistry" },
+            new { Category = "Diagnostics & Imaging", Name = "Hematology (Laboratory)" },
+            new { Category = "Public Health", Name = "Community Medicine" },
+            new { Category = "Dermatology", Name = "Dermatology & Venereology" },
+            new { Category = "Other Fields", Name = "Nuclear Medicine" },
+            new { Category = "Other Fields", Name = "Forensic Medicine" },
+            new { Category = "Other Fields", Name = "Transfusion Medicine" }
+        };
+
+        foreach (var speciality in specialityData)
+        {
+            if (!await context.DoctorSpecialities.AnyAsync(ds => ds.Name == speciality.Name))
+            {
+                var doctorSpeciality = new DoctorSpeciality
+                {
+                    Name = speciality.Name,
+                    Description = speciality.Category,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = "System"
+                };
+                await context.DoctorSpecialities.AddAsync(doctorSpeciality);
+            }
+        }
+
+        await context.SaveChangesAsync();
+        _logger.LogInformation("Doctor specialities seeded successfully");
     }
 
     private async Task SeedSuperUserAsync(ApplicationDbContext context, IServiceProvider serviceProvider)

@@ -54,6 +54,22 @@ export const routes: Routes = [
                 path: 'roles/:id/edit',
                 loadComponent: () => import('./features/admin/roles/role-form/role-form.component').then(c => c.RoleFormComponent)
             },
+            {
+                path: 'doctors',
+                loadComponent: () => import('./features/admin/doctors/doctors-list/doctors-list.component').then(c => c.DoctorsListComponent)
+            },
+            {
+                path: 'doctors/create',
+                loadComponent: () => import('./features/admin/doctors/doctor-form/doctor-form.component').then(c => c.DoctorFormComponent)
+            },
+            {
+                path: 'doctors/:id',
+                loadComponent: () => import('./features/admin/doctors/doctor-form/doctor-form.component').then(c => c.DoctorFormComponent)
+            },
+            {
+                path: 'doctors/:id/edit',
+                loadComponent: () => import('./features/admin/doctors/doctor-form/doctor-form.component').then(c => c.DoctorFormComponent)
+            },
             // Future routes can be added here
             // { path: 'patients', loadComponent: () => import('./features/admin/patients/patients.component').then(c => c.PatientsComponent) },
             // { path: 'tests', loadComponent: () => import('./features/admin/tests/tests.component').then(c => c.TestsComponent) },

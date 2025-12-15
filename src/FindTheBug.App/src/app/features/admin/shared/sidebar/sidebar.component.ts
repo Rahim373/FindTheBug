@@ -51,11 +51,19 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
                     </li>
                 </ul>
             </li>
-            <li nz-menu-item>
-                <a routerLink="/admin/patients">
-                    <span nz-icon nzType="user"></span>
-                    <span>Patients</span>
-                </a>
+            <li nz-submenu nzTitle="Medical Management" nzIcon="medicine-box">
+                <ul>
+                    <li nz-menu-item nzMatchRouter>
+                        <a routerLink="/admin/doctors">
+                            <span>Doctors</span>
+                        </a>
+                    </li>
+                    <li nz-menu-item>
+                        <a routerLink="/admin/patients">
+                            <span>Patients</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li nz-menu-item>
                 <a routerLink="/admin/tests">

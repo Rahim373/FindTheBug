@@ -1,0 +1,76 @@
+<div class="form-container">
+  <nz-card [nzTitle]="isEditMode ? 'Edit Doctor' : 'Create New Doctor'" [nzLoading]="loading">
+    <form nz-form [formGroup]="doctorForm" (ngSubmit)="onSubmit()" nzLayout="vertical">
+      <div class="form-row">
+        <nz-form-item class="form-item-half">
+          <nz-form-label nzRequired>Name</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter doctor name">
+            <input nz-input formControlName="name" placeholder="Enter doctor name" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="form-item-half">
+          <nz-form-label nzRequired>Phone Number</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter phone number">
+            <input nz-input formControlName="phoneNumber" placeholder="Enter phone number" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-row">
+        <nz-form-item class="form-item-half">
+          <nz-form-label>Degree</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="degree" placeholder="e.g., MD, MBBS, etc." />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="form-item-half">
+          <nz-form-label>Office</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="office" placeholder="Office location or room number" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-row">
+        <nz-form-item class="form-item-half">
+          <nz-form-label nzRequired>Specialities</nz-form-label>
+          <nz-form-control nzErrorTip="Please select at least one speciality">
+            <nz-select
+              formControlName="specialityIds"
+              nzMode="multiple"
+              nzPlaceHolder="Select specialities"
+              [nzLoading]="loadingSpecialities"
+              nzShowSearch
+              [nzFilterOption]="filterOption"
+            >
+              <nz-option
+                *ngFor="let speciality of availableSpecialities"
+                [nzValue]="speciality.id"
+                [nzLabel]="speciality.name"
+              ></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="form-item-half" *ngIf="isEditMode">
+          <nz-form-label>Status</nz-form-label>
+          <nz-form-control>
+            <nz-switch formControlName="isActive"></nz-switch>
+            <span class="status-label">{{ doctorForm.get('isActive')?.value ? 'Active' : 'Inactive' }}</span>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-actions">
+        <button nz-button nzType="default" (click)="cancel()" [disabled]="submitting">
+          Cancel
+        </button>
+        <button nz-button nzType="primary" type="submit" [nzLoading]="submitting">
+          {{ isEditMode ? 'Update Doctor' : 'Create Doctor' }}
+        </button>
+      </div>
+    </form>
+  </nz-card>
+</div>
