@@ -49,7 +49,7 @@ export class DoctorsListComponent implements OnInit {
 
   loadDoctors(): void {
     this.loading = true;
-    this.doctorService.getDoctors(this.searchText || undefined).subscribe({
+    this.doctorService.getDoctors(this.searchText || undefined, this.pageNumber, this.pageSize).subscribe({
       next: (response) => {
         if (response.isSuccess && response.data) {
           this.doctors = response.data.items || [];

@@ -1,3 +1,4 @@
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Doctors.Commands;
 using FindTheBug.Application.Features.Doctors.DTOs;
 using FindTheBug.Application.Features.Doctors.Queries;
@@ -12,19 +13,24 @@ namespace FindTheBug.WebAPI.Controllers;
 public class DoctorsController(ISender mediator) : BaseApiController
 {
     /// <summary>
-    /// Get all doctors with optional search
+    /// Get all doctors with optional search and pagination
     /// </summary>
     /// <param name="search">Search by name, phone number, degree, office, or speciality</param>
+    /// <param name="pageNumber">Page number (default: 1)</param>
+    /// <param name="pageSize">Page size (default: 10)</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>List of doctors</returns>
-    /// <response code="200">Returns the list of doctors</response>
-    /// <response code="400">If the request is invalid</response>
+    /// <returns>Paginated list of doctors</returns>
+    /// <response code="200">Returns paginated list of doctors</response>
+    /// <response code="400">If request is invalid</response>
     [HttpGet]
-    [ProducesResponseType(typeof(List<DoctorListItemDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedResult<DoctorListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetAll([FromQuery] string? search, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken,
+        [FromQuery] string? search,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var query = new GetAllDoctorsQuery(search);
+        var query = new GetAllDoctorsQuery(search, pageNumber, pageSize);
         var result = await mediator.Send(query, cancellationToken);
 
         return result.Match(
@@ -38,8 +44,8 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <param name="id">Doctor ID</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Doctor details</returns>
-    /// <response code="200">Returns the doctor</response>
-    /// <response code="404">If the doctor is not found</response>
+    /// <response code="200">Returns doctor</response>
+    /// <response code="404">If doctor is not found</response>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(DoctorResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -59,8 +65,8 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <param name="command">Doctor creation request</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Created doctor</returns>
-    /// <response code="200">Returns the newly created doctor</response>
-    /// <response code="400">If the request is invalid</response>
+    /// <response code="200">Returns newly created doctor</response>
+    /// <response code="400">If request is invalid</response>
     /// <response code="409">If a doctor with the same phone number already exists</response>
     [HttpPost]
     [ProducesResponseType(typeof(DoctorResponseDto), StatusCodes.Status200OK)]
@@ -82,9 +88,9 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <param name="command">Doctor update request</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Updated doctor</returns>
-    /// <response code="200">Returns the updated doctor</response>
-    /// <response code="400">If the request is invalid</response>
-    /// <response code="404">If the doctor is not found</response>
+    /// <response code="200">Returns updated doctor</response>
+    /// <response code="400">If request is invalid</response>
+    /// <response code="404">If doctor is not found</response>
     /// <response code="409">If another doctor with the same phone number already exists</response>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(DoctorResponseDto), StatusCodes.Status200OK)]
@@ -107,7 +113,7 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <param name="id">Doctor ID</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <response code="200">Doctor deleted successfully</response>
-    /// <response code="404">If the doctor is not found</response>
+    /// <response code="404">If doctor is not found</response>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

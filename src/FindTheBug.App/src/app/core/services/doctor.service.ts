@@ -18,10 +18,16 @@ export class DoctorService {
 
   constructor(private http: HttpClient) {}
 
-  getDoctors(search?: string): Observable<PagedDoctorsResponse> {
+  getDoctors(search?: string, pageNumber?: number, pageSize?: number): Observable<PagedDoctorsResponse> {
     let params = new HttpParams();
     if (search) {
       params = params.append('search', search);
+    }
+    if (pageNumber) {
+      params = params.append('pageNumber', pageNumber.toString());
+    }
+    if (pageSize) {
+      params = params.append('pageSize', pageSize.toString());
     }
     return this.http.get<PagedDoctorsResponse>(`${this.apiUrl}/doctors`, { params });
   }

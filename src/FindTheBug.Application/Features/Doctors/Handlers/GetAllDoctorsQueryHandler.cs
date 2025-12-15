@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Doctors.DTOs;
 using FindTheBug.Application.Features.Doctors.Queries;
 using FindTheBug.Domain.Entities;
@@ -9,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FindTheBug.Application.Features.Doctors.Handlers;
 
 public class GetAllDoctorsQueryHandler(IUnitOfWork unitOfWork)
-    : ICommandHandler<GetAllDoctorsQuery, List<DoctorListItemDto>>
+    : IQueryHandler<GetAllDoctorsQuery, PagedResult<DoctorListItemDto>>
 {
-    public async Task<ErrorOr<List<DoctorListItemDto>>> Handle(GetAllDoctorsQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<PagedResult<DoctorListItemDto>>> Handle(GetAllDoctorsQuery request, CancellationToken cancellationToken)
     {
         var query = unitOfWork.Repository<Doctor>().GetQueryable()
             .Include(d => d.DoctorSpecialities)
@@ -30,8 +31,12 @@ public class GetAllDoctorsQueryHandler(IUnitOfWork unitOfWork)
                 d.DoctorSpecialities.Any(dsm => dsm.DoctorSpeciality.Name.ToLower().Contains(searchTerm)));
         }
 
+        var totalCount = await query.CountAsync(cancellationToken);
+
         var doctors = await query
             .OrderBy(d => d.Name)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
             .Select(d => new DoctorListItemDto
             {
                 Id = d.Id,
@@ -43,6 +48,12 @@ public class GetAllDoctorsQueryHandler(IUnitOfWork unitOfWork)
             })
             .ToListAsync(cancellationToken);
 
-        return doctors;
+        return new PagedResult<DoctorListItemDto>
+        {
+            Items = doctors,
+            TotalCount = totalCount,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize
+        };
     }
 }
