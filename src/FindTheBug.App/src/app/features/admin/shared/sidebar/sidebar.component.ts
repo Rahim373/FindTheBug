@@ -40,26 +40,31 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
             <li nz-submenu nzTitle="User Management" nzIcon="team">
                 <ul>
                     <li nz-menu-item nzMatchRouter>
+
                         <a routerLink="/admin/users">
+                            <span nz-icon nzType="user"></span>
                             <span>Users</span>
                         </a>
                     </li>
                     <li nz-menu-item nzMatchRouter>
                         <a routerLink="/admin/roles">
+                             <span nzTheme="fill" nz-icon nzType="security-scan"></span>
                             <span>Roles</span>
                         </a>
                     </li>
                 </ul>
             </li>
-            <li nz-submenu nzTitle="Medical Management" nzIcon="medicine-box">
+            <li nz-submenu nzTitle="Medical Management" nzIcon="fa:stethoscope">
                 <ul>
                     <li nz-menu-item nzMatchRouter>
                         <a routerLink="/admin/doctors">
+                            <span nz-icon nzType="fa:user-doctor"></span>
                             <span>Doctors</span>
                         </a>
                     </li>
                     <li nz-menu-item>
                         <a routerLink="/admin/patients">
+                            <span nz-icon nzType="fa:hospital-user"></span>
                             <span>Patients</span>
                         </a>
                     </li>
@@ -100,7 +105,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
         </ul>
     </nz-sider>
   `,
-  styles: [`
+    styles: [`
     .sidebar {
         position: fixed;
         left: 0;
