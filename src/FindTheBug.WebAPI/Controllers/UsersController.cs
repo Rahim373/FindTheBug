@@ -8,6 +8,7 @@ using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 
@@ -28,7 +29,7 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="400">If request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
-    [RequireModulePermission("UserManagement", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.View)]
     [ProducesResponseType(typeof(PagedResult<UserListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -56,7 +57,7 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If user is not found</response>
     [HttpGet("{id}")]
-    [RequireModulePermission("UserManagement", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.View)]
     [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -81,7 +82,7 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="409">If a user with same email or phone already exists</response>
     [HttpPost]
-    [RequireModulePermission("UserManagement", ModulePermission.Create)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.Create)]
     [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -109,7 +110,7 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="404">If user is not found</response>
     /// <response code="409">If a user with same email or phone already exists</response>
     [HttpPut("{id}")]
-    [RequireModulePermission("UserManagement", ModulePermission.Edit)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.Edit)]
     [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -138,7 +139,7 @@ public class UsersController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="404">If user is not found</response>
     /// <response code="400">If user cannot be deleted</response>
     [HttpDelete("{id}")]
-    [RequireModulePermission("UserManagement", ModulePermission.Delete)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.Delete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

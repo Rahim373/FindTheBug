@@ -6,6 +6,7 @@ using FindTheBug.Application.Features.Laboratory.TestParameters.Queries;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 
@@ -24,7 +25,7 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     /// <response code="400">If the request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
-    [RequireModulePermission("Laboratory", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.Laboratory, ModulePermission.View)]
     [ProducesResponseType(typeof(List<TestParameterResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -48,7 +49,7 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     /// <response code="400">If the request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpPost]
-    [RequireModulePermission("Laboratory", ModulePermission.Create)]
+    [RequireModulePermission(ModuleConstants.Laboratory, ModulePermission.Create)]
     [ProducesResponseType(typeof(TestParameterResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -73,7 +74,7 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If the test parameter is not found</response>
     [HttpPut("{id}")]
-    [RequireModulePermission("Laboratory", ModulePermission.Edit)]
+    [RequireModulePermission(ModuleConstants.Laboratory, ModulePermission.Edit)]
     [ProducesResponseType(typeof(TestParameterResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -101,7 +102,7 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     /// <response code="404">If the test parameter is not found</response>
     /// <response code="400">If the test parameter cannot be deleted</response>
     [HttpDelete("{id}")]
-    [RequireModulePermission("Laboratory", ModulePermission.Delete)]
+    [RequireModulePermission(ModuleConstants.Laboratory, ModulePermission.Delete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

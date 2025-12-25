@@ -1,6 +1,7 @@
 using FindTheBug.Application.Features.Laboratory.TestEntries.Commands;
 using FindTheBug.Application.Features.Laboratory.TestEntries.DTOs;
 using FindTheBug.Domain.Common;
+using FindTheBug.Domain.Contracts;
 using FindTheBug.WebAPI.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ public class TestEntriesController(ISender mediator) : BaseApiController
     /// <response code="400">If the request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpPost]
-    [RequireModulePermission("Laboratory", ModulePermission.Create)]
+    [RequireModulePermission(ModuleConstants.Laboratory, ModulePermission.Create)]
     [ProducesResponseType(typeof(TestEntryResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]

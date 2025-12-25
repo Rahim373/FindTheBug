@@ -7,6 +7,7 @@ using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 
@@ -25,7 +26,7 @@ public class TestResultsController(ISender mediator, IMapper mapper) : BaseApiCo
     /// <response code="400">If the request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpGet("entry/{entryId}")]
-    [RequireModulePermission("Laboratory", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.Laboratory, ModulePermission.View)]
     [ProducesResponseType(typeof(List<TestResultResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -49,7 +50,7 @@ public class TestResultsController(ISender mediator, IMapper mapper) : BaseApiCo
     /// <response code="400">If the request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpPost]
-    [RequireModulePermission("Laboratory", ModulePermission.Create)]
+    [RequireModulePermission(ModuleConstants.Laboratory, ModulePermission.Create)]
     [ProducesResponseType(typeof(TestResultResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -74,7 +75,7 @@ public class TestResultsController(ISender mediator, IMapper mapper) : BaseApiCo
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If the test result is not found</response>
     [HttpPut("{id}")]
-    [RequireModulePermission("Laboratory", ModulePermission.Edit)]
+    [RequireModulePermission(ModuleConstants.Laboratory, ModulePermission.Edit)]
     [ProducesResponseType(typeof(TestResultResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -103,7 +104,7 @@ public class TestResultsController(ISender mediator, IMapper mapper) : BaseApiCo
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If the test entry is not found</response>
     [HttpPost("{testEntryId}/verify")]
-    [RequireModulePermission("Laboratory", ModulePermission.Edit)]
+    [RequireModulePermission(ModuleConstants.Laboratory, ModulePermission.Edit)]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]

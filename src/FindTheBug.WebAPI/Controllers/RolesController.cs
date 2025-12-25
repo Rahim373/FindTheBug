@@ -8,6 +8,7 @@ using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 
@@ -28,7 +29,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="400">If request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
-    [RequireModulePermission("UserManagement", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.View)]
     [ProducesResponseType(typeof(PagedResult<RoleListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -54,7 +55,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="200">Returns list of active roles</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpGet("active")]
-    [RequireModulePermission("UserManagement", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.View)]
     [ProducesResponseType(typeof(List<RoleListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetActive(CancellationToken cancellationToken = default)
@@ -77,7 +78,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If role is not found</response>
     [HttpGet("{id:guid}")]
-    [RequireModulePermission("UserManagement", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.View)]
     [ProducesResponseType(typeof(RoleResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -102,7 +103,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="409">If a role with same name already exists</response>
     [HttpPost]
-    [RequireModulePermission("UserManagement", ModulePermission.Create)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.Create)]
     [ProducesResponseType(typeof(RoleResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -130,7 +131,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="404">If role is not found</response>
     /// <response code="409">If a role with same name already exists</response>
     [HttpPut("{id:guid}")]
-    [RequireModulePermission("UserManagement", ModulePermission.Edit)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.Edit)]
     [ProducesResponseType(typeof(RoleResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -159,7 +160,7 @@ public class RolesController(ISender mediator, IMapper mapper) : BaseApiControll
     /// <response code="404">If role is not found</response>
     /// <response code="400">If role cannot be deleted (e.g., system role)</response>
     [HttpDelete("{id:guid}")]
-    [RequireModulePermission("UserManagement", ModulePermission.Delete)]
+    [RequireModulePermission(ModuleConstants.UserManagement, ModulePermission.Delete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

@@ -1,4 +1,5 @@
 using FindTheBug.Application.Common.Interfaces;
+using FindTheBug.Domain.Contracts;
 using FindTheBug.Domain.Entities;
 using FindTheBug.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -55,10 +56,8 @@ public class DbInitializer
         // Seed Modules
         var moduleDefinitions = new[]
         {
-            new { Name = "Dashboard", DisplayName = "Dashboard", Description = "Main dashboard and overview" },
-            new { Name = "Users", DisplayName = "User Management", Description = "Manage system users and their access" },
-            new { Name = "Roles", DisplayName = "Role Management", Description = "Manage user roles and permissions" },
-            new { Name = "Modules", DisplayName = "Module Management", Description = "Manage system modules" }
+            new { Name = ModuleConstants.UserManagement, DisplayName = "User Management", Description = "Manage system users and their access" },
+            new { Name = ModuleConstants.Dispensary, DisplayName = "Dispensary Management", Description = "Manage dispensary, product and sales" },
         };
 
         foreach (var moduleDef in moduleDefinitions)
@@ -83,7 +82,7 @@ public class DbInitializer
         // Seed Roles
         var roleDefinitions = new[]
         {
-            new { Name = "SuperUser", Description = "Super administrator with unrestricted access", IsSystemRole = true }
+            new { Name = RoleConstants.SuperUser, Description = "Super administrator with unrestricted access", IsSystemRole = true }
         };
 
         foreach (var roleDef in roleDefinitions)
@@ -112,32 +111,12 @@ public class DbInitializer
     private async Task SeedRolePermissionsAsync(ApplicationDbContext context)
     {
         var modules = await context.Modules.ToListAsync();
-        var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");
-        var userRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "User");
-        var superUserRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "SuperUser");
+        var superUserRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == RoleConstants.SuperUser);
 
-        if (adminRole == null || userRole == null || superUserRole == null)
+        if (superUserRole is null)
         {
-            _logger.LogWarning("One or more roles not found. Skipping permission seeding.");
+            _logger.LogWarning("Superuser role not found. Skipping permission seeding.");
             return;
-        }
-
-        // Admin permissions (full access to all modules)
-        foreach (var module in modules)
-        {
-            if (!await context.RoleModulePermissions.AnyAsync(p => p.RoleId == adminRole.Id && p.ModuleId == module.Id))
-            {
-                await context.RoleModulePermissions.AddAsync(new RoleModulePermission
-                {
-                    RoleId = adminRole.Id,
-                    ModuleId = module.Id,
-                    CanView = true,
-                    CanCreate = true,
-                    CanEdit = true,
-                    CanDelete = true,
-                    CreatedAt = DateTime.UtcNow
-                });
-            }
         }
 
         // SuperUser permissions (full access to all modules)
@@ -156,38 +135,6 @@ public class DbInitializer
                     CreatedAt = DateTime.UtcNow
                 });
             }
-        }
-
-        // User permissions (view-only access to Dashboard and Users)
-        var dashboardModule = modules.FirstOrDefault(m => m.Name == "Dashboard");
-        var usersModule = modules.FirstOrDefault(m => m.Name == "Users");
-
-        if (dashboardModule != null && !await context.RoleModulePermissions.AnyAsync(p => p.RoleId == userRole.Id && p.ModuleId == dashboardModule.Id))
-        {
-            await context.RoleModulePermissions.AddAsync(new RoleModulePermission
-            {
-                RoleId = userRole.Id,
-                ModuleId = dashboardModule.Id,
-                CanView = true,
-                CanCreate = false,
-                CanEdit = false,
-                CanDelete = false,
-                CreatedAt = DateTime.UtcNow
-            });
-        }
-
-        if (usersModule != null && !await context.RoleModulePermissions.AnyAsync(p => p.RoleId == userRole.Id && p.ModuleId == usersModule.Id))
-        {
-            await context.RoleModulePermissions.AddAsync(new RoleModulePermission
-            {
-                RoleId = userRole.Id,
-                ModuleId = usersModule.Id,
-                CanView = true,
-                CanCreate = false,
-                CanEdit = false,
-                CanDelete = false,
-                CreatedAt = DateTime.UtcNow
-            });
         }
 
         await context.SaveChangesAsync();

@@ -15,10 +15,12 @@ export class AuthService {
     private readonly tokenService = inject(TokenService);
     private readonly router = inject(Router);
 
+    private readonly USER_STORAGE_KEY = 'currentUser';
+
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.tokenService.isAuthenticated());
     public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-    private currentUserSubject = new BehaviorSubject<User | null>(null);
+    private currentUserSubject = new BehaviorSubject<User | null>(this.loadUserFromStorage());
     public currentUser$ = this.currentUserSubject.asObservable();
 
     /**
@@ -50,6 +52,7 @@ export class AuthService {
                 // Update authentication state and user
                 this.isAuthenticatedSubject.next(true);
                 this.currentUserSubject.next(response.data.user);
+                this.saveUserToStorage(response.data.user);
             }
 
             return response;
@@ -108,6 +111,7 @@ export class AuthService {
         this.tokenService.clearTokens();
         this.isAuthenticatedSubject.next(false);
         this.currentUserSubject.next(null);
+        this.clearUserFromStorage();
 
         // Redirect to login
         await this.router.navigate(['/login']);
@@ -149,6 +153,7 @@ export class AuthService {
                 // Update authentication state and user
                 this.isAuthenticatedSubject.next(true);
                 this.currentUserSubject.next(response.data.user);
+                this.saveUserToStorage(response.data.user);
                 
                 return response;
             }
@@ -174,5 +179,44 @@ export class AuthService {
      */
     getCurrentUser(): User | null {
         return this.currentUserSubject.value;
+    }
+
+    /**
+     * Load user from localStorage
+     */
+    private loadUserFromStorage(): User | null {
+        try {
+            const userJson = localStorage.getItem(this.USER_STORAGE_KEY);
+            return userJson ? JSON.parse(userJson) : null;
+        } catch (error) {
+            console.error('Error loading user from storage:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Save user to localStorage
+     */
+    private saveUserToStorage(user: User | null): void {
+        try {
+            if (user) {
+                localStorage.setItem(this.USER_STORAGE_KEY, JSON.stringify(user));
+            } else {
+                localStorage.removeItem(this.USER_STORAGE_KEY);
+            }
+        } catch (error) {
+            console.error('Error saving user to storage:', error);
+        }
+    }
+
+    /**
+     * Clear user from localStorage
+     */
+    private clearUserFromStorage(): void {
+        try {
+            localStorage.removeItem(this.USER_STORAGE_KEY);
+        } catch (error) {
+            console.error('Error clearing user from storage:', error);
+        }
     }
 }

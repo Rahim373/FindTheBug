@@ -5,6 +5,7 @@ using FindTheBug.WebAPI.Attributes;
 using FindTheBug.Application.Features.Billing.Invoices.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 
@@ -23,7 +24,7 @@ public class InvoicesController(ISender mediator) : BaseApiController
     /// <response code="400">If the request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpPost]
-    [RequireModulePermission("Billing", ModulePermission.Create)]
+    [RequireModulePermission(ModuleConstants.Billing, ModulePermission.Create)]
     [ProducesResponseType(typeof(InvoiceResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -46,7 +47,7 @@ public class InvoicesController(ISender mediator) : BaseApiController
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If the invoice is not found</response>
     [HttpGet("{id}/pdf")]
-    [RequireModulePermission("Billing", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.Billing, ModulePermission.View)]
     [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

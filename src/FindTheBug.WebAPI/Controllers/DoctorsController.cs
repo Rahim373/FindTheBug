@@ -6,6 +6,7 @@ using FindTheBug.Application.Features.Doctors.DTOs;
 using FindTheBug.Application.Features.Doctors.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 
@@ -26,7 +27,7 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <response code="400">If request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
-    [RequireModulePermission("Doctors", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.Doctors, ModulePermission.View)]
     [ProducesResponseType(typeof(PagedResult<DoctorListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -53,7 +54,7 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If doctor is not found</response>
     [HttpGet("{id}")]
-    [RequireModulePermission("Doctors", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.Doctors, ModulePermission.View)]
     [ProducesResponseType(typeof(DoctorResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -78,7 +79,7 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="409">If a doctor with the same phone number already exists</response>
     [HttpPost]
-    [RequireModulePermission("Doctors", ModulePermission.Create)]
+    [RequireModulePermission(ModuleConstants.Doctors, ModulePermission.Create)]
     [ProducesResponseType(typeof(DoctorResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -105,7 +106,7 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <response code="404">If doctor is not found</response>
     /// <response code="409">If another doctor with the same phone number already exists</response>
     [HttpPut("{id}")]
-    [RequireModulePermission("Doctors", ModulePermission.Edit)]
+    [RequireModulePermission(ModuleConstants.Doctors, ModulePermission.Edit)]
     [ProducesResponseType(typeof(DoctorResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -130,7 +131,7 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If doctor is not found</response>
     [HttpDelete("{id}")]
-    [RequireModulePermission("Doctors", ModulePermission.Delete)]
+    [RequireModulePermission(ModuleConstants.Doctors, ModulePermission.Delete)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

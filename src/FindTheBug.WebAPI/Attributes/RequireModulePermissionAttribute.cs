@@ -10,7 +10,7 @@ namespace FindTheBug.WebAPI.Attributes;
 public class RequireModulePermissionAttribute : AuthorizeAttribute
 {
     /// <summary>
-    /// Module name (e.g., "Doctors", "Patients", "Billing")
+    /// Module name (e.g., "Doctors", "Patients", ModuleConstants.Billing)
     /// </summary>
     public string ModuleName { get; }
 

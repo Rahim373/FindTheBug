@@ -2,6 +2,7 @@ using FindTheBug.Application.Features.Patients.Commands;
 using FindTheBug.Application.Features.Patients.DTOs;
 using FindTheBug.Application.Features.Patients.Queries;
 using FindTheBug.Domain.Common;
+using FindTheBug.Domain.Contracts;
 using FindTheBug.WebAPI.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ public class PatientsController(ISender mediator) : BaseApiController
     /// <response code="400">If the request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
-    [RequireModulePermission("Patients", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.Patient, ModulePermission.View)]
     [ProducesResponseType(typeof(List<PatientListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -47,7 +48,7 @@ public class PatientsController(ISender mediator) : BaseApiController
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If the patient is not found</response>
     [HttpGet("{id}")]
-    [RequireModulePermission("Patients", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.Patient, ModulePermission.View)]
     [ProducesResponseType(typeof(PatientResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -72,7 +73,7 @@ public class PatientsController(ISender mediator) : BaseApiController
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="409">If a patient with the same mobile number already exists</response>
     [HttpPost]
-    [RequireModulePermission("Patients", ModulePermission.Create)]
+    [RequireModulePermission(ModuleConstants.Patient, ModulePermission.Create)]
     [ProducesResponseType(typeof(PatientResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]

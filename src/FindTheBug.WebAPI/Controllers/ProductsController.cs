@@ -6,6 +6,7 @@ using FindTheBug.Application.Features.Dispensary.Products.DTOs;
 using FindTheBug.Application.Features.Dispensary.Products.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 
@@ -26,7 +27,7 @@ public class ProductsController(ISender mediator) : BaseApiController
     /// <response code="400">If request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
-    [RequireModulePermission("Dispensary", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.Dispensary, ModulePermission.View)]
     [ProducesResponseType(typeof(PagedResult<ProductListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -53,7 +54,7 @@ public class ProductsController(ISender mediator) : BaseApiController
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If product is not found</response>
     [HttpGet("{id}")]
-    [RequireModulePermission("Dispensary", ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.Dispensary, ModulePermission.View)]
     [ProducesResponseType(typeof(ProductResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -77,7 +78,7 @@ public class ProductsController(ISender mediator) : BaseApiController
     /// <response code="400">If request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpPost]
-    [RequireModulePermission("Dispensary", ModulePermission.Create)]
+    [RequireModulePermission(ModuleConstants.Dispensary, ModulePermission.Create)]
     [ProducesResponseType(typeof(ProductResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -102,7 +103,7 @@ public class ProductsController(ISender mediator) : BaseApiController
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If product is not found</response>
     [HttpPut("{id}")]
-    [RequireModulePermission("Dispensary", ModulePermission.Edit)]
+    [RequireModulePermission(ModuleConstants.Dispensary, ModulePermission.Edit)]
     [ProducesResponseType(typeof(ProductResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -126,7 +127,7 @@ public class ProductsController(ISender mediator) : BaseApiController
     /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If product is not found</response>
     [HttpDelete("{id}")]
-    [RequireModulePermission("Dispensary", ModulePermission.Delete)]
+    [RequireModulePermission(ModuleConstants.Dispensary, ModulePermission.Delete)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
