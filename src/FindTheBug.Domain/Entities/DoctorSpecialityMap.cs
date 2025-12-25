@@ -2,7 +2,7 @@ using FindTheBug.Domain.Common;
 
 namespace FindTheBug.Domain.Entities;
 
-public class DoctorSpecialityMapping : BaseEntity
+public class DoctorSpecialityMap : BaseEntity
 {
     public Guid DoctorId { get; set; }
     public Guid DoctorSpecialityId { get; set; }

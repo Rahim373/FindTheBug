@@ -61,7 +61,7 @@ public class UpdateDoctorCommandHandler(IUnitOfWork unitOfWork)
 
             foreach (var mapping in mappingsToRemove)
             {
-                await unitOfWork.Repository<DoctorSpecialityMapping>().DeleteAsync(mapping.Id, cancellationToken);
+                await unitOfWork.Repository<DoctorSpecialityMap>().DeleteAsync(mapping.Id, cancellationToken);
             }
         }
 
@@ -70,12 +70,12 @@ public class UpdateDoctorCommandHandler(IUnitOfWork unitOfWork)
         {
             foreach (var specialityId in specialitiesToAdd)
             {
-                var newMapping = new DoctorSpecialityMapping
+                var newMapping = new DoctorSpecialityMap
                 {
                     DoctorId = doctor.Id,
                     DoctorSpecialityId = specialityId
                 };
-                await unitOfWork.Repository<DoctorSpecialityMapping>().AddAsync(newMapping, cancellationToken);
+                await unitOfWork.Repository<DoctorSpecialityMap>().AddAsync(newMapping, cancellationToken);
             }
         }
 

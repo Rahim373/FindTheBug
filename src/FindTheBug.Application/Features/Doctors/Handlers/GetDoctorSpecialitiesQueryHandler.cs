@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FindTheBug.Application.Features.Doctors.Handlers;
 
 public class GetDoctorSpecialitiesQueryHandler(IUnitOfWork unitOfWork)
-    : ICommandHandler<GetDoctorSpecialitiesQuery, List<DoctorSpecialityDto>>
+    : IQueryHandler<GetDoctorSpecialitiesQuery, List<DoctorSpecialityDto>>
 {
     public async Task<ErrorOr<List<DoctorSpecialityDto>>> Handle(GetDoctorSpecialitiesQuery request, CancellationToken cancellationToken)
     {

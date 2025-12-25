@@ -24,7 +24,7 @@ public class DeleteDoctorCommandHandler(IUnitOfWork unitOfWork)
         {
             foreach (var mapping in doctor.DoctorSpecialities)
             {
-                await unitOfWork.Repository<DoctorSpecialityMapping>().DeleteAsync(mapping.Id, cancellationToken);
+                await unitOfWork.Repository<DoctorSpecialityMap>().DeleteAsync(mapping.Id, cancellationToken);
             }
         }
 

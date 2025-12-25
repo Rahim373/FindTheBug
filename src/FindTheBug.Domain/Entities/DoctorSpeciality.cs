@@ -9,5 +9,5 @@ public class DoctorSpeciality : BaseAuditableEntity
     public bool IsActive { get; set; } = true;
 
     // Navigation properties
-    public ICollection<DoctorSpecialityMapping> DoctorMappings { get; set; } = new List<DoctorSpecialityMapping>();
+    public ICollection<DoctorSpecialityMap> DoctorMappings { get; set; } = new List<DoctorSpecialityMap>();
 }

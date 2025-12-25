@@ -25,7 +25,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     // Doctors Management DbSets
     public DbSet<Doctor> Doctors => Set<Doctor>();
     public DbSet<DoctorSpeciality> DoctorSpecialities => Set<DoctorSpeciality>();
-    public DbSet<DoctorSpecialityMapping> DoctorSpecialityMappings => Set<DoctorSpecialityMapping>();
+    public DbSet<DoctorSpecialityMap> DoctorSpecialityMappings => Set<DoctorSpecialityMap>();
 
     // Dispensary Management DbSets
     public DbSet<Drug> Drugs => Set<Drug>();

@@ -49,12 +49,12 @@ public class CreateDoctorCommandHandler(IUnitOfWork unitOfWork)
         {
             foreach (var specialityId in request.SpecialityIds)
             {
-                var mapping = new DoctorSpecialityMapping
+                var mapping = new DoctorSpecialityMap
                 {
                     DoctorId = created.Id,
                     DoctorSpecialityId = specialityId
                 };
-                await unitOfWork.Repository<DoctorSpecialityMapping>().AddAsync(mapping, cancellationToken);
+                await unitOfWork.Repository<DoctorSpecialityMap>().AddAsync(mapping, cancellationToken);
             }
         }
 
