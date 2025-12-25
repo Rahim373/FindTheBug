@@ -1,24 +1,19 @@
 import { Routes } from '@angular/router';
-import { AuthLayoutComponent } from './features/auth/auth-layout/auth-layout.component';
-import { LoginComponent } from './features/auth/login/login.component';
-import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
-import { AdminLayoutComponent } from './features/admin/admin-layout/admin-layout.component';
-import { DashboardComponent } from './features/admin/dashboard/dashboard.component';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     {
         path: '',
-        component: AuthLayoutComponent,
+        loadComponent: () => import('./features/auth/auth-layout/auth-layout.component').then(c => c.AuthLayoutComponent),
         children: [
-            { path: 'login', component: LoginComponent },
-            { path: 'forgot-password', component: ForgotPasswordComponent },
+            { path: 'login', loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent) },
+            { path: 'forgot-password', loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent) },
             { path: '', redirectTo: 'login', pathMatch: 'full' }
         ]
     },
     {
         path: 'admin',
-        component: AdminLayoutComponent,
+        loadComponent: () => import('./features/admin/admin-layout/admin-layout.component').then(c => c.AdminLayoutComponent),
         canActivate: [authGuard],
         children: [
             {
@@ -28,7 +23,7 @@ export const routes: Routes = [
             },
             {
                 path: 'dashboard',
-                component: DashboardComponent
+                loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(c => c.DashboardComponent)
             },
             {
                 path: 'users',
