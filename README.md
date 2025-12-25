@@ -262,6 +262,23 @@ The Angular app will be available at `http://localhost:4200` and API at `https:/
 - **Responsive Design** - Mobile-friendly interface
 - **Dark Theme** - Ng-Zorro dark theme support
 
+### CSS Architecture 🎨
+
+- **No Inline Styles** - All styles separated into dedicated CSS files
+- **Global Utility Classes** - Reusable utility classes in `styles.css` for common patterns
+  - `.cursor-pointer` - Pointer cursor for interactive elements
+  - `.margin-left-8`, `.margin-left-12` - Margin utilities
+  - `.width-100` - Full width utility
+  - `.text-secondary`, `.font-size-12`, `.font-size-14` - Typography utilities
+  - `.form-container`, `.form-container h2` - Standard form styling
+  - `.page-header`, `.page-container` - Page layout utilities
+  - `.search-bar` - Search input styling
+- **Component-Specific CSS** - Each component has its own `.component.css` file for isolated styles
+- **Clean Architecture** - Proper separation between HTML templates, CSS stylesheets, and TypeScript logic
+- **Maintainable Codebase** - Easier to update, debug, and scale styling
+- **Better IDE Support** - Full CSS syntax highlighting and IntelliSense
+- **Consistent Patterns** - Standardized styling approach across all components
+
 ## 📚 Documentation
 
 Additional documentation is available in the `/docs` folder:
