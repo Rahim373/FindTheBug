@@ -86,34 +86,7 @@ import { AuthService } from '../../../core/services/auth.service';
       </form>
     </div>
   `,
-  styles: [`
-    .form-title {
-      text-align: center;
-      margin-bottom: 24px;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: 500;
-    }
-
-    .login-form {
-      max-width: 100%;
-    }
-
-    .login-form-margin {
-      margin-bottom: 24px;
-    }
-
-    .login-form-forgot {
-      text-align: right;
-    }
-
-    .login-form-button {
-      width: 100%;
-    }
-
-    .error-alert {
-      margin-bottom: 24px;
-    }
-  `]
+  styleUrl: './login.component.css'
 })
 export class LoginComponent {
   private fb = inject(FormBuilder);

@@ -80,33 +80,7 @@ import { AuthService } from '../../../core/services/auth.service';
       </ng-template>
     </div>
   `,
-    styles: [`
-    .form-title {
-      text-align: center;
-      margin-bottom: 12px;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: 500;
-    }
-
-    .form-subtitle {
-      text-align: center;
-      color: rgba(0, 0, 0, 0.45);
-      margin-bottom: 24px;
-    }
-
-    .submit-button {
-      width: 100%;
-      margin-bottom: 16px;
-    }
-
-    .back-link {
-      text-align: center;
-    }
-
-    .error-alert {
-      margin-bottom: 24px;
-    }
-  `]
+  styleUrl: './forgot-password.component.css'
 })
 export class ForgotPasswordComponent {
     private fb = inject(FormBuilder);

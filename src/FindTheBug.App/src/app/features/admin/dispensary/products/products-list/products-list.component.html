@@ -12,7 +12,7 @@
       <input type="text" nz-input placeholder="Search products..." [(ngModel)]="searchText" (keyup.enter)="onSearch()" />
     </nz-input-group>
     <ng-template #suffixIconSearch>
-      <span nz-icon nzType="search" (click)="onSearch()" style="cursor: pointer"></span>
+      <span nz-icon nzType="search" (click)="onSearch()" class="cursor-pointer"></span>
     </ng-template>
     <button nz-button nzType="primary" (click)="onSearch()">Search</button>
   </div>

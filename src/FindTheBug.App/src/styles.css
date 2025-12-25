@@ -7,3 +7,69 @@ body {
     'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
 }
+
+/* Generic utility classes */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.margin-left-8 {
+  margin-left: 8px;
+}
+
+.margin-left-12 {
+  margin-left: 12px;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.text-secondary {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.font-size-12 {
+  font-size: 12px;
+}
+
+.font-size-14 {
+  font-size: 14px;
+}
+
+.font-normal {
+  font-weight: normal;
+}
+
+/* Form container styles */
+.form-container {
+  padding: 24px;
+}
+
+.form-container h2 {
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Grid layouts */
+.grid-auto-fill {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+/* Scrollable container */
+.scrollable-container {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  background: #fafafa;
+}
+
+/* Grid item padding */
+.grid-item {
+  padding: 8px 0;
+}
