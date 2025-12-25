@@ -1,0 +1,79 @@
+using ErrorOr;
+using FindTheBug.Application.Common.Interfaces;
+using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Features.Dispensary.Drugs.Commands;
+using FindTheBug.Application.Features.Dispensary.Drugs.DTOs;
+using FindTheBug.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace FindTheBug.Application.Features.Dispensary.Drugs.Handlers;
+
+public class UpdateDrugCommandHandler(IUnitOfWork unitOfWork)
+    : ICommandHandler<UpdateDrugCommand, DrugResponseDto>
+{
+    public async Task<ErrorOr<DrugResponseDto>> Handle(UpdateDrugCommand request, CancellationToken cancellationToken)
+    {
+        var drug = await unitOfWork.Repository<Drug>().GetQueryable()
+            .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
+
+        if (drug == null)
+            return Error.NotFound("Drug.NotFound", "Drug not found");
+
+        // Validate GenericName exists
+        var genericName = await unitOfWork.Repository<GenericName>().GetQueryable()
+            .FirstOrDefaultAsync(gn => gn.Id == request.GenericNameId && gn.IsActive, cancellationToken);
+
+        if (genericName == null)
+            return Error.NotFound("Drug.GenericNameNotFound", "Generic name not found");
+
+        // Validate Brand exists
+        var brand = await unitOfWork.Repository<Brand>().GetQueryable()
+            .FirstOrDefaultAsync(b => b.Id == request.BrandId && b.IsActive, cancellationToken);
+
+        if (brand == null)
+            return Error.NotFound("Drug.BrandNotFound", "Brand not found");
+
+        drug.Name = request.Name;
+        drug.Strength = request.Strength;
+        drug.GenericNameId = request.GenericNameId;
+        drug.BrandId = request.BrandId;
+        drug.Type = request.Type;
+        drug.UnitPrice = request.UnitPrice;
+        drug.PhotoPath = request.PhotoPath;
+        drug.IsActive = request.IsActive;
+
+        await unitOfWork.Repository<Drug>().UpdateAsync(drug, cancellationToken);
+
+        // Get the updated drug with related entities
+        var drugWithRelations = await unitOfWork.Repository<Drug>().GetQueryable()
+            .Include(d => d.GenericName)
+            .Include(d => d.Brand)
+            .FirstAsync(d => d.Id == drug.Id, cancellationToken);
+
+        return new DrugResponseDto
+        {
+            Id = drugWithRelations.Id,
+            Name = drugWithRelations.Name,
+            Strength = drugWithRelations.Strength,
+            GenericName = new GenericNameDto
+            {
+                Id = drugWithRelations.GenericName.Id,
+                Name = drugWithRelations.GenericName.Name,
+                Description = drugWithRelations.GenericName.Description,
+                IsActive = drugWithRelations.GenericName.IsActive
+            },
+            Brand = new BrandDto
+            {
+                Id = drugWithRelations.Brand.Id,
+                Name = drugWithRelations.Brand.Name,
+                IsActive = drugWithRelations.Brand.IsActive
+            },
+            Type = drugWithRelations.Type,
+            UnitPrice = drugWithRelations.UnitPrice,
+            PhotoPath = drugWithRelations.PhotoPath,
+            IsActive = drugWithRelations.IsActive,
+            CreatedAt = drugWithRelations.CreatedAt,
+            UpdatedAt = drugWithRelations.UpdatedAt
+        };
+    }
+}

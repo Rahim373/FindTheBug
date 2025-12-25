@@ -70,6 +70,22 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
                     </li>
                 </ul>
             </li>
+            <li nz-submenu nzTitle="Dispensary" nzIcon="fa:pills">
+                <ul>
+                    <li nz-menu-item nzMatchRouter>
+                        <a routerLink="/admin/dispensary/drugs">
+                            <span nz-icon nzType="fa:syringe"></span>
+                            <span>Drugs</span>
+                        </a>
+                    </li>
+                    <li nz-menu-item nzMatchRouter>
+                        <a routerLink="/admin/dispensary/products">
+                            <span nzTheme="fill" nz-icon nzType="drop-box"></span>
+                            <span>Products</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li nz-menu-item>
                 <a routerLink="/admin/tests">
                     <span nz-icon nzType="experiment"></span>

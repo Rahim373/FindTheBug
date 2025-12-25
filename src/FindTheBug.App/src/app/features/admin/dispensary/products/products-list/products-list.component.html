@@ -1,0 +1,55 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Product Management</h2>
+    <button nz-button nzType="primary" (click)="createProduct()">
+      <span nz-icon nzType="plus"></span>
+      Add Product
+    </button>
+  </div>
+
+  <div class="search-bar">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input type="text" nz-input placeholder="Search products..." [(ngModel)]="searchText" (keyup.enter)="onSearch()" />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search" (click)="onSearch()" style="cursor: pointer"></span>
+    </ng-template>
+    <button nz-button nzType="primary" (click)="onSearch()">Search</button>
+  </div>
+
+  <nz-table #productsTable [nzData]="products" [nzLoading]="loading" [nzTotal]="totalCount" [nzPageSize]="pageSize"
+    [nzPageIndex]="pageNumber" [nzFrontPagination]="false" (nzPageIndexChange)="onPageChange($event)"
+    (nzPageSizeChange)="onPageSizeChange($event)" [nzShowSizeChanger]="true" [nzPageSizeOptions]="[10, 20, 50]">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td><strong>{{ product.name }}</strong></td>
+        <td>${{ product.price | number:'1.2-2' }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>{{ product.description || '-' }}</td>
+        <td>
+          <nz-tag [nzColor]="product.isActive ? 'success' : 'default'">
+            {{ product.isActive ? 'Active' : 'Inactive' }}
+          </nz-tag>
+        </td>
+        <td>
+          <button nz-button nzType="link" (click)="editProduct(product.id)">
+            <span nz-icon nzType="edit"></span>
+          </button>
+          <button nz-button nzType="link" nzDanger (click)="deleteProduct(product)">
+            <span nz-icon nzType="delete"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

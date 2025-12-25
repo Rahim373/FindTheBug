@@ -27,6 +27,12 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<DoctorSpeciality> DoctorSpecialities => Set<DoctorSpeciality>();
     public DbSet<DoctorSpecialityMapping> DoctorSpecialityMappings => Set<DoctorSpecialityMapping>();
 
+    // Dispensary Management DbSets
+    public DbSet<Drug> Drugs => Set<Drug>();
+    public DbSet<Brand> Brands => Set<Brand>();
+    public DbSet<GenericName> GenericNames => Set<GenericName>();
+    public DbSet<Product> Products => Set<Product>();
+
     // Authentication DbSets
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();

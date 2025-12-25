@@ -70,6 +70,30 @@ export const routes: Routes = [
                 path: 'doctors/:id/edit',
                 loadComponent: () => import('./features/admin/doctors/doctor-form/doctor-form.component').then(c => c.DoctorFormComponent)
             },
+            {
+                path: 'dispensary/drugs',
+                loadComponent: () => import('./features/admin/dispensary/drugs/drugs-list/drugs-list.component').then(c => c.DrugsListComponent)
+            },
+            {
+                path: 'dispensary/drugs/create',
+                loadComponent: () => import('./features/admin/dispensary/drugs/drug-form/drug-form.component').then(c => c.DrugFormComponent)
+            },
+            {
+                path: 'dispensary/drugs/:id/edit',
+                loadComponent: () => import('./features/admin/dispensary/drugs/drug-form/drug-form.component').then(c => c.DrugFormComponent)
+            },
+            {
+                path: 'dispensary/products',
+                loadComponent: () => import('./features/admin/dispensary/products/products-list/products-list.component').then(c => c.ProductsListComponent)
+            },
+            {
+                path: 'dispensary/products/create',
+                loadComponent: () => import('./features/admin/dispensary/products/product-form/product-form.component').then(c => c.ProductFormComponent)
+            },
+            {
+                path: 'dispensary/products/:id/edit',
+                loadComponent: () => import('./features/admin/dispensary/products/product-form/product-form.component').then(c => c.ProductFormComponent)
+            },
             // Future routes can be added here
             // { path: 'patients', loadComponent: () => import('./features/admin/patients/patients.component').then(c => c.PatientsComponent) },
             // { path: 'tests', loadComponent: () => import('./features/admin/tests/tests.component').then(c => c.TestsComponent) },
