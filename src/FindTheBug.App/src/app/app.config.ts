@@ -28,6 +28,7 @@ import {
   TeamOutline,
   SecurityScanFill,
   HomeOutline,
+  DropboxOutline,
   MedicineBoxOutline
 } from '@ant-design/icons-angular/icons';
 
@@ -98,7 +99,8 @@ const icons = [
   TeamOutline,
   SecurityScanFill,
   HomeOutline,
-  MedicineBoxOutline
+  MedicineBoxOutline,
+  DropboxOutline
 ];
 
 export const appConfig: ApplicationConfig = {

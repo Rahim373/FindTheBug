@@ -116,6 +116,45 @@ export class AuthService {
     }
 
     /**
+     * Refresh access token using refresh token
+     */
+    async refreshAccessToken(): Promise<LoginResponse | null> {
+        const refreshToken = this.tokenService.getRefreshToken();
+        
+        if (!refreshToken) {
+            return null;
+        }
+
+        try {
+            const response = await firstValueFrom(
+                this.http.post<LoginResponse>(
+                    `${environment.apiUrl}/token/refresh`,
+                    { refreshToken }
+                )
+            );
+
+            if (response?.isSuccess && response.data) {
+                // Store new tokens
+                this.tokenService.setTokens(
+                    response.data.accessToken,
+                    response.data.refreshToken,
+                    response.data.expiresAt
+                );
+
+                // Update authentication state
+                this.isAuthenticatedSubject.next(true);
+                
+                return response;
+            }
+
+            return null;
+        } catch (error: any) {
+            console.error('Token refresh error:', error);
+            return null;
+        }
+    }
+
+    /**
      * Check if user is on login page and redirect to dashboard if authenticated
      */
     async checkAuthAndRedirect(): Promise<void> {

@@ -80,7 +80,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
                     </li>
                     <li nz-menu-item nzMatchRouter>
                         <a routerLink="/admin/dispensary/products">
-                            <span nzTheme="fill" nz-icon nzType="drop-box"></span>
+                            <span nz-icon nzType="dropbox"></span>
                             <span>Products</span>
                         </a>
                     </li>
