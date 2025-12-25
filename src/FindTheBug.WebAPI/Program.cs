@@ -29,6 +29,9 @@ builder.Host.UseSerilog();
 // Add services to the container using Installers
 builder.Services.InstallServicesInAssembly(builder.Configuration);
 
+// Add module-based authorization
+builder.Services.AddModuleAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

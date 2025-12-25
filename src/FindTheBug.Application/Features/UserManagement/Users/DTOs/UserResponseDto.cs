@@ -1,5 +1,11 @@
 namespace FindTheBug.Application.Features.UserManagement.Users.DTOs;
 
+public record ModulePermissionDto
+{
+    public string Module { get; init; } = string.Empty;
+    public string Permission { get; init; } = string.Empty;
+}
+
 public record UserResponseDto
 {
     public Guid Id { get; init; }
@@ -14,6 +20,7 @@ public record UserResponseDto
     public DateTime CreatedAt { get; init; }
     public DateTime? UpdatedAt { get; init; }
     public List<UserRoleDto>? Roles { get; init; }
+    public List<ModulePermissionDto>? Permissions { get; init; }
 }
 
 public record UserListItemDto

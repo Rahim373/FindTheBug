@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { TokenService } from './token.service';
-import { LoginRequest, LoginResponse, ForgotPasswordRequest, ForgotPasswordResponse } from '../models/auth.models';
+import { LoginRequest, LoginResponse, ForgotPasswordRequest, ForgotPasswordResponse, User } from '../models/auth.models';
 import { environment } from '../../../environments/environment.development';
 import { firstValueFrom } from 'rxjs';
 
@@ -17,6 +17,9 @@ export class AuthService {
 
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.tokenService.isAuthenticated());
     public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+    private currentUserSubject = new BehaviorSubject<User | null>(null);
+    public currentUser$ = this.currentUserSubject.asObservable();
 
     /**
      * Login with email/phone and password
@@ -44,8 +47,9 @@ export class AuthService {
                     response.data.expiresAt
                 );
 
-                // Update authentication state
+                // Update authentication state and user
                 this.isAuthenticatedSubject.next(true);
+                this.currentUserSubject.next(response.data.user);
             }
 
             return response;
@@ -103,6 +107,7 @@ export class AuthService {
         // Clear tokens and update state
         this.tokenService.clearTokens();
         this.isAuthenticatedSubject.next(false);
+        this.currentUserSubject.next(null);
 
         // Redirect to login
         await this.router.navigate(['/login']);
@@ -141,8 +146,9 @@ export class AuthService {
                     response.data.expiresAt
                 );
 
-                // Update authentication state
+                // Update authentication state and user
                 this.isAuthenticatedSubject.next(true);
+                this.currentUserSubject.next(response.data.user);
                 
                 return response;
             }
@@ -161,5 +167,12 @@ export class AuthService {
         if (this.isAuthenticated()) {
             await this.router.navigate(['/admin/dashboard']);
         }
+    }
+
+    /**
+     * Get current user
+     */
+    getCurrentUser(): User | null {
+        return this.currentUserSubject.value;
     }
 }

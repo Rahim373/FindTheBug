@@ -1,5 +1,7 @@
 using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Dispensary.Drugs.Commands;
+using FindTheBug.Domain.Common;
+using FindTheBug.WebAPI.Attributes;
 using FindTheBug.Application.Features.Dispensary.Drugs.DTOs;
 using FindTheBug.Application.Features.Dispensary.Drugs.Queries;
 using MediatR;
@@ -22,9 +24,12 @@ public class DrugsController(ISender mediator) : BaseApiController
     /// <returns>Paginated list of drugs</returns>
     /// <response code="200">Returns paginated list of drugs</response>
     /// <response code="400">If request is invalid</response>
+    /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
+    [RequireModulePermission("Dispensary", ModulePermission.View)]
     [ProducesResponseType(typeof(PagedResult<DrugListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken,
         [FromQuery] string? search,
         [FromQuery] int pageNumber = 1,
@@ -45,9 +50,12 @@ public class DrugsController(ISender mediator) : BaseApiController
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Drug details</returns>
     /// <response code="200">Returns drug</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If drug is not found</response>
     [HttpGet("{id}")]
+    [RequireModulePermission("Dispensary", ModulePermission.View)]
     [ProducesResponseType(typeof(DrugResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
@@ -67,10 +75,13 @@ public class DrugsController(ISender mediator) : BaseApiController
     /// <returns>Created drug</returns>
     /// <response code="200">Returns newly created drug</response>
     /// <response code="400">If request is invalid</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If generic name or brand not found</response>
     [HttpPost]
+    [RequireModulePermission("Dispensary", ModulePermission.Create)]
     [ProducesResponseType(typeof(DrugResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Create([FromBody] CreateDrugCommand command, CancellationToken cancellationToken)
     {
@@ -90,10 +101,13 @@ public class DrugsController(ISender mediator) : BaseApiController
     /// <returns>Updated drug</returns>
     /// <response code="200">Returns updated drug</response>
     /// <response code="400">If request is invalid</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If drug, generic name, or brand is not found</response>
     [HttpPut("{id}")]
+    [RequireModulePermission("Dispensary", ModulePermission.Edit)]
     [ProducesResponseType(typeof(DrugResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateDrugCommand command, CancellationToken cancellationToken)
     {
@@ -111,9 +125,12 @@ public class DrugsController(ISender mediator) : BaseApiController
     /// <param name="id">Drug ID</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <response code="200">Drug deleted successfully</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If drug is not found</response>
     [HttpDelete("{id}")]
+    [RequireModulePermission("Dispensary", ModulePermission.Delete)]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {

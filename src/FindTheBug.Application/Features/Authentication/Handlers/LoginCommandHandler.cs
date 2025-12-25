@@ -60,13 +60,41 @@ public class LoginCommandHandler(
         user.LastLoginIp = httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
         await unitOfWork.Repository<User>().UpdateAsync(user, cancellationToken);
 
-        // Get user roles
-        var userRoles = await unitOfWork.Repository<UserRole>()
+        // Get user roles with permissions
+        var userRolesData = await unitOfWork.Repository<UserRole>()
             .GetQueryable()
+            .Include(ur => ur.Role)
+                .ThenInclude(r => r.RoleModulePermissions)
+                    .ThenInclude(rmp => rmp.Module)
             .Where(ur => ur.UserId == user.Id)
-            .Select(ur => ur.Role.Name)
             .ToListAsync(cancellationToken);
+
+        var userRoles = userRolesData.Select(ur => ur.Role?.Name).Where(n => n != null).ToList();
         var rolesString = string.Join(",", userRoles);
+
+        // Collect all permissions from all roles
+        var permissions = new List<ModulePermissionInfo>();
+        foreach (var userRole in userRolesData)
+        {
+            if (userRole.Role?.RoleModulePermissions != null)
+            {
+                foreach (var roleModulePermission in userRole.Role.RoleModulePermissions)
+                {
+                    var module = roleModulePermission.Module;
+                    if (module != null && module.IsActive)
+                    {
+                        if (roleModulePermission.CanView)
+                            permissions.Add(new ModulePermissionInfo(module.Name, "View"));
+                        if (roleModulePermission.CanCreate)
+                            permissions.Add(new ModulePermissionInfo(module.Name, "Create"));
+                        if (roleModulePermission.CanEdit)
+                            permissions.Add(new ModulePermissionInfo(module.Name, "Edit"));
+                        if (roleModulePermission.CanDelete)
+                            permissions.Add(new ModulePermissionInfo(module.Name, "Delete"));
+                    }
+                }
+            }
+        }
 
         // Generate tokens
         var accessToken = authService.GenerateAccessToken(user.Id, user.Email ?? user.Phone, rolesString);
@@ -87,7 +115,7 @@ public class LoginCommandHandler(
             accessToken,
             refreshToken,
             refreshTokenEntity.ExpiresAt,
-            new UserInfo(user.Id, user.Email ?? user.Phone, user.FirstName, user.LastName, rolesString)
+            new UserInfo(user.Id, user.Email ?? user.Phone, user.FirstName, user.LastName, rolesString, permissions.Distinct().ToList())
         );
     }
 }

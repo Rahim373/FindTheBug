@@ -1,5 +1,7 @@
 using FindTheBug.Application.Features.Laboratory.TestParameters.Commands;
 using FindTheBug.Application.Features.Laboratory.TestParameters.DTOs;
+using FindTheBug.Domain.Common;
+using FindTheBug.WebAPI.Attributes;
 using FindTheBug.Application.Features.Laboratory.TestParameters.Queries;
 using MapsterMapper;
 using MediatR;
@@ -20,9 +22,12 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     /// <returns>List of test parameters</returns>
     /// <response code="200">Returns the list of test parameters</response>
     /// <response code="400">If the request is invalid</response>
+    /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
+    [RequireModulePermission("Laboratory", ModulePermission.View)]
     [ProducesResponseType(typeof(List<TestParameterResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAll([FromQuery] Guid? diagnosticTestId, CancellationToken cancellationToken)
     {
         var query = new GetAllTestParametersQuery(diagnosticTestId);
@@ -41,9 +46,12 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     /// <returns>Created test parameter</returns>
     /// <response code="200">Returns the newly created test parameter</response>
     /// <response code="400">If the request is invalid</response>
+    /// <response code="403">If user doesn't have permission</response>
     [HttpPost]
+    [RequireModulePermission("Laboratory", ModulePermission.Create)]
     [ProducesResponseType(typeof(TestParameterResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] CreateTestParameterCommand command, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(command, cancellationToken);
@@ -62,10 +70,13 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     /// <returns>Updated test parameter</returns>
     /// <response code="200">Returns the updated test parameter</response>
     /// <response code="400">If the request is invalid</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If the test parameter is not found</response>
     [HttpPut("{id}")]
+    [RequireModulePermission("Laboratory", ModulePermission.Edit)]
     [ProducesResponseType(typeof(TestParameterResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTestParameterCommand request, CancellationToken cancellationToken)
     {
@@ -86,10 +97,13 @@ public class TestParametersController(ISender mediator, IMapper mapper) : BaseAp
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>No content</returns>
     /// <response code="204">Test parameter successfully deleted</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If the test parameter is not found</response>
     /// <response code="400">If the test parameter cannot be deleted</response>
     [HttpDelete("{id}")]
+    [RequireModulePermission("Laboratory", ModulePermission.Delete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)

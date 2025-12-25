@@ -41,7 +41,8 @@ export class RoleFormComponent implements OnInit {
     loading = false;
     submitting = false;
     modules: Module[] = [];
-    enabledModules: Set<string> = new Set();
+    // Track permissions per module: { moduleId: { view, create, edit, delete } }
+    modulePermissions: Map<string, { view: boolean; create: boolean; edit: boolean; delete: boolean }> = new Map();
 
     constructor(
         private fb: FormBuilder,
@@ -87,12 +88,16 @@ export class RoleFormComponent implements OnInit {
                     isActive: roleData.isActive
                 });
                 
-                // Load existing module permissions if available
+                // Load existing module permissions
                 if (roleData.modulePermissions && roleData.modulePermissions.length > 0) {
                     roleData.modulePermissions.forEach(permission => {
-                        // Convert Guid to string for comparison
                         const moduleIdString = String(permission.moduleId);
-                        this.enabledModules.add(moduleIdString);
+                        this.modulePermissions.set(moduleIdString, {
+                            view: permission.canView || false,
+                            create: permission.canCreate || false,
+                            edit: permission.canEdit || false,
+                            delete: permission.canDelete || false
+                        });
                     });
                 }
             }
@@ -104,16 +109,42 @@ export class RoleFormComponent implements OnInit {
         }
     }
 
-    isModuleEnabled(moduleId: string): boolean {
-        return this.enabledModules.has(moduleId);
+    isPermissionEnabled(moduleId: string, permission: 'view' | 'create' | 'edit' | 'delete'): boolean {
+        return this.modulePermissions.get(moduleId)?.[permission] || false;
     }
 
-    toggleModule(moduleId: string, enabled: boolean): void {
-        if (enabled) {
-            this.enabledModules.add(moduleId);
+    togglePermission(moduleId: string, permission: 'view' | 'create' | 'edit' | 'delete', value?: boolean): void {
+        const currentPermissions = this.modulePermissions.get(moduleId) || { view: false, create: false, edit: false, delete: false };
+        const newPermissions = { 
+            ...currentPermissions, 
+            [permission]: value !== undefined ? value : !currentPermissions[permission] 
+        };
+        this.modulePermissions.set(moduleId, newPermissions);
+    }
+
+    toggleAllPermissions(moduleId: string, enabled: boolean): void {
+        this.modulePermissions.set(moduleId, { view: enabled, create: enabled, edit: enabled, delete: enabled });
+    }
+
+    hasAnyPermission(moduleId: string): boolean {
+        const permissions = this.modulePermissions.get(moduleId);
+        return permissions ? Object.values(permissions).some(p => p) : false;
+    }
+
+    toggleAllPermissionsForModule(moduleId: string): void {
+        const permissions = this.modulePermissions.get(moduleId);
+        if (permissions && Object.values(permissions).every(p => p)) {
+            // All enabled, disable all
+            this.toggleAllPermissions(moduleId, false);
         } else {
-            this.enabledModules.delete(moduleId);
+            // Not all enabled, enable all
+            this.toggleAllPermissions(moduleId, true);
         }
+    }
+
+    isAllPermissionsEnabled(moduleId: string): boolean {
+        const permissions = this.modulePermissions.get(moduleId);
+        return permissions ? Object.values(permissions).every(p => p) : false;
     }
 
     async submitForm(): Promise<void> {
@@ -131,14 +162,16 @@ export class RoleFormComponent implements OnInit {
         try {
             const formValue = this.roleForm.value;
 
-            // Convert enabled modules to permission objects with all permissions enabled
-            const modulePermissions: ModulePermission[] = Array.from(this.enabledModules).map(moduleId => ({
-                moduleId,
-                canView: true,
-                canCreate: true,
-                canEdit: true,
-                canDelete: true
-            }));
+            // Convert module permissions to the request format
+            const modulePermissions: ModulePermission[] = Array.from(this.modulePermissions.entries())
+                .filter(([_, permissions]) => Object.values(permissions).some(p => p))
+                .map(([moduleId, permissions]) => ({
+                    moduleId,
+                    canView: permissions.view,
+                    canCreate: permissions.create,
+                    canEdit: permissions.edit,
+                    canDelete: permissions.delete
+                }));
 
             const request: CreateRoleRequest | UpdateRoleRequest = {
                 name: formValue.name,

@@ -117,13 +117,15 @@ export class UserFormComponent implements OnInit {
             next: (response) => {
                 if (response.isSuccess && response.data) {
                     const user = response.data;
+                    // Map roles array to roleIds array
+                    //const roleIds = user.roles?.map(r => r.roleId) || [];
                     this.userForm.patchValue({
                         email: user.email,
                         firstName: user.firstName,
                         lastName: user.lastName,
                         phone: user.phone,
                         nidNumber: user.nidNumber,
-                        roleIds: user.roleIds || [],
+                        //roleIds: roleIds,
                         isActive: user.isActive,
                         allowUserLogin: user.allowUserLogin
                     });

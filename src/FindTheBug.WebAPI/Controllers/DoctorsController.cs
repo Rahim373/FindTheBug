@@ -1,4 +1,6 @@
 using FindTheBug.Application.Common.Models;
+using FindTheBug.Domain.Common;
+using FindTheBug.WebAPI.Attributes;
 using FindTheBug.Application.Features.Doctors.Commands;
 using FindTheBug.Application.Features.Doctors.DTOs;
 using FindTheBug.Application.Features.Doctors.Queries;
@@ -22,9 +24,12 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <returns>Paginated list of doctors</returns>
     /// <response code="200">Returns paginated list of doctors</response>
     /// <response code="400">If request is invalid</response>
+    /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
+    [RequireModulePermission("Doctors", ModulePermission.View)]
     [ProducesResponseType(typeof(PagedResult<DoctorListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken,
         [FromQuery] string? search,
         [FromQuery] int pageNumber = 1,
@@ -45,9 +50,12 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Doctor details</returns>
     /// <response code="200">Returns doctor</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If doctor is not found</response>
     [HttpGet("{id}")]
+    [RequireModulePermission("Doctors", ModulePermission.View)]
     [ProducesResponseType(typeof(DoctorResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
@@ -67,10 +75,13 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <returns>Created doctor</returns>
     /// <response code="200">Returns newly created doctor</response>
     /// <response code="400">If request is invalid</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="409">If a doctor with the same phone number already exists</response>
     [HttpPost]
+    [RequireModulePermission("Doctors", ModulePermission.Create)]
     [ProducesResponseType(typeof(DoctorResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Create([FromBody] CreateDoctorCommand command, CancellationToken cancellationToken)
     {
@@ -90,11 +101,14 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <returns>Updated doctor</returns>
     /// <response code="200">Returns updated doctor</response>
     /// <response code="400">If request is invalid</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If doctor is not found</response>
     /// <response code="409">If another doctor with the same phone number already exists</response>
     [HttpPut("{id}")]
+    [RequireModulePermission("Doctors", ModulePermission.Edit)]
     [ProducesResponseType(typeof(DoctorResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateDoctorCommand command, CancellationToken cancellationToken)
@@ -113,9 +127,12 @@ public class DoctorsController(ISender mediator) : BaseApiController
     /// <param name="id">Doctor ID</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <response code="200">Doctor deleted successfully</response>
+    /// <response code="403">If user doesn't have permission</response>
     /// <response code="404">If doctor is not found</response>
     [HttpDelete("{id}")]
+    [RequireModulePermission("Doctors", ModulePermission.Delete)]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {

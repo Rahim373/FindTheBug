@@ -15,11 +15,17 @@ export interface TokenData {
 }
 
 export interface User {
-  id: string
-  email: string
-  firstName: string
-  lastName: string
-  roles: string
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    roles: string
+    permissions?: ModulePermission[]
+}
+
+export interface ModulePermission {
+    module: string;
+    permission: string;
 }
 
 export interface ForgotPasswordRequest {
@@ -36,12 +42,6 @@ export interface ForgotPasswordResponse {
 export interface ErrorDetail {
     code: string;
     description: string;
-}
-
-export interface User {
-    id: string;
-    email: string;
-    name?: string;
 }
 
 export interface Response<T> {

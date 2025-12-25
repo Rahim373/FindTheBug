@@ -83,8 +83,6 @@ public class DbInitializer
         // Seed Roles
         var roleDefinitions = new[]
         {
-            new { Name = "Admin", Description = "Administrator with full access to all modules", IsSystemRole = true },
-            new { Name = "User", Description = "Standard user with limited access", IsSystemRole = true },
             new { Name = "SuperUser", Description = "Super administrator with unrestricted access", IsSystemRole = true }
         };
 

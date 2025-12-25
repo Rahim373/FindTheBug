@@ -1,8 +1,19 @@
+export interface UserRole {
+  roleId: string;
+  roleName: string;
+}
+
+export interface ModulePermission {
+  module: string;
+  permission: string;
+}
+
 export interface User {
   id: string;
   email?: string;
   firstName: string;
   lastName: string;
+  fullName: string;
   phone: string;
   nidNumber?: string;
   roleCount: number;
@@ -11,6 +22,8 @@ export interface User {
   lastLoginAt?: Date;
   createdAt: Date;
   updatedAt?: Date;
+  roles?: UserRole[];
+  permissions?: ModulePermission[];
 }
 
 export interface CreateUserRequest {

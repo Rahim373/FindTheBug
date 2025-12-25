@@ -1,5 +1,10 @@
 namespace FindTheBug.Application.Features.Authentication.Contracts;
 
+public record ModulePermissionInfo(
+    string Module,
+    string Permission
+);
+
 public record LoginResponse(
     string AccessToken,
     string RefreshToken,
@@ -12,5 +17,6 @@ public record UserInfo(
     string Email,
     string FirstName,
     string LastName,
-    string Roles
+    string Roles,
+    List<ModulePermissionInfo> Permissions
 );

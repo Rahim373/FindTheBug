@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { PermissionService, PermissionType } from '../../../../core/services/permission.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -54,31 +55,33 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
                     </li>
                 </ul>
             </li>
-            <li nz-submenu nzTitle="Medical Management" nzIcon="fa:stethoscope" [nzOpen]="isMedicalManagementOpen">
+            <li nz-submenu nzTitle="Medical Management" nzIcon="fa:stethoscope" [nzOpen]="isMedicalManagementOpen"
+                *ngIf="permissionService.hasAnyPermissionSync('Doctors') || permissionService.hasAnyPermissionSync('Patients')">
                 <ul>
-                    <li nz-menu-item nzMatchRouter>
+                    <li nz-menu-item nzMatchRouter *ngIf="permissionService.hasPermissionSync('Doctors', PermissionType.View)">
                         <a routerLink="/admin/doctors">
                             <span nz-icon nzType="fa:user-doctor"></span>
                             <span>Doctors</span>
                         </a>
                     </li>
-                    <!-- <li nz-menu-item>
+                    <li nz-menu-item nzMatchRouter *ngIf="permissionService.hasPermissionSync('Patients', PermissionType.View)">
                         <a routerLink="/admin/patients">
                             <span nz-icon nzType="fa:hospital-user"></span>
                             <span>Patients</span>
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
             </li>
-            <li nz-submenu nzTitle="Dispensary" nzIcon="fa:pills" [nzOpen]="isDispensaryOpen">
+            <li nz-submenu nzTitle="Dispensary" nzIcon="fa:pills" [nzOpen]="isDispensaryOpen"
+                *ngIf="permissionService.hasAnyPermissionSync('Dispensary')">
                 <ul>
-                    <li nz-menu-item nzMatchRouter>
+                    <li nz-menu-item nzMatchRouter *ngIf="permissionService.hasPermissionSync('Dispensary', PermissionType.View)">
                         <a routerLink="/admin/dispensary/drugs">
                             <span nz-icon nzType="fa:syringe"></span>
                             <span>Drugs</span>
                         </a>
                     </li>
-                    <li nz-menu-item nzMatchRouter>
+                    <li nz-menu-item nzMatchRouter *ngIf="permissionService.hasPermissionSync('Dispensary', PermissionType.View)">
                         <a routerLink="/admin/dispensary/products">
                             <span nz-icon nzType="dropbox"></span>
                             <span>Products</span>
@@ -94,6 +97,8 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 export class SidebarComponent implements OnInit, OnDestroy {
     isCollapsed = false;
     private router = inject(Router);
+    readonly permissionService = inject(PermissionService);
+    readonly PermissionType = PermissionType;
     private routerSubscription: any;
     
     // Submenu expansion states

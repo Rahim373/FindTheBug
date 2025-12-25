@@ -195,7 +195,7 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.ToTable("DoctorSpecialities", (string)null);
                 });
 
-            modelBuilder.Entity("FindTheBug.Domain.Entities.DoctorSpecialityMapping", b =>
+            modelBuilder.Entity("FindTheBug.Domain.Entities.DoctorSpecialityMap", b =>
                 {
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uuid");
@@ -1035,7 +1035,7 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.ToTable("UserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("FindTheBug.Domain.Entities.DoctorSpecialityMapping", b =>
+            modelBuilder.Entity("FindTheBug.Domain.Entities.DoctorSpecialityMap", b =>
                 {
                     b.HasOne("FindTheBug.Domain.Entities.Doctor", "Doctor")
                         .WithMany("DoctorSpecialities")

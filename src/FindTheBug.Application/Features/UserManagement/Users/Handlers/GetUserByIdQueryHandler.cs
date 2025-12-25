@@ -16,10 +16,39 @@ public class GetUserByIdQueryHandler(IUnitOfWork unitOfWork)
         var user = await unitOfWork.Repository<User>().GetQueryable()
             .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
+                    .ThenInclude(r => r.RoleModulePermissions)
+                        .ThenInclude(rmp => rmp.Module)
             .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
 
         if (user == null)
             return Error.NotFound("User.NotFound", "User not found");
+
+        // Collect all permissions from all roles
+        var permissions = new List<ModulePermissionDto>();
+        if (user.UserRoles != null)
+        {
+            foreach (var userRole in user.UserRoles)
+            {
+                if (userRole.Role?.RoleModulePermissions != null)
+                {
+                    foreach (var roleModulePermission in userRole.Role.RoleModulePermissions)
+                    {
+                        var module = roleModulePermission.Module;
+                        if (module != null && module.IsActive)
+                        {
+                            if (roleModulePermission.CanView)
+                                permissions.Add(new ModulePermissionDto { Module = module.Name, Permission = "View" });
+                            if (roleModulePermission.CanCreate)
+                                permissions.Add(new ModulePermissionDto { Module = module.Name, Permission = "Create" });
+                            if (roleModulePermission.CanEdit)
+                                permissions.Add(new ModulePermissionDto { Module = module.Name, Permission = "Edit" });
+                            if (roleModulePermission.CanDelete)
+                                permissions.Add(new ModulePermissionDto { Module = module.Name, Permission = "Delete" });
+                        }
+                    }
+                }
+            }
+        }
 
         return new UserResponseDto
         {
@@ -37,7 +66,8 @@ public class GetUserByIdQueryHandler(IUnitOfWork unitOfWork)
             {
                 RoleId = ur.RoleId,
                 RoleName = ur.Role?.Name ?? string.Empty
-            }).ToList()
+            }).ToList(),
+            Permissions = permissions.Distinct().ToList()
         };
     }
 }

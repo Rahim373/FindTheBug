@@ -44,6 +44,9 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IEmailService, EmailService>();
 
+        // Register module permission service
+        services.AddScoped<IModulePermissionService, ModulePermissionService>();
+
         // Add health checks
         services.AddHealthChecks()
             .AddCheck("master_database", () =>
