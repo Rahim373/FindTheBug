@@ -57,26 +57,25 @@ export class RoleService {
     }
 
     const response = await firstValueFrom(this.http.get<any>(this.apiUrl, { params }));
-    return response?.data || response;
+    return response;
   }
 
   async getRoleByIdAsync(id: string): Promise<Role> {
     const response = await firstValueFrom(this.http.get<any>(`${this.apiUrl}/${id}`));
-    return response?.data || response;
+    return response;
   }
 
   async createRoleAsync(request: CreateRoleRequest): Promise<Role> {
     const response = await firstValueFrom(this.http.post<any>(this.apiUrl, request));
-    return response?.data || response;
+    return response;
   }
 
   async updateRoleAsync(id: string, request: UpdateRoleRequest): Promise<Role> {
     const response = await firstValueFrom(this.http.put<any>(`${this.apiUrl}/${id}`, request));
-    return response?.data || response;
+    return response;
   }
 
   async deleteRoleAsync(id: string): Promise<void> {
-    const response = await firstValueFrom(this.http.delete<any>(`${this.apiUrl}/${id}`));
-    return response?.data || response;
+    await firstValueFrom(this.http.delete<any>(`${this.apiUrl}/${id}`));
   }
 }

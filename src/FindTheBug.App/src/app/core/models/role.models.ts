@@ -5,6 +5,7 @@ export interface Role {
   isSystemRole: boolean;
   isActive: boolean;
   createdAt: Date;
+  modulePermissions?: ModulePermission[];
 }
 
 export interface CreateRoleRequest {

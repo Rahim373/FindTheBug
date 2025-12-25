@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
@@ -37,10 +38,9 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li nz-submenu nzTitle="User Management" nzIcon="team">
+            <li nz-submenu nzTitle="User Management" nzIcon="team" [nzOpen]="isUserManagementOpen">
                 <ul>
                     <li nz-menu-item nzMatchRouter>
-
                         <a routerLink="/admin/users">
                             <span nz-icon nzType="user"></span>
                             <span>Users</span>
@@ -54,7 +54,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
                     </li>
                 </ul>
             </li>
-            <li nz-submenu nzTitle="Medical Management" nzIcon="fa:stethoscope">
+            <li nz-submenu nzTitle="Medical Management" nzIcon="fa:stethoscope" [nzOpen]="isMedicalManagementOpen">
                 <ul>
                     <li nz-menu-item nzMatchRouter>
                         <a routerLink="/admin/doctors">
@@ -70,7 +70,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
                     </li>
                 </ul>
             </li>
-            <li nz-submenu nzTitle="Dispensary" nzIcon="fa:pills">
+            <li nz-submenu nzTitle="Dispensary" nzIcon="fa:pills" [nzOpen]="isDispensaryOpen">
                 <ul>
                     <li nz-menu-item nzMatchRouter>
                         <a routerLink="/admin/dispensary/drugs">
@@ -104,7 +104,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
                     <span>Invoices</span>
                 </a>
             </li>
-            <li nz-submenu nzTitle="Settings" nzIcon="setting">
+            <li nz-submenu nzTitle="Settings" nzIcon="setting" [nzOpen]="isSettingsOpen">
                 <ul>
                     <li nz-menu-item>
                         <a routerLink="/admin/settings/profile">
@@ -176,9 +176,47 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
     }
   `]
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit, OnDestroy {
     isCollapsed = false;
     private router = inject(Router);
+    private routerSubscription: any;
+    
+    // Submenu expansion states
+    isUserManagementOpen = false;
+    isMedicalManagementOpen = false;
+    isDispensaryOpen = false;
+    isSettingsOpen = false;
+
+    ngOnInit(): void {
+        this.updateExpandedMenus();
+        
+        // Subscribe to router changes to update expanded menus
+        this.routerSubscription = this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+        ).subscribe(() => {
+            this.updateExpandedMenus();
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.routerSubscription) {
+            this.routerSubscription.unsubscribe();
+        }
+    }
+
+    private updateExpandedMenus(): void {
+        const url = this.router.url;
+        
+        // Check if current URL matches any submenu items
+        this.isUserManagementOpen = this.isRouteInSubmenu(url, ['/admin/users', '/admin/roles']);
+        this.isMedicalManagementOpen = this.isRouteInSubmenu(url, ['/admin/doctors', '/admin/patients']);
+        this.isDispensaryOpen = this.isRouteInSubmenu(url, ['/admin/dispensary/drugs', '/admin/dispensary/products']);
+        this.isSettingsOpen = this.isRouteInSubmenu(url, ['/admin/settings/profile', '/admin/settings/system']);
+    }
+
+    private isRouteInSubmenu(currentUrl: string, menuRoutes: string[]): boolean {
+        return menuRoutes.some(route => currentUrl.startsWith(route));
+    }
 
     toggleCollapse(): void {
         this.isCollapsed = !this.isCollapsed;

@@ -86,7 +86,15 @@ export class RoleFormComponent implements OnInit {
                     description: roleData.description,
                     isActive: roleData.isActive
                 });
-                // Note: Backend might not return module permissions yet
+                
+                // Load existing module permissions if available
+                if (roleData.modulePermissions && roleData.modulePermissions.length > 0) {
+                    roleData.modulePermissions.forEach(permission => {
+                        // Convert Guid to string for comparison
+                        const moduleIdString = String(permission.moduleId);
+                        this.enabledModules.add(moduleIdString);
+                    });
+                }
             }
         } catch (error) {
             console.error('Error loading data:', error);
