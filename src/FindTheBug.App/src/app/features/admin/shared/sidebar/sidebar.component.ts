@@ -87,6 +87,23 @@ import { PermissionService, PermissionType } from '../../../../core/services/per
                             <span>Products</span>
                         </a>
                     </li>
+                    <li nz-menu-item nzMatchRouter *ngIf="permissionService.hasPermissionSync('Dispensary', PermissionType.View)">
+                        <a routerLink="/admin/dispensary/expenses">
+                            <span nz-icon nzType="money-collect"></span>
+                            <span>Expenses</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu nzTitle="Transactions" nzIcon="transaction" [nzOpen]="isTransactionsOpen"
+                *ngIf="permissionService.hasAnyPermissionSync('Accounts')">
+                <ul>
+                    <li nz-menu-item nzMatchRouter>
+                        <a routerLink="/admin/transactions/expenses">
+                            <span nz-icon nzType="file-invoice-dollar"></span>
+                            <span>Lab Expenses</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
         </ul>
@@ -105,6 +122,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     isUserManagementOpen = false;
     isMedicalManagementOpen = false;
     isDispensaryOpen = false;
+    isTransactionsOpen = false;
     isSettingsOpen = false;
 
     ngOnInit(): void {
@@ -130,7 +148,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         // Check if current URL matches any submenu items
         this.isUserManagementOpen = this.isRouteInSubmenu(url, ['/admin/users', '/admin/roles']);
         this.isMedicalManagementOpen = this.isRouteInSubmenu(url, ['/admin/doctors', '/admin/patients']);
-        this.isDispensaryOpen = this.isRouteInSubmenu(url, ['/admin/dispensary/drugs', '/admin/dispensary/products']);
+        this.isDispensaryOpen = this.isRouteInSubmenu(url, ['/admin/dispensary/drugs', '/admin/dispensary/products', '/admin/dispensary/expenses']);
+        this.isTransactionsOpen = this.isRouteInSubmenu(url, ['/admin/transactions/expenses']);
         this.isSettingsOpen = this.isRouteInSubmenu(url, ['/admin/settings/profile', '/admin/settings/system']);
     }
 

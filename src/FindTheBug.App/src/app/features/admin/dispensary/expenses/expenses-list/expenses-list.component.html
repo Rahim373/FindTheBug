@@ -1,0 +1,55 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>{{ title }}</h2>
+    <button nz-button nzType="primary" (click)="createExpense()">
+      <span nz-icon nzType="plus"></span>
+      Add Expense
+    </button>
+  </div>
+
+  <div class="search-bar">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input type="text" nz-input placeholder="Search by note or reference..." [(ngModel)]="searchText" (keyup.enter)="onSearch()" />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search"></span>
+    </ng-template>
+    <button nz-button nzType="primary" (click)="onSearch()">Search</button>
+  </div>
+
+  <nz-table #expensesTable [nzData]="expenses" [nzLoading]="loading" [nzTotal]="totalCount" [nzPageSize]="pageSize"
+    [nzPageIndex]="pageNumber" [nzFrontPagination]="false" (nzPageIndexChange)="onPageChange($event)"
+    (nzPageSizeChange)="onPageSizeChange($event)" [nzShowSizeChanger]="true" [nzPageSizeOptions]="[10, 20, 50]">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Note</th>
+        <th>Amount</th>
+        <th>Payment Method</th>
+        <th>Reference No</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let expense of expenses">
+        <td>{{ formatDate(expense.date) }}</td>
+        <td>{{ expense.note }}</td>
+        <td>{{ expense.amount | currency }}</td>
+        <td>
+          <nz-tag [nzColor]="getPaymentMethodColor(expense.paymentMethod)">
+            {{ expense.paymentMethod }}
+          </nz-tag>
+        </td>
+        <td>{{ expense.referenceNo || '-' }}</td>
+        <td>
+          <button nz-button nzType="link" (click)="editExpense(expense.id)">
+            <span nz-icon nzType="edit"></span>
+          </button>
+          <button nz-button nzType="link" nzDanger (click)="deleteExpense(expense)">
+            <span nz-icon nzType="delete"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

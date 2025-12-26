@@ -33,6 +33,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<GenericName> GenericNames => Set<GenericName>();
     public DbSet<Product> Products => Set<Product>();
 
+    // Expenses DbSets
+    public DbSet<Expense> Expenses => Set<Expense>();
+
     // Authentication DbSets
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();

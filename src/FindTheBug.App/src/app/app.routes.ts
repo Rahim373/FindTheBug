@@ -89,6 +89,32 @@ export const routes: Routes = [
                 path: 'dispensary/products/:id/edit',
                 loadComponent: () => import('./features/admin/dispensary/products/product-form/product-form.component').then(c => c.ProductFormComponent)
             },
+            {
+                path: 'dispensary/expenses',
+                data: { department: 'Dispensary' },
+                loadComponent: () => import('./features/admin/dispensary/expenses/expenses-list/expenses-list.component').then(c => c.ExpensesListComponent)
+            },
+            {
+                path: 'dispensary/expenses/create',
+                loadComponent: () => import('./features/admin/dispensary/expenses/expense-form/expense-form.component').then(c => c.ExpenseFormComponent)
+            },
+            {
+                path: 'dispensary/expenses/:id/edit',
+                loadComponent: () => import('./features/admin/dispensary/expenses/expense-form/expense-form.component').then(c => c.ExpenseFormComponent)
+            },
+            {
+                path: 'transactions/expenses',
+                data: { department: 'Lab' },
+                loadComponent: () => import('./features/admin/dispensary/expenses/expenses-list/expenses-list.component').then(c => c.ExpensesListComponent)
+            },
+            {
+                path: 'transactions/expenses/create',
+                loadComponent: () => import('./features/admin/dispensary/expenses/expense-form/expense-form.component').then(c => c.ExpenseFormComponent)
+            },
+            {
+                path: 'transactions/expenses/:id/edit',
+                loadComponent: () => import('./features/admin/dispensary/expenses/expense-form/expense-form.component').then(c => c.ExpenseFormComponent)
+            },
             // Future routes can be added here
             // { path: 'patients', loadComponent: () => import('./features/admin/patients/patients.component').then(c => c.PatientsComponent) },
             // { path: 'tests', loadComponent: () => import('./features/admin/tests/tests.component').then(c => c.TestsComponent) },

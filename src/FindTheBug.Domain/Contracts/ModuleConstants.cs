@@ -8,9 +8,15 @@ public static class ModuleConstants
     public const string Billing = "Billing";
     public const string UserManagement = "UserManagement";
     public const string Patient = "Patient";
+    public const string Accounts = "Accounts";
 
     public static IEnumerable<string> GetModules() =>
     [
-        Laboratory, Doctors, Dispensary, Billing, UserManagement
+        Accounts, 
+        Billing,
+        Doctors, 
+        Dispensary, 
+        Laboratory, 
+        UserManagement
     ];
 }
