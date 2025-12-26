@@ -1,9 +1,11 @@
-﻿<Application x:Class="FindTheBug.Desktop.Reception.App"
+<Application x:Class="FindTheBug.Desktop.Reception.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:FindTheBug.Desktop.Reception"
+             xmlns:converters="clr-namespace:FindTheBug.Desktop.Reception.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Application.Resources>
 </Application>

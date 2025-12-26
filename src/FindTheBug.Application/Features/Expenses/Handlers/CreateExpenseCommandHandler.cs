@@ -4,7 +4,6 @@ using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Features.Expenses.Commands;
 using FindTheBug.Application.Features.Expenses.DTOs;
 using FindTheBug.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Application.Features.Expenses.Handlers;
 
