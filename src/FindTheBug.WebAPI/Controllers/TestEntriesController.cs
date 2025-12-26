@@ -4,6 +4,7 @@ using FindTheBug.Domain.Common;
 using FindTheBug.Domain.Contracts;
 using FindTheBug.WebAPI.Attributes;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -11,6 +12,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Test entry management endpoints
 /// </summary>
+[Authorize]
 public class TestEntriesController(ISender mediator) : BaseApiController
 {
     /// <summary>

@@ -1,6 +1,7 @@
 using FindTheBug.Application.Features.Metrics.DTOs;
 using FindTheBug.Application.Features.Metrics.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -8,6 +9,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Metrics and dashboard endpoints
 /// </summary>
+[Authorize]
 public class MetricsController(ISender mediator) : BaseApiController
 {
     /// <summary>

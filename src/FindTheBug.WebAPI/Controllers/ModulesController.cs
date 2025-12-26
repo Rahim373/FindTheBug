@@ -1,6 +1,7 @@
 using FindTheBug.Application.Features.UserManagement.Modules.DTOs;
 using FindTheBug.Application.Features.UserManagement.Modules.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -8,6 +9,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Module management endpoints
 /// </summary>
+[Authorize]
 public class ModulesController(ISender mediator) : BaseApiController
 {
     /// <summary>

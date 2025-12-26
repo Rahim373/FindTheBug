@@ -42,7 +42,6 @@ public class CloudSyncService
         _logger = logger;
         _state = state;
 
-
         _jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,

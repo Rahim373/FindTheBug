@@ -10,16 +10,9 @@ namespace FindTheBug.WebAPI.Attributes;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class BasicAuthAttribute : Attribute, IAuthorizationFilter
 {
-    private IConfiguration configuration;
-
-    public BasicAuthAttribute()
-    {
-        // Configuration will be resolved via service provider in OnAuthorization
-    }
-
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+        var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
 
         // Skip authorization if AllowAnonymous attribute is present
         var allowAnonymous = context.ActionDescriptor.EndpointMetadata

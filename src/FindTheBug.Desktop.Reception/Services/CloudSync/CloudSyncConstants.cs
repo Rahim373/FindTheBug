@@ -8,7 +8,7 @@ public static class CloudSyncConstants
     /// <summary>
     /// Base path for all sync endpoints
     /// </summary>
-    public const string ApiBasePath = "/api/sync";
+    public const string ApiBasePath = "/api/service-sync";
 
     /// <summary>
     /// Endpoint for syncing modules

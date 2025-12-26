@@ -8,6 +8,7 @@ using FindTheBug.WebAPI.Attributes;
 using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -15,6 +16,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Role management endpoints
 /// </summary>
+[Authorize]
 public class RolesController(ISender mediator, IMapper mapper) : BaseApiController
 {
     /// <summary>

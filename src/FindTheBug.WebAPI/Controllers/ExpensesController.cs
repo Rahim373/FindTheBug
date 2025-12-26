@@ -5,6 +5,7 @@ using FindTheBug.Domain.Common;
 using FindTheBug.Domain.Contracts;
 using FindTheBug.WebAPI.Attributes;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -12,6 +13,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Expense management endpoints
 /// </summary>
+[Authorize]
 public class ExpensesController(ISender mediator) : BaseApiController
 {
     /// <summary>

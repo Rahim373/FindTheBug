@@ -1,6 +1,5 @@
 ﻿using ErrorOr;
 using FindTheBug.WebAPI.Http;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -8,7 +7,6 @@ namespace FindTheBug.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class BaseApiController : ControllerBase
 {
     protected IActionResult Problem(List<Error> errors)

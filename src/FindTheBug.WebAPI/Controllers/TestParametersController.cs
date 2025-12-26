@@ -6,6 +6,7 @@ using FindTheBug.Domain.Contracts;
 using FindTheBug.WebAPI.Attributes;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FindTheBug.WebAPI.Controllers;
@@ -13,6 +14,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Test parameter management endpoints
 /// </summary>
+[Authorize]
 public class TestParametersController(ISender mediator, IMapper mapper) : BaseApiController
 {
     /// <summary>

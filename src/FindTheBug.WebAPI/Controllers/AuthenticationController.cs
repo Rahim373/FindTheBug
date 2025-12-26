@@ -11,6 +11,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// <summary>
 /// Authentication and authorization endpoints
 /// </summary>
+[Authorize]
 public class AuthenticationController(ISender mediator, IMapper mapper) : BaseApiController
 {
     /// <summary>
