@@ -5,10 +5,10 @@ namespace FindTheBug.Domain.Entities;
 public class User : BaseAuditableEntity
 {
     public string? Email { get; set; }
-    public required string PasswordHash { get; set; }
+    public string PasswordHash { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public required string Phone { get; set; }
+    public string Phone { get; set; }
     public string? NIDNumber { get; set; }
     public bool IsActive { get; set; } = true;
     public bool AllowUserLogin { get; set; } = true;

@@ -21,6 +21,13 @@ public class ReceptionDbContext : DbContext
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<InvoiceItem> InvoiceItems => Set<InvoiceItem>();
 
+    // RBAC (Role-Based Access Control) - Synced from Cloud
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<Module> Modules => Set<Module>();
+    public DbSet<RoleModulePermission> RoleModulePermissions => Set<RoleModulePermission>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

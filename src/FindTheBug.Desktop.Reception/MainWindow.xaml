@@ -29,10 +29,37 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Background="#FF2C3E50">
-            <TextBlock FontSize="17" Padding="5 3" Foreground="White" FontWeight="Bold">Mathbaria Al-Razi Diagnostics and Consultation Center</TextBlock>
-            <TextBlock FontSize="20" Padding="5 0 0 10" Foreground="White">Reception App</TextBlock>
-        </StackPanel>
+        <Grid Grid.Row="0" Background="#FF0E3175">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" >
+                <TextBlock FontSize="17" Padding="10 3" Foreground="White" FontWeight="Bold">Mathbaria Al-Razi Diagnostics and Consultation Center</TextBlock>
+                <TextBlock FontSize="20" Padding="10 0 0 10" Foreground="White">Reception App</TextBlock>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Padding="5 3" Foreground="White" FontWeight="Bold" Text="Cloud" />
+                    <Ellipse Width="10" Height="10" Margin="5 8 10 3" VerticalAlignment="Top">
+                        <Ellipse.Fill>
+                            <SolidColorBrush Color="{Binding CloudOnlineColor}"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Padding="5 3" Foreground="White" FontWeight="Bold" Text="Sync" />
+                    <Ellipse Width="10" Height="10" Margin="5 8 10 3" VerticalAlignment="Top">
+                        <Ellipse.Fill>
+                            <SolidColorBrush Color="{Binding IsSyncing, Converter={StaticResource SyncStatusColorConverter}}"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        
 
         <!-- Top Menu Bar - Only visible when logged in -->
         <Menu Grid.Row="1" 
@@ -41,7 +68,6 @@
             <MenuItem Header="Home" Command="{Binding HomeCommand}"/>
             <MenuItem Header="Receipts" Command="{Binding ReceiptsCommand}"/>
             <MenuItem Header="Doctors" Command="{Binding DoctorsCommand}"/>
-            <MenuItem Header="Sync Data" Command="{Binding SyncDataCommand}"/>
             <MenuItem Header="Logout" Command="{Binding LogoutCommand}"/>
         </Menu>
 

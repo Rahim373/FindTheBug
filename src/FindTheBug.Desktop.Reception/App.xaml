@@ -7,5 +7,6 @@
     <Application.Resources>
         <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:SyncStatusColorConverter x:Key="SyncStatusColorConverter"/>
     </Application.Resources>
 </Application>

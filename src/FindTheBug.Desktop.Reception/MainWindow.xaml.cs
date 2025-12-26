@@ -1,5 +1,6 @@
 using System.Windows;
 using FindTheBug.Desktop.Reception.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FindTheBug.Desktop.Reception
 {
@@ -11,7 +12,13 @@ namespace FindTheBug.Desktop.Reception
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            
+            // Use dependency injection to get ViewModel
+            if (App.ServiceProvider is not null)
+            {
+                var viewModel = App.ServiceProvider.GetService<MainWindowViewModel>();
+                DataContext = viewModel;
+            }
         }
     }
 }

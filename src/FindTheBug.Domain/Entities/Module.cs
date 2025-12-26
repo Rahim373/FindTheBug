@@ -4,7 +4,7 @@ namespace FindTheBug.Domain.Entities;
 
 public class Module : BaseAuditableEntity
 {
-    public required string Name { get; set; }
+    public string Name { get; set; }
     public string? DisplayName { get; set; }
     public string? Description { get; set; }
     public bool IsActive { get; set; } = true;
