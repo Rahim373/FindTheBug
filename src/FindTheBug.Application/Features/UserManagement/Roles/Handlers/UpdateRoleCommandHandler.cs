@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.UserManagement.Roles.Commands;
 using FindTheBug.Application.Features.UserManagement.Roles.DTOs;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.UserManagement.Roles.Handlers;
 public class UpdateRoleCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateRoleCommand, RoleResponseDto>
 {
-    public async Task<ErrorOr<RoleResponseDto>> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<RoleResponseDto>>> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
         var role = await unitOfWork.Repository<Role>()
             .GetQueryable()
@@ -48,7 +49,7 @@ public class UpdateRoleCommandHandler(IUnitOfWork unitOfWork)
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Return DTO
-        return new RoleResponseDto
+        return Result<RoleResponseDto>.Success(new RoleResponseDto
         {
             Id = role.Id,
             Name = role.Name,
@@ -66,6 +67,6 @@ public class UpdateRoleCommandHandler(IUnitOfWork unitOfWork)
                 CanEdit = rmp.CanEdit,
                 CanDelete = rmp.CanDelete
             }).ToList()
-        };
+        });
     }
 }

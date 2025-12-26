@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Laboratory.TestResults.Commands;
 using FindTheBug.Domain.Entities;
 
@@ -9,7 +10,7 @@ namespace FindTheBug.Application.Features.Laboratory.TestResults.Handlers;
 public class VerifyTestResultsCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<VerifyTestResultsCommand, bool>
 {
-    public async Task<ErrorOr<bool>> Handle(VerifyTestResultsCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<bool>>> Handle(VerifyTestResultsCommand request, CancellationToken cancellationToken)
     {
         var results = await unitOfWork.Repository<TestResult>().GetAllAsync(cancellationToken);
         var entryResults = results.Where(r => r.TestEntryId == request.TestEntryId).ToList();
@@ -24,6 +25,6 @@ public class VerifyTestResultsCommandHandler(IUnitOfWork unitOfWork)
             await unitOfWork.Repository<TestResult>().UpdateAsync(result, cancellationToken);
         }
 
-        return true;
+        return Result<bool>.Success(true);
     }
 }

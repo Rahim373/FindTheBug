@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Patients.DTOs;
 using FindTheBug.Application.Features.Patients.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Patients.Handlers;
 public class GetAllPatientsQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllPatientsQuery, List<PatientListItemDto>>
 {
-    public async Task<ErrorOr<List<PatientListItemDto>>> Handle(GetAllPatientsQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<List<PatientListItemDto>>>> Handle(GetAllPatientsQuery request, CancellationToken cancellationToken)
     {
         var query = unitOfWork.Repository<Patient>().GetQueryable();
 
@@ -36,6 +37,6 @@ public class GetAllPatientsQueryHandler(IUnitOfWork unitOfWork)
             Gender = p.Gender
         }).ToList();
 
-        return patientDtos;
+        return Result<List<PatientListItemDto>>.Success(patientDtos);
     }
 }

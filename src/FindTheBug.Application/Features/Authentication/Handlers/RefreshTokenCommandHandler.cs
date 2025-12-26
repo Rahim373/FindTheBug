@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Application.Features.Authentication.Contracts;
 using FindTheBug.Domain.Entities;
@@ -15,7 +16,7 @@ public class RefreshTokenCommandHandler(
     IHttpContextAccessor httpContextAccessor)
     : ICommandHandler<RefreshTokenCommand, RefreshTokenResponse>
 {
-    public async Task<ErrorOr<RefreshTokenResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<RefreshTokenResponse>>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         // Find refresh token
         var refreshTokens = await unitOfWork.Repository<RefreshToken>().GetAllAsync(cancellationToken);
@@ -71,10 +72,10 @@ public class RefreshTokenCommandHandler(
         };
         await unitOfWork.Repository<RefreshToken>().AddAsync(newRefreshTokenEntity, cancellationToken);
 
-        return new RefreshTokenResponse(
+        return Result<RefreshTokenResponse>.Success(new RefreshTokenResponse(
             newAccessToken,
             newRefreshToken,
             newRefreshTokenEntity.ExpiresAt
-        );
+        ));
     }
 }

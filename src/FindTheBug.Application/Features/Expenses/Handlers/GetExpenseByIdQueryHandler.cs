@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Expenses.DTOs;
 using FindTheBug.Application.Features.Expenses.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Expenses.Handlers;
 public class GetExpenseByIdQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetExpenseByIdQuery, ExpenseResponseDto>
 {
-    public async Task<ErrorOr<ExpenseResponseDto>> Handle(GetExpenseByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<ExpenseResponseDto>>> Handle(GetExpenseByIdQuery request, CancellationToken cancellationToken)
     {
         var expense = await unitOfWork.Repository<Expense>().GetQueryable()
             .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken);
@@ -19,7 +20,7 @@ public class GetExpenseByIdQueryHandler(IUnitOfWork unitOfWork)
         if (expense == null)
             return Error.NotFound("Expense.NotFound", "Expense not found");
 
-        return new ExpenseResponseDto
+        return Result<ExpenseResponseDto>.Success(new ExpenseResponseDto
         {
             Id = expense.Id,
             Date = expense.Date,
@@ -31,6 +32,6 @@ public class GetExpenseByIdQueryHandler(IUnitOfWork unitOfWork)
             Department = expense.Department,
             CreatedAt = expense.CreatedAt,
             UpdatedAt = expense.UpdatedAt
-        };
+        });
     }
 }

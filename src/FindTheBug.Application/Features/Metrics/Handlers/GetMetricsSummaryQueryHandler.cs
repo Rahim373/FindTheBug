@@ -1,15 +1,15 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
-using FindTheBug.Application.Common.Messaging;
 using FindTheBug.Application.Features.Metrics.DTOs;
 using FindTheBug.Application.Features.Metrics.Queries;
 using FindTheBug.Domain.Entities;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FindTheBug.Application.Features.Metrics.Handlers;
 
 public class GetMetricsSummaryQueryHandler(IUnitOfWork unitOfWork)
-    : IQueryHandler<GetMetricsSummaryQuery, MetricsSummaryDto>
+    : IRequestHandler<GetMetricsSummaryQuery, ErrorOr<MetricsSummaryDto>>
 {
     public async Task<ErrorOr<MetricsSummaryDto>> Handle(GetMetricsSummaryQuery request, CancellationToken cancellationToken)
     {

@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.UserManagement.Users.Commands;
 using FindTheBug.Application.Features.UserManagement.Users.DTOs;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.UserManagement.Users.Handlers;
 public class UpdateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
     : ICommandHandler<UpdateUserCommand, UserResponseDto>
 {
-    public async Task<ErrorOr<UserResponseDto>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<UserResponseDto>>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         var user = await unitOfWork.Repository<User>().GetQueryable()
             .Include(u => u.UserRoles)
@@ -57,7 +58,7 @@ public class UpdateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher pa
         await unitOfWork.Repository<User>().UpdateAsync(user);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new UserResponseDto
+        return Result<UserResponseDto>.Success(new UserResponseDto
         {
             Id = user.Id,
             Email = user.Email,
@@ -69,6 +70,6 @@ public class UpdateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher pa
             AllowUserLogin = user.AllowUserLogin,
             CreatedAt = user.CreatedAt,
             UpdatedAt = user.UpdatedAt
-        };
+        });
     }
 }

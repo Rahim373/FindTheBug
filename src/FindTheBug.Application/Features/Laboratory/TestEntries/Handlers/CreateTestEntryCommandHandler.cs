@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Laboratory.TestEntries.Commands;
 using FindTheBug.Application.Features.Laboratory.TestEntries.DTOs;
 using FindTheBug.Domain.Entities;
@@ -10,7 +11,7 @@ namespace FindTheBug.Application.Features.Laboratory.TestEntries.Handlers;
 public class CreateTestEntryCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateTestEntryCommand, TestEntryResponseDto>
 {
-    public async Task<ErrorOr<TestEntryResponseDto>> Handle(CreateTestEntryCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<TestEntryResponseDto>>> Handle(CreateTestEntryCommand request, CancellationToken cancellationToken)
     {
         var entry = new TestEntry
         {
@@ -27,7 +28,7 @@ public class CreateTestEntryCommandHandler(IUnitOfWork unitOfWork)
         var patient = await unitOfWork.Repository<Patient>().GetByIdAsync(created.PatientId, cancellationToken);
         var test = await unitOfWork.Repository<DiagnosticTest>().GetByIdAsync(created.DiagnosticTestId, cancellationToken);
 
-        return new TestEntryResponseDto
+        return Result<TestEntryResponseDto>.Success(new TestEntryResponseDto
         {
             Id = created.Id,
             PatientId = created.PatientId,
@@ -37,6 +38,6 @@ public class CreateTestEntryCommandHandler(IUnitOfWork unitOfWork)
             EntryDate = created.EntryDate,
             Status = created.Status,
             CreatedAt = created.CreatedAt
-        };
+        });
     }
 }

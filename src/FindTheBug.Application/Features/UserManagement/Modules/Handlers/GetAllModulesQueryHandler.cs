@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.UserManagement.Modules.DTOs;
 using FindTheBug.Application.Features.UserManagement.Modules.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.UserManagement.Modules.Handlers;
 public class GetAllModulesQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllModulesQuery, List<ModuleDto>>
 {
-    public async Task<ErrorOr<List<ModuleDto>>> Handle(GetAllModulesQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<List<ModuleDto>>>> Handle(GetAllModulesQuery request, CancellationToken cancellationToken)
     {
         var modules = await unitOfWork.Repository<Module>().GetQueryable()
             .OrderBy(m => m.Name)
@@ -26,6 +27,6 @@ public class GetAllModulesQueryHandler(IUnitOfWork unitOfWork)
             IsActive = m.IsActive
         }).ToList();
 
-        return moduleDtos;
+        return Result<List<ModuleDto>>.Success(moduleDtos);
     }
 }

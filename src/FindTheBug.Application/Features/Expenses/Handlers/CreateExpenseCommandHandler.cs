@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Expenses.Commands;
 using FindTheBug.Application.Features.Expenses.DTOs;
 using FindTheBug.Domain.Entities;
@@ -10,7 +11,7 @@ namespace FindTheBug.Application.Features.Expenses.Handlers;
 public class CreateExpenseCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateExpenseCommand, ExpenseResponseDto>
 {
-    public async Task<ErrorOr<ExpenseResponseDto>> Handle(CreateExpenseCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<ExpenseResponseDto>>> Handle(CreateExpenseCommand request, CancellationToken cancellationToken)
     {
         var expense = new Expense
         {
@@ -26,7 +27,7 @@ public class CreateExpenseCommandHandler(IUnitOfWork unitOfWork)
         var created = await unitOfWork.Repository<Expense>().AddAsync(expense, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new ExpenseResponseDto
+        return Result<ExpenseResponseDto>.Success(new ExpenseResponseDto
         {
             Id = created.Id,
             Date = created.Date,
@@ -38,6 +39,6 @@ public class CreateExpenseCommandHandler(IUnitOfWork unitOfWork)
             Department = created.Department,
             CreatedAt = created.CreatedAt,
             UpdatedAt = created.UpdatedAt
-        };
+        });
     }
 }

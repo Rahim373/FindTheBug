@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.UserManagement.Roles.DTOs;
 using FindTheBug.Application.Features.UserManagement.Roles.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.UserManagement.Roles.Handlers;
 public class GetRoleByIdQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetRoleByIdQuery, RoleResponseDto>
 {
-    public async Task<ErrorOr<RoleResponseDto>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<RoleResponseDto>>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
     {
         var role = await unitOfWork.Repository<Role>().GetQueryable()
             .Include(r => r.RoleModulePermissions)
@@ -44,6 +45,6 @@ public class GetRoleByIdQueryHandler(IUnitOfWork unitOfWork)
             }).ToList()
         };
 
-        return roleDto;
+        return Result<RoleResponseDto>.Success(roleDto);
     }
 }

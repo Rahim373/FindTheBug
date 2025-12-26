@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Laboratory.TestResults.DTOs;
 using FindTheBug.Application.Features.Laboratory.TestResults.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Laboratory.TestResults.Handlers;
 public class GetTestResultsByEntryQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetTestResultsByEntryQuery, List<TestResultResponseDto>>
 {
-    public async Task<ErrorOr<List<TestResultResponseDto>>> Handle(GetTestResultsByEntryQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<List<TestResultResponseDto>>>> Handle(GetTestResultsByEntryQuery request, CancellationToken cancellationToken)
     {
         var results = await unitOfWork.Repository<TestResult>().GetQueryable()
             .Include(tr => tr.TestParameter)
@@ -31,6 +32,6 @@ public class GetTestResultsByEntryQueryHandler(IUnitOfWork unitOfWork)
             CreatedAt = r.CreatedAt
         }).ToList();
 
-        return dtos;
+        return Result<List<TestResultResponseDto>>.Success(dtos);
     }
 }

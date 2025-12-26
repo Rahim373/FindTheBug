@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Dispensary.Drugs.Commands;
 using FindTheBug.Application.Features.Dispensary.Drugs.DTOs;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Dispensary.Drugs.Handlers;
 public class CreateDrugCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateDrugCommand, DrugResponseDto>
 {
-    public async Task<ErrorOr<DrugResponseDto>> Handle(CreateDrugCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<DrugResponseDto>>> Handle(CreateDrugCommand request, CancellationToken cancellationToken)
     {
         // Validate GenericName exists
         var genericName = await unitOfWork.Repository<GenericName>().GetQueryable()
@@ -47,7 +48,7 @@ public class CreateDrugCommandHandler(IUnitOfWork unitOfWork)
             .Include(d => d.Brand)
             .FirstAsync(d => d.Id == created.Id, cancellationToken);
 
-        return new DrugResponseDto
+        return Result<DrugResponseDto>.Success(new DrugResponseDto
         {
             Id = drugWithRelations.Id,
             Name = drugWithRelations.Name,
@@ -71,6 +72,6 @@ public class CreateDrugCommandHandler(IUnitOfWork unitOfWork)
             IsActive = drugWithRelations.IsActive,
             CreatedAt = drugWithRelations.CreatedAt,
             UpdatedAt = drugWithRelations.UpdatedAt
-        };
+        });
     }
 }

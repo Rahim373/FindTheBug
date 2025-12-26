@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,7 @@ public class RequestPasswordResetCommandHandler(
     IHttpContextAccessor httpContextAccessor)
     : ICommandHandler<RequestPasswordResetCommand, bool>
 {
-    public async Task<ErrorOr<bool>> Handle(RequestPasswordResetCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<bool>>> Handle(RequestPasswordResetCommand request, CancellationToken cancellationToken)
     {
         // Get user by email
         var users = await unitOfWork.Repository<User>().GetAllAsync(cancellationToken);
@@ -22,7 +23,7 @@ public class RequestPasswordResetCommandHandler(
 
         // Always return success to prevent email enumeration
         if (user is null || !user.IsActive)
-            return true;
+            return Result<bool>.Success(true);
 
         // Generate secure random token
         var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
@@ -41,6 +42,6 @@ public class RequestPasswordResetCommandHandler(
         // Send email
         await emailService.SendPasswordResetEmailAsync(user.Email, token, cancellationToken);
 
-        return true;
+        return Result<bool>.Success(true);
     }
 }

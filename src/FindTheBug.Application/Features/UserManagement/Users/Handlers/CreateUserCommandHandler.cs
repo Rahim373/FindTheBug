@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.UserManagement.Users.Commands;
 using FindTheBug.Application.Features.UserManagement.Users.DTOs;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.UserManagement.Users.Handlers;
 public class CreateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher passwordHasher)
     : ICommandHandler<CreateUserCommand, UserResponseDto>
 {
-    public async Task<ErrorOr<UserResponseDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<UserResponseDto>>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         // Check if email exists
         if (!string.IsNullOrEmpty(request.Email))
@@ -48,7 +49,7 @@ public class CreateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher pa
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new UserResponseDto
+        return Result<UserResponseDto>.Success(new UserResponseDto
         {
             Id = created.Id,
             Email = created.Email,
@@ -60,6 +61,6 @@ public class CreateUserCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher pa
             AllowUserLogin = created.AllowUserLogin,
             CreatedAt = created.CreatedAt,
             UpdatedAt = created.UpdatedAt
-        };
+        });
     }
 }

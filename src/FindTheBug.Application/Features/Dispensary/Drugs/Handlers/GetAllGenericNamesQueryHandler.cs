@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Dispensary.Drugs.DTOs;
 using FindTheBug.Application.Features.Dispensary.Drugs.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Dispensary.Drugs.Handlers;
 public class GetAllGenericNamesQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllGenericNamesQuery, List<GenericNameDto>>
 {
-    public async Task<ErrorOr<List<GenericNameDto>>> Handle(GetAllGenericNamesQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<List<GenericNameDto>>>> Handle(GetAllGenericNamesQuery request, CancellationToken cancellationToken)
     {
         var query = unitOfWork.Repository<GenericName>().GetQueryable()
             .Where(gn => gn.IsActive)
@@ -35,6 +36,6 @@ public class GetAllGenericNamesQueryHandler(IUnitOfWork unitOfWork)
             })
             .ToListAsync(cancellationToken);
 
-        return genericNames;
+        return Result<List<GenericNameDto>>.Success(genericNames);
     }
 }

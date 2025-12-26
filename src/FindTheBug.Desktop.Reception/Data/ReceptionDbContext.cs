@@ -21,6 +21,7 @@ public class ReceptionDbContext : DbContext
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<InvoiceItem> InvoiceItems => Set<InvoiceItem>();
 
+
     // RBAC (Role-Based Access Control) - Synced from Cloud
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();

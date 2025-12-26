@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Doctors.Commands;
 using FindTheBug.Application.Features.Doctors.DTOs;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Doctors.Handlers;
 public class CreateDoctorCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateDoctorCommand, DoctorResponseDto>
 {
-    public async Task<ErrorOr<DoctorResponseDto>> Handle(CreateDoctorCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<DoctorResponseDto>>> Handle(CreateDoctorCommand request, CancellationToken cancellationToken)
     {
         // Check if doctor with phone number exists
         var existing = await unitOfWork.Repository<Doctor>().GetQueryable()
@@ -73,7 +74,7 @@ public class CreateDoctorCommandHandler(IUnitOfWork unitOfWork)
                 IsActive = dsm.DoctorSpeciality.IsActive
             }).ToList();
 
-        return new DoctorResponseDto
+        return Result<DoctorResponseDto>.Success(new DoctorResponseDto
         {
             Id = created.Id,
             Name = created.Name,
@@ -84,6 +85,6 @@ public class CreateDoctorCommandHandler(IUnitOfWork unitOfWork)
             IsActive = created.IsActive,
             CreatedAt = created.CreatedAt,
             UpdatedAt = created.UpdatedAt
-        };
+        });
     }
 }

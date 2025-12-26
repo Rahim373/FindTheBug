@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Domain.Entities;
 
@@ -11,7 +12,7 @@ public class ChangePasswordCommandHandler(
     IPasswordHasher passwordHasher)
     : ICommandHandler<ChangePasswordCommand, bool>
 {
-    public async Task<ErrorOr<bool>> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<bool>>> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
         // Get user
         var user = await unitOfWork.Repository<User>().GetByIdAsync(request.UserId, cancellationToken);
@@ -44,6 +45,6 @@ public class ChangePasswordCommandHandler(
             await unitOfWork.Repository<RefreshToken>().UpdateAsync(token, cancellationToken);
         }
 
-        return true;
+        return Result<bool>.Success(true);
     }
 }

@@ -12,7 +12,7 @@ namespace FindTheBug.Application.Features.UserManagement.Users.Handlers;
 public class GetAllUsersQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllUsersQuery, PagedResult<UserListItemDto>>
 {
-    public async Task<ErrorOr<PagedResult<UserListItemDto>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<PagedResult<UserListItemDto>>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
         IQueryable<User> query = unitOfWork.Repository<User>().GetQueryable()
             .Include(u => u.UserRoles);
@@ -49,12 +49,12 @@ public class GetAllUsersQueryHandler(IUnitOfWork unitOfWork)
             RoleCount = u.UserRoles?.Count ?? 0
         }).ToList();
 
-        return new PagedResult<UserListItemDto>
+        return Result<PagedResult<UserListItemDto>>.Success(new PagedResult<UserListItemDto>
         {
             Items = userDtos,
             TotalCount = totalCount,
             PageNumber = request.PageNumber,
             PageSize = request.PageSize
-        };
+        });
     }
 }

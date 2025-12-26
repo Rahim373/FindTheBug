@@ -12,7 +12,7 @@ namespace FindTheBug.Application.Features.UserManagement.Roles.Handlers;
 public class GetAllRolesQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllRolesQuery, PagedResult<RoleListItemDto>>
 {
-    public async Task<ErrorOr<PagedResult<RoleListItemDto>>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<PagedResult<RoleListItemDto>>>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
     {
         IQueryable<Role> query = unitOfWork.Repository<Role>().GetQueryable()
             .Include(r => r.RoleModulePermissions);
@@ -49,12 +49,12 @@ public class GetAllRolesQueryHandler(IUnitOfWork unitOfWork)
             ModuleCount = r.RoleModulePermissions?.Count ?? 0
         }).ToList();
 
-        return new PagedResult<RoleListItemDto>
+        return Result<PagedResult<RoleListItemDto>>.Success(new PagedResult<RoleListItemDto>
         {
             Items = roleDtos,
             TotalCount = totalCount,
             PageNumber = request.PageNumber,
             PageSize = request.PageSize
-        };
+        });
     }
 }

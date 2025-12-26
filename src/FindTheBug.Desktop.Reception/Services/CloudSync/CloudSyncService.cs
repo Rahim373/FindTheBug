@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using FindTheBug.Desktop.Reception.Data;
@@ -33,7 +34,7 @@ public class CloudSyncService
         HttpClient httpClient,
         IServiceScopeFactory scopeFactory,
         IConfiguration configuration,
-        ILogger<CloudSyncService> logger, 
+        ILogger<CloudSyncService> logger,
         SyncState state)
     {
         _httpClient = httpClient;
@@ -54,7 +55,7 @@ public class CloudSyncService
         // Configure Basic Authentication
         var clientKey = _configuration["ApiSettings:SyncClientKey"];
         var clientSecret = _configuration["ApiSettings:SyncClientSecret"];
-        
+
         if (!string.IsNullOrEmpty(clientKey) && !string.IsNullOrEmpty(clientSecret))
         {
             var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{clientKey}:{clientSecret}"));
@@ -96,11 +97,8 @@ public class CloudSyncService
         {
             var tasks = new[]
             {
-                SyncEntityAsync<UserDto, User>(CloudSyncConstants.UsersEndpoint),
-                SyncEntityAsync<RoleDto, Role>(CloudSyncConstants.RolesEndpoint),
-                SyncEntityAsync<UserRoleDto, UserRole>(CloudSyncConstants.UserRolesEndpoint),
-                SyncEntityAsync<ModuleDto, Module>(CloudSyncConstants.ModulesEndpoint),
-                SyncEntityAsync<RoleModulePermissionDto, RoleModulePermission>(CloudSyncConstants.RoleModulePermissionsEndpoint)
+                SyncEntityAsync<User, User>(CloudSyncConstants.UsersEndpoint, SaveUsersToLocal),
+                SyncEntityAsync<ModuleDto, Module>(CloudSyncConstants.ModulesEndpoint)
             };
 
             await Task.WhenAll(tasks);
@@ -113,6 +111,16 @@ public class CloudSyncService
             _state.FailSync(ex.Message);
             _logger.LogError(ex, "Error during RBAC sync");
             throw;
+        }
+    }
+
+    private void SaveUsersToLocal(Result<PagedResult<User>> response, ReceptionDbContext dbContext)
+    {
+        foreach (var user in response.Data.Items)
+        {
+            var exists = dbContext.Users.Any(x => x.Id == user.Id);
+
+            dbContext.Entry(user).State = exists ? EntityState.Modified : EntityState.Added;
         }
     }
 
@@ -141,7 +149,7 @@ public class CloudSyncService
     /// <typeparam name="TDto">DTO type for API response</typeparam>
     /// <typeparam name="TEntity">Entity type for database</typeparam>
     /// <param name="endpoint">API endpoint to fetch data from</param>
-    private async Task SyncEntityAsync<TDto, TEntity>(string endpoint)
+    private async Task SyncEntityAsync<TDto, TEntity>(string endpoint, Action<Result<PagedResult<TDto>>, ReceptionDbContext>? customMapping = null)
         where TEntity : class, new()
         where TDto : class
     {
@@ -156,81 +164,87 @@ public class CloudSyncService
 
             response.EnsureSuccessStatusCode();
 
-            var syncResponse = await response.Content.ReadFromJsonAsync<SyncResponse<TDto>>(_jsonOptions);
+            var syncResponse = await response.Content.ReadFromJsonAsync<Result<PagedResult<TDto>>>(_jsonOptions);
 
-            if (syncResponse?.Data == null || !syncResponse.Success)
+            if (syncResponse?.Data == null || !syncResponse.IsSuccess)
             {
-                _logger.LogWarning("Failed to sync {EntityName}: {Message}", entityName, syncResponse?.Message);
+                _logger.LogWarning("Failed to sync {EntityName}: {Message}", entityName, syncResponse!.ErrorMessage);
                 return;
             }
 
             using var scope = _scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<ReceptionDbContext>();
 
+            if (customMapping is not null)
+            {
+                customMapping?.Invoke(syncResponse, dbContext);
+                return;
+            }
+
             var dbSet = dbContext.Set<TEntity>();
             var idProperty = typeof(TEntity).GetProperty("Id");
-            
+
             if (idProperty == null)
             {
                 _logger.LogError("Entity {EntityName} does not have an Id property", entityName);
                 return;
             }
-
-            // Get existing IDs
-            var existingEntities = await dbSet.ToListAsync();
-            var existingIds = existingEntities
-                .Select(e => idProperty.GetValue(e))
-                .OfType<Guid>()
-                .ToHashSet();
-            
-            var incomingIds = syncResponse.Data
-                .Select(d => d.GetType().GetProperty("Id")?.GetValue(d))
-                .OfType<Guid>()
-                .ToHashSet();
-
-            // Remove entities not in sync data
-            var toRemove = existingIds.Except(incomingIds).ToList();
-            if (toRemove.Any())
+            else
             {
-                var entitiesToRemove = existingEntities
-                    .Where(e => toRemove.Contains((Guid)idProperty.GetValue(e)!))
-                    .ToList();
-                
-                dbSet.RemoveRange(entitiesToRemove);
-                _logger.LogDebug("Removed {Count} {EntityName} not in sync data", toRemove.Count, entityName);
-            }
 
-            // Add or update entities
-            var addedCount = 0;
-            var updatedCount = 0;
+                // Get existing IDs
+                var existingEntities = await dbSet.ToListAsync();
+                var existingIds = existingEntities
+                    .Select(e => idProperty.GetValue(e))
+                    .OfType<Guid>()
+                    .ToHashSet();
 
-            foreach (var dto in syncResponse.Data)
-            {
-                var dtoId = (Guid?) dto.GetType().GetProperty("Id")?.GetValue(dto);
-                var existingEntity = await dbSet.FindAsync(dtoId);
+                var incomingIds = syncResponse.Data.Items
+                    .Select(d => d.GetType().GetProperty("Id")?.GetValue(d))
+                    .OfType<Guid>()
+                    .ToHashSet();
 
-                if (existingEntity == null)
+                // Remove entities not in sync data
+                var toRemove = existingIds.Except(incomingIds).ToList();
+                if (toRemove.Any())
                 {
-                    // Map DTO to entity and add
-                    var newEntity = MapDtoToEntity<TDto, TEntity>(dto);
-                    if (newEntity != null)
-                    {
-                        dbSet.Add(newEntity);
-                        addedCount++;
-                    }
+                    var entitiesToRemove = existingEntities
+                        .Where(e => toRemove.Contains((Guid)idProperty.GetValue(e)!))
+                        .ToList();
+
+                    dbSet.RemoveRange(entitiesToRemove);
+                    _logger.LogDebug("Removed {Count} {EntityName} not in sync data", toRemove.Count, entityName);
                 }
-                else
+
+                // Add or update entities
+                var addedCount = 0;
+                var updatedCount = 0;
+
+                foreach (var dto in syncResponse.Data.Items)
                 {
-                    // Update existing entity
-                    MapDtoToEntity<TDto, TEntity>(dto, existingEntity);
-                    updatedCount++;
+                    var dtoId = (Guid?)dto.GetType().GetProperty("Id")?.GetValue(dto);
+                    var existingEntity = await dbSet.FindAsync(dtoId);
+
+                    if (existingEntity == null)
+                    {
+                        // Map DTO to entity and add
+                        var newEntity = MapDtoToEntity<TDto, TEntity>(dto);
+                        if (newEntity != null)
+                        {
+                            dbSet.Add(newEntity);
+                            addedCount++;
+                        }
+                    }
+                    else
+                    {
+                        // Update existing entity
+                        MapDtoToEntity<TDto, TEntity>(dto, existingEntity);
+                        updatedCount++;
+                    }
                 }
             }
 
             await dbContext.SaveChangesAsync();
-            _logger.LogInformation(
-                "Synced {EntityName}: {Added} added, {Updated} updated, {Removed} removed",
-                entityName, addedCount, updatedCount, toRemove.Count);
         }
         catch (Exception ex)
         {

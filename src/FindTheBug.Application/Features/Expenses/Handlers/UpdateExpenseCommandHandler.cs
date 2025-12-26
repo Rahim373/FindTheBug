@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Expenses.Commands;
 using FindTheBug.Application.Features.Expenses.DTOs;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Expenses.Handlers;
 public class UpdateExpenseCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateExpenseCommand, ExpenseResponseDto>
 {
-    public async Task<ErrorOr<ExpenseResponseDto>> Handle(UpdateExpenseCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<ExpenseResponseDto>>> Handle(UpdateExpenseCommand request, CancellationToken cancellationToken)
     {
         var expense = await unitOfWork.Repository<Expense>().GetQueryable()
             .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken);
@@ -30,7 +31,7 @@ public class UpdateExpenseCommandHandler(IUnitOfWork unitOfWork)
         await unitOfWork.Repository<Expense>().UpdateAsync(expense, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new ExpenseResponseDto
+        return Result<ExpenseResponseDto>.Success(new ExpenseResponseDto
         {
             Id = expense.Id,
             Date = expense.Date,
@@ -42,6 +43,6 @@ public class UpdateExpenseCommandHandler(IUnitOfWork unitOfWork)
             Department = expense.Department,
             CreatedAt = expense.CreatedAt,
             UpdatedAt = expense.UpdatedAt
-        };
+        });
     }
 }

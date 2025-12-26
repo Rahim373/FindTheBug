@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Laboratory.TestResults.Commands;
 using FindTheBug.Application.Features.Laboratory.TestResults.DTOs;
 using FindTheBug.Domain.Entities;
@@ -10,7 +11,7 @@ namespace FindTheBug.Application.Features.Laboratory.TestResults.Handlers;
 public class CreateTestResultCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateTestResultCommand, TestResultResponseDto>
 {
-    public async Task<ErrorOr<TestResultResponseDto>> Handle(CreateTestResultCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<TestResultResponseDto>>> Handle(CreateTestResultCommand request, CancellationToken cancellationToken)
     {
         var result = new TestResult
         {
@@ -28,7 +29,7 @@ public class CreateTestResultCommandHandler(IUnitOfWork unitOfWork)
         var parameter = await unitOfWork.Repository<TestParameter>()
             .GetByIdAsync(created.TestParameterId, cancellationToken);
 
-        return new TestResultResponseDto
+        return Result<TestResultResponseDto>.Success(new TestResultResponseDto
         {
             Id = created.Id,
             TestEntryId = created.TestEntryId,
@@ -38,6 +39,6 @@ public class CreateTestResultCommandHandler(IUnitOfWork unitOfWork)
             IsAbnormal = created.IsAbnormal,
             Notes = created.Notes,
             CreatedAt = created.CreatedAt
-        };
+        });
     }
 }

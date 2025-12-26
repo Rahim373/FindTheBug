@@ -12,7 +12,7 @@ namespace FindTheBug.Application.Features.Dispensary.Products.Handlers;
 public class GetAllProductsQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllProductsQuery, PagedResult<ProductListItemDto>>
 {
-    public async Task<ErrorOr<PagedResult<ProductListItemDto>>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<PagedResult<ProductListItemDto>>>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
         var query = unitOfWork.Repository<Product>().GetQueryable()
             .AsQueryable();
@@ -43,12 +43,12 @@ public class GetAllProductsQueryHandler(IUnitOfWork unitOfWork)
             })
             .ToListAsync(cancellationToken);
 
-        return new PagedResult<ProductListItemDto>
+        return Result<PagedResult<ProductListItemDto>>.Success(new PagedResult<ProductListItemDto>
         {
             Items = products,
             TotalCount = totalCount,
             PageNumber = request.PageNumber,
             PageSize = request.PageSize
-        };
+        });
     }
 }

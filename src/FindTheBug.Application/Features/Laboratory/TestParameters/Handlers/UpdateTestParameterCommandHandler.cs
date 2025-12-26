@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Laboratory.TestParameters.Commands;
 using FindTheBug.Application.Features.Laboratory.TestParameters.DTOs;
 using FindTheBug.Domain.Entities;
@@ -10,7 +11,7 @@ namespace FindTheBug.Application.Features.Laboratory.TestParameters.Handlers;
 public class UpdateTestParameterCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateTestParameterCommand, TestParameterResponseDto>
 {
-    public async Task<ErrorOr<TestParameterResponseDto>> Handle(UpdateTestParameterCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<TestParameterResponseDto>>> Handle(UpdateTestParameterCommand request, CancellationToken cancellationToken)
     {
         var parameter = await unitOfWork.Repository<TestParameter>().GetByIdAsync(request.Id, cancellationToken);
 
@@ -27,7 +28,7 @@ public class UpdateTestParameterCommandHandler(IUnitOfWork unitOfWork)
         await unitOfWork.Repository<TestParameter>().UpdateAsync(parameter);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new TestParameterResponseDto
+        return Result<TestParameterResponseDto>.Success(new TestParameterResponseDto
         {
             Id = parameter.Id,
             DiagnosticTestId = parameter.DiagnosticTestId,
@@ -38,6 +39,6 @@ public class UpdateTestParameterCommandHandler(IUnitOfWork unitOfWork)
             DataType = parameter.DataType,
             DisplayOrder = parameter.DisplayOrder,
             CreatedAt = parameter.CreatedAt
-        };
+        });
     }
 }

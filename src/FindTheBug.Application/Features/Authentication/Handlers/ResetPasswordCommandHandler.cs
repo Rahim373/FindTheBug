@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Domain.Entities;
 
@@ -11,7 +12,7 @@ public class ResetPasswordCommandHandler(
     IPasswordHasher passwordHasher)
     : ICommandHandler<ResetPasswordCommand, bool>
 {
-    public async Task<ErrorOr<bool>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<bool>>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
         // Find reset token
         var resetTokens = await unitOfWork.Repository<PasswordResetToken>().GetAllAsync(cancellationToken);
@@ -60,6 +61,6 @@ public class ResetPasswordCommandHandler(
             await unitOfWork.Repository<RefreshToken>().UpdateAsync(token, cancellationToken);
         }
 
-        return true;
+        return Result<bool>.Success(true);
     }
 }

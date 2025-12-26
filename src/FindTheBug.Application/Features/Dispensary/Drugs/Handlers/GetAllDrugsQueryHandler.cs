@@ -12,7 +12,7 @@ namespace FindTheBug.Application.Features.Dispensary.Drugs.Handlers;
 public class GetAllDrugsQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllDrugsQuery, PagedResult<DrugListItemDto>>
 {
-    public async Task<ErrorOr<PagedResult<DrugListItemDto>>> Handle(GetAllDrugsQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<PagedResult<DrugListItemDto>>>> Handle(GetAllDrugsQuery request, CancellationToken cancellationToken)
     {
         var query = unitOfWork.Repository<Drug>().GetQueryable()
             .Include(d => d.GenericName)
@@ -48,12 +48,12 @@ public class GetAllDrugsQueryHandler(IUnitOfWork unitOfWork)
             })
             .ToListAsync(cancellationToken);
 
-        return new PagedResult<DrugListItemDto>
+        return Result<PagedResult<DrugListItemDto>>.Success(new PagedResult<DrugListItemDto>
         {
             Items = drugs,
             TotalCount = totalCount,
             PageNumber = request.PageNumber,
             PageSize = request.PageSize
-        };
+        });
     }
 }

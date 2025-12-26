@@ -12,7 +12,7 @@ namespace FindTheBug.Application.Features.Doctors.Handlers;
 public class GetAllDoctorsQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllDoctorsQuery, PagedResult<DoctorListItemDto>>
 {
-    public async Task<ErrorOr<PagedResult<DoctorListItemDto>>> Handle(GetAllDoctorsQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<PagedResult<DoctorListItemDto>>>> Handle(GetAllDoctorsQuery request, CancellationToken cancellationToken)
     {
         var query = unitOfWork.Repository<Doctor>().GetQueryable()
             .Include(d => d.DoctorSpecialities)
@@ -48,12 +48,12 @@ public class GetAllDoctorsQueryHandler(IUnitOfWork unitOfWork)
             })
             .ToListAsync(cancellationToken);
 
-        return new PagedResult<DoctorListItemDto>
+        return Result<PagedResult<DoctorListItemDto>>.Success(new PagedResult<DoctorListItemDto>
         {
             Items = doctors,
             TotalCount = totalCount,
             PageNumber = request.PageNumber,
             PageSize = request.PageSize
-        };
+        });
     }
 }

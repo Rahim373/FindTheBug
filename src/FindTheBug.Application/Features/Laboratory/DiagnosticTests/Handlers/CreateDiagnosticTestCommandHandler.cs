@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Laboratory.DiagnosticTests.Commands;
 using FindTheBug.Application.Features.Laboratory.DiagnosticTests.DTOs;
 using FindTheBug.Domain.Entities;
@@ -10,7 +11,7 @@ namespace FindTheBug.Application.Features.Laboratory.DiagnosticTests.Handlers;
 public class CreateDiagnosticTestCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateDiagnosticTestCommand, DiagnosticTestResponseDto>
 {
-    public async Task<ErrorOr<DiagnosticTestResponseDto>> Handle(CreateDiagnosticTestCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<DiagnosticTestResponseDto>>> Handle(CreateDiagnosticTestCommand request, CancellationToken cancellationToken)
     {
         var test = new DiagnosticTest
         {
@@ -23,7 +24,7 @@ public class CreateDiagnosticTestCommandHandler(IUnitOfWork unitOfWork)
         var created = await unitOfWork.Repository<DiagnosticTest>().AddAsync(test, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new DiagnosticTestResponseDto
+        return Result<DiagnosticTestResponseDto>.Success(new DiagnosticTestResponseDto
         {
             Id = created.Id,
             TestName = created.TestName,
@@ -31,6 +32,6 @@ public class CreateDiagnosticTestCommandHandler(IUnitOfWork unitOfWork)
             Price = created.Price,
             Description = created.Description,
             CreatedAt = created.CreatedAt
-        };
+        });
     }
 }

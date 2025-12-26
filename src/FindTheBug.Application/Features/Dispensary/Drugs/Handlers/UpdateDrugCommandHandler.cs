@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Dispensary.Drugs.Commands;
 using FindTheBug.Application.Features.Dispensary.Drugs.DTOs;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Dispensary.Drugs.Handlers;
 public class UpdateDrugCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateDrugCommand, DrugResponseDto>
 {
-    public async Task<ErrorOr<DrugResponseDto>> Handle(UpdateDrugCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<DrugResponseDto>>> Handle(UpdateDrugCommand request, CancellationToken cancellationToken)
     {
         var drug = await unitOfWork.Repository<Drug>().GetQueryable()
             .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
@@ -50,7 +51,7 @@ public class UpdateDrugCommandHandler(IUnitOfWork unitOfWork)
             .Include(d => d.Brand)
             .FirstAsync(d => d.Id == drug.Id, cancellationToken);
 
-        return new DrugResponseDto
+        return Result<DrugResponseDto>.Success(new DrugResponseDto
         {
             Id = drugWithRelations.Id,
             Name = drugWithRelations.Name,
@@ -74,6 +75,6 @@ public class UpdateDrugCommandHandler(IUnitOfWork unitOfWork)
             IsActive = drugWithRelations.IsActive,
             CreatedAt = drugWithRelations.CreatedAt,
             UpdatedAt = drugWithRelations.UpdatedAt
-        };
+        });
     }
 }

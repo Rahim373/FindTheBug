@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.UserManagement.Roles.Commands;
 using FindTheBug.Application.Features.UserManagement.Roles.DTOs;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.UserManagement.Roles.Handlers;
 public class CreateRoleCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateRoleCommand, RoleResponseDto>
 {
-    public async Task<ErrorOr<RoleResponseDto>> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<RoleResponseDto>>> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
     {
         // Check if role name already exists
         var existingRole = await unitOfWork.Repository<Role>()
@@ -68,7 +69,7 @@ public class CreateRoleCommandHandler(IUnitOfWork unitOfWork)
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Return DTO
-        return new RoleResponseDto
+        return Result<RoleResponseDto>.Success(new RoleResponseDto
         {
             Id = created.Id,
             Name = created.Name,
@@ -78,6 +79,6 @@ public class CreateRoleCommandHandler(IUnitOfWork unitOfWork)
             CreatedAt = created.CreatedAt,
             UpdatedAt = created.UpdatedAt,
             ModulePermissions = modulePermissions
-        };
+        });
     }
 }

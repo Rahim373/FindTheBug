@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.UserManagement.Roles.Commands;
 using FindTheBug.Domain.Entities;
 
@@ -9,7 +10,7 @@ namespace FindTheBug.Application.Features.UserManagement.Roles.Handlers;
 public class DeleteRoleCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<DeleteRoleCommand, bool>
 {
-    public async Task<ErrorOr<bool>> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<bool>>> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
         var role = await unitOfWork.Repository<Role>().GetByIdAsync(request.Id, cancellationToken);
 
@@ -25,6 +26,6 @@ public class DeleteRoleCommandHandler(IUnitOfWork unitOfWork)
         }
 
         await unitOfWork.Repository<Role>().DeleteAsync(request.Id, cancellationToken);
-        return true;
+        return Result<bool>.Success(true);
     }
 }

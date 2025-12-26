@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Patients.Commands;
 using FindTheBug.Application.Features.Patients.DTOs;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Patients.Handlers;
 public class CreatePatientCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreatePatientCommand, PatientResponseDto>
 {
-    public async Task<ErrorOr<PatientResponseDto>> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<PatientResponseDto>>> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
     {
         // Check if patient with mobile number exists
         var existing = await unitOfWork.Repository<Patient>().GetQueryable()
@@ -32,7 +33,7 @@ public class CreatePatientCommandHandler(IUnitOfWork unitOfWork)
         var created = await unitOfWork.Repository<Patient>().AddAsync(patient, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new PatientResponseDto
+        return Result<PatientResponseDto>.Success(new PatientResponseDto
         {
             Id = created.Id,
             Name = created.FirstName,
@@ -42,6 +43,6 @@ public class CreatePatientCommandHandler(IUnitOfWork unitOfWork)
             Address = created.Address,
             CreatedAt = created.CreatedAt,
             UpdatedAt = created.UpdatedAt
-        };
+        });
     }
 }

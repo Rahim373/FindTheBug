@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Doctors.DTOs;
 using FindTheBug.Application.Features.Doctors.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Doctors.Handlers;
 public class GetDoctorByIdQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetDoctorByIdQuery, DoctorResponseDto>
 {
-    public async Task<ErrorOr<DoctorResponseDto>> Handle(GetDoctorByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<DoctorResponseDto>>> Handle(GetDoctorByIdQuery request, CancellationToken cancellationToken)
     {
         var doctor = await unitOfWork.Repository<Doctor>().GetQueryable()
             .Include(d => d.DoctorSpecialities)
@@ -30,7 +31,7 @@ public class GetDoctorByIdQueryHandler(IUnitOfWork unitOfWork)
                 IsActive = dsm.DoctorSpeciality.IsActive
             }).ToList();
 
-        return new DoctorResponseDto
+        return Result<DoctorResponseDto>.Success(new DoctorResponseDto
         {
             Id = doctor.Id,
             Name = doctor.Name,
@@ -41,6 +42,6 @@ public class GetDoctorByIdQueryHandler(IUnitOfWork unitOfWork)
             IsActive = doctor.IsActive,
             CreatedAt = doctor.CreatedAt,
             UpdatedAt = doctor.UpdatedAt
-        };
+        });
     }
 }

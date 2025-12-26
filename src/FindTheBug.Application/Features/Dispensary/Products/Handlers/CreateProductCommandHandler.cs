@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Dispensary.Products.Commands;
 using FindTheBug.Application.Features.Dispensary.Products.DTOs;
 using FindTheBug.Domain.Entities;
@@ -10,7 +11,7 @@ namespace FindTheBug.Application.Features.Dispensary.Products.Handlers;
 public class CreateProductCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateProductCommand, ProductResponseDto>
 {
-    public async Task<ErrorOr<ProductResponseDto>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<ProductResponseDto>>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var product = new Product
         {
@@ -24,7 +25,7 @@ public class CreateProductCommandHandler(IUnitOfWork unitOfWork)
 
         var created = await unitOfWork.Repository<Product>().AddAsync(product, cancellationToken);
 
-        return new ProductResponseDto
+        return Result<ProductResponseDto>.Success(new ProductResponseDto
         {
             Id = created.Id,
             Name = created.Name,
@@ -35,6 +36,6 @@ public class CreateProductCommandHandler(IUnitOfWork unitOfWork)
             IsActive = created.IsActive,
             CreatedAt = created.CreatedAt,
             UpdatedAt = created.UpdatedAt
-        };
+        });
     }
 }

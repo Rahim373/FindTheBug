@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Billing.Invoices.Commands;
 using FindTheBug.Application.Features.Billing.Invoices.DTOs;
 using FindTheBug.Domain.Entities;
@@ -10,7 +11,7 @@ namespace FindTheBug.Application.Features.Billing.Invoices.Handlers;
 public class CreateInvoiceCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<CreateInvoiceCommand, InvoiceResponseDto>
 {
-    public async Task<ErrorOr<InvoiceResponseDto>> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<InvoiceResponseDto>>> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
     {
         var invoice = new Invoice
         {
@@ -25,7 +26,7 @@ public class CreateInvoiceCommandHandler(IUnitOfWork unitOfWork)
 
         var patient = await unitOfWork.Repository<Patient>().GetByIdAsync(created.PatientId, cancellationToken);
 
-        return new InvoiceResponseDto
+        return Result<InvoiceResponseDto>.Success(new InvoiceResponseDto
         {
             Id = created.Id,
             InvoiceNumber = created.InvoiceNumber,
@@ -34,6 +35,6 @@ public class CreateInvoiceCommandHandler(IUnitOfWork unitOfWork)
             TotalAmount = created.TotalAmount,
             InvoiceDate = created.InvoiceDate,
             CreatedAt = created.CreatedAt
-        };
+        });
     }
 }

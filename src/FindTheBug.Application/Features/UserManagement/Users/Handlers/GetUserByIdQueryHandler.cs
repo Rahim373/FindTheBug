@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.UserManagement.Users.DTOs;
 using FindTheBug.Application.Features.UserManagement.Users.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.UserManagement.Users.Handlers;
 public class GetUserByIdQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetUserByIdQuery, UserResponseDto>
 {
-    public async Task<ErrorOr<UserResponseDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<UserResponseDto>>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         var user = await unitOfWork.Repository<User>().GetQueryable()
             .Include(u => u.UserRoles)
@@ -50,7 +51,7 @@ public class GetUserByIdQueryHandler(IUnitOfWork unitOfWork)
             }
         }
 
-        return new UserResponseDto
+        return Result<UserResponseDto>.Success(new UserResponseDto
         {
             Id = user.Id,
             Email = user.Email,
@@ -68,6 +69,6 @@ public class GetUserByIdQueryHandler(IUnitOfWork unitOfWork)
                 RoleName = ur.Role?.Name ?? string.Empty
             }).ToList(),
             Permissions = permissions.Distinct().ToList()
-        };
+        });
     }
 }

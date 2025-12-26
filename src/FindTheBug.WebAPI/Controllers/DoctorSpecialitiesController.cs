@@ -13,7 +13,7 @@ namespace FindTheBug.WebAPI.Controllers;
 /// Doctor specialities management endpoints
 /// </summary>
 [Authorize]
-public class DoctorSpecialitiesController(ISender mediator) : BaseApiController
+public class DoctorSpecialitiesController(ISender sender) : BaseApiController
 {
     /// <summary>
     /// Get all active doctor specialities
@@ -31,7 +31,7 @@ public class DoctorSpecialitiesController(ISender mediator) : BaseApiController
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var query = new GetDoctorSpecialitiesQuery();
-        var result = await mediator.Send(query, cancellationToken);
+        var result = await sender.Send(query, cancellationToken);
 
         return result.Match(
             specialities => Ok(specialities),

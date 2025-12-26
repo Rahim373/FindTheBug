@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Dispensary.Drugs.DTOs;
 using FindTheBug.Application.Features.Dispensary.Drugs.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Dispensary.Drugs.Handlers;
 public class GetDrugByIdQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetDrugByIdQuery, DrugResponseDto>
 {
-    public async Task<ErrorOr<DrugResponseDto>> Handle(GetDrugByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<DrugResponseDto>>> Handle(GetDrugByIdQuery request, CancellationToken cancellationToken)
     {
         var drug = await unitOfWork.Repository<Drug>().GetQueryable()
             .Include(d => d.GenericName)
@@ -21,7 +22,7 @@ public class GetDrugByIdQueryHandler(IUnitOfWork unitOfWork)
         if (drug == null)
             return Error.NotFound("Drug.NotFound", "Drug not found");
 
-        return new DrugResponseDto
+        return Result<DrugResponseDto>.Success(new DrugResponseDto
         {
             Id = drug.Id,
             Name = drug.Name,
@@ -45,6 +46,6 @@ public class GetDrugByIdQueryHandler(IUnitOfWork unitOfWork)
             IsActive = drug.IsActive,
             CreatedAt = drug.CreatedAt,
             UpdatedAt = drug.UpdatedAt
-        };
+        });
     }
 }

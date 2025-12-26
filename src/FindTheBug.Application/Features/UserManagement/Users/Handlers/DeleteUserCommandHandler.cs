@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.UserManagement.Users.Commands;
 using FindTheBug.Domain.Entities;
 
@@ -9,7 +10,7 @@ namespace FindTheBug.Application.Features.UserManagement.Users.Handlers;
 public class DeleteUserCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<DeleteUserCommand, bool>
 {
-    public async Task<ErrorOr<bool>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<bool>>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
         var user = await unitOfWork.Repository<User>().GetByIdAsync(request.Id, cancellationToken);
 
@@ -19,6 +20,6 @@ public class DeleteUserCommandHandler(IUnitOfWork unitOfWork)
         }
 
         await unitOfWork.Repository<User>().DeleteAsync(request.Id, cancellationToken);
-        return true;
+        return Result<bool>.Success(true);
     }
 }

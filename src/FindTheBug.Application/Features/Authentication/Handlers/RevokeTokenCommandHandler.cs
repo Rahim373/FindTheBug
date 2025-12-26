@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +13,7 @@ public class RevokeTokenCommandHandler(
     IHttpContextAccessor httpContextAccessor)
     : ICommandHandler<RevokeTokenCommand, bool>
 {
-    public async Task<ErrorOr<bool>> Handle(RevokeTokenCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<bool>>> Handle(RevokeTokenCommand request, CancellationToken cancellationToken)
     {
         // Find refresh token
         var refreshTokens = await unitOfWork.Repository<RefreshToken>().GetAllAsync(cancellationToken);
@@ -22,7 +23,7 @@ public class RevokeTokenCommandHandler(
             return Error.NotFound("Authentication.TokenNotFound", "Refresh token not found");
 
         if (refreshToken.IsRevoked)
-            return true; // Already revoked
+            return Result<bool>.Success(true); // Already revoked
 
         // Revoke token
         refreshToken.RevokedAt = DateTime.UtcNow;
@@ -30,6 +31,6 @@ public class RevokeTokenCommandHandler(
         refreshToken.ReasonRevoked = "Revoked by user";
         await unitOfWork.Repository<RefreshToken>().UpdateAsync(refreshToken, cancellationToken);
 
-        return true;
+        return Result<bool>.Success(true);
     }
 }

@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Expenses.DTOs;
 using FindTheBug.Application.Features.Expenses.Queries;
 using FindTheBug.Domain.Entities;
@@ -11,7 +12,7 @@ namespace FindTheBug.Application.Features.Expenses.Handlers;
 public class GetAllExpensesQueryHandler(IUnitOfWork unitOfWork)
     : IQueryHandler<GetAllExpensesQuery, PaginatedExpenseListDto>
 {
-    public async Task<ErrorOr<PaginatedExpenseListDto>> Handle(GetAllExpensesQuery request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<PaginatedExpenseListDto>>> Handle(GetAllExpensesQuery request, CancellationToken cancellationToken)
     {
         var query = unitOfWork.Repository<Expense>().GetQueryable();
 
@@ -47,12 +48,12 @@ public class GetAllExpensesQueryHandler(IUnitOfWork unitOfWork)
             })
             .ToListAsync(cancellationToken);
 
-        return new PaginatedExpenseListDto
+        return Result<PaginatedExpenseListDto>.Success(new PaginatedExpenseListDto
         {
             Items = items,
             TotalCount = totalCount,
             PageNumber = request.PageNumber,
             PageSize = request.PageSize
-        };
+        });
     }
 }

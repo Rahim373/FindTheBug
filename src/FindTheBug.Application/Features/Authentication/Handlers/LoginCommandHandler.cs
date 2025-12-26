@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Authentication.Commands;
 using FindTheBug.Application.Features.Authentication.Contracts;
 using FindTheBug.Domain.Entities;
@@ -16,7 +17,7 @@ public class LoginCommandHandler(
     IHttpContextAccessor httpContextAccessor)
     : ICommandHandler<LoginCommand, LoginResponse>
 {
-    public async Task<ErrorOr<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<LoginResponse>>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         // Get user by email or phone
         var users = await unitOfWork.Repository<User>().GetAllAsync(cancellationToken);
@@ -111,11 +112,11 @@ public class LoginCommandHandler(
         };
         await unitOfWork.Repository<RefreshToken>().AddAsync(refreshTokenEntity, cancellationToken);
 
-        return new LoginResponse(
+        return Result<LoginResponse>.Success(new LoginResponse(
             accessToken,
             refreshToken,
             refreshTokenEntity.ExpiresAt,
             new UserInfo(user.Id, user.Email ?? user.Phone, user.FirstName, user.LastName, rolesString, permissions.Distinct().ToList())
-        );
+        ));
     }
 }

@@ -1,6 +1,7 @@
 using ErrorOr;
 using FindTheBug.Application.Common.Interfaces;
 using FindTheBug.Application.Common.Messaging;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Doctors.Commands;
 using FindTheBug.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ namespace FindTheBug.Application.Features.Doctors.Handlers;
 public class DeleteDoctorCommandHandler(IUnitOfWork unitOfWork)
     : ICommandHandler<DeleteDoctorCommand, bool>
 {
-    public async Task<ErrorOr<bool>> Handle(DeleteDoctorCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<Result<bool>>> Handle(DeleteDoctorCommand request, CancellationToken cancellationToken)
     {
         var doctor = await unitOfWork.Repository<Doctor>().GetQueryable()
             .Include(d => d.DoctorSpecialities)
@@ -31,6 +32,6 @@ public class DeleteDoctorCommandHandler(IUnitOfWork unitOfWork)
         // Remove the doctor
         await unitOfWork.Repository<Doctor>().DeleteAsync(doctor.Id, cancellationToken);
 
-        return true;
+        return Result<bool>.Success(true);
     }
 }
