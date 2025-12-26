@@ -23,7 +23,7 @@ public class GetAllDoctorsQueryHandler(IUnitOfWork unitOfWork)
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
             var searchTerm = request.Search.ToLower();
-            query = query.Where(d => 
+            query = query.Where(d =>
                 d.Name.ToLower().Contains(searchTerm) ||
                 d.PhoneNumber.Contains(searchTerm) ||
                 (d.Degree != null && d.Degree.ToLower().Contains(searchTerm)) ||

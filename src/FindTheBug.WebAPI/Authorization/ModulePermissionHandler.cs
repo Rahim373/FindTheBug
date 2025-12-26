@@ -24,7 +24,7 @@ public class ModulePermissionHandler : AuthorizationHandler<ModulePermissionRequ
         }
 
         // Get user ID from claims
-        var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+        var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? context.User.FindFirst("sub")?.Value;
 
         if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))

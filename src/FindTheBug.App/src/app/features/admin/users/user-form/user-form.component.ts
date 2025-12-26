@@ -65,7 +65,7 @@ export class UserFormComponent implements OnInit {
             firstName: ['', [Validators.required, Validators.maxLength(100)]],
             lastName: ['', [Validators.required, Validators.maxLength(100)]],
             phone: ['', [Validators.required]],
-            nidNumber: ['', [Validators.maxLength(50)]],
+            nidNumber: ['', [Validators.maxLength(17)]],
             roleIds: [[], [Validators.required]],
             isActive: [true],
             allowUserLogin: [true]
@@ -118,7 +118,7 @@ export class UserFormComponent implements OnInit {
                 if (response.isSuccess && response.data) {
                     const user = response.data;
                     // Map roles array to roleIds array
-                    //const roleIds = user.roles?.map(r => r.roleId) || [];
+                    const roleIds = user.roles?.map((r: { roleId: any; }) => r.roleId) || [];
                     this.userForm.patchValue({
                         email: user.email,
                         firstName: user.firstName,

@@ -1,13 +1,13 @@
 using FindTheBug.Application.Features.Laboratory.TestResults.Commands;
 using FindTheBug.Application.Features.Laboratory.TestResults.DTOs;
-using FindTheBug.Domain.Common;
-using FindTheBug.WebAPI.Attributes;
 using FindTheBug.Application.Features.Laboratory.TestResults.Queries;
+using FindTheBug.Domain.Common;
+using FindTheBug.Domain.Contracts;
+using FindTheBug.WebAPI.Attributes;
 using FindTheBug.WebAPI.Contracts.Requests;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 

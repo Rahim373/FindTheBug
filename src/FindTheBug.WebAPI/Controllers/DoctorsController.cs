@@ -1,12 +1,12 @@
 using FindTheBug.Application.Common.Models;
-using FindTheBug.Domain.Common;
-using FindTheBug.WebAPI.Attributes;
 using FindTheBug.Application.Features.Doctors.Commands;
 using FindTheBug.Application.Features.Doctors.DTOs;
 using FindTheBug.Application.Features.Doctors.Queries;
+using FindTheBug.Domain.Common;
+using FindTheBug.Domain.Contracts;
+using FindTheBug.WebAPI.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 

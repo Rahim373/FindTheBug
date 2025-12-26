@@ -1,11 +1,11 @@
 using FindTheBug.Application.Features.Billing.Invoices.Commands;
 using FindTheBug.Application.Features.Billing.Invoices.DTOs;
-using FindTheBug.Domain.Common;
-using FindTheBug.WebAPI.Attributes;
 using FindTheBug.Application.Features.Billing.Invoices.Queries;
+using FindTheBug.Domain.Common;
+using FindTheBug.Domain.Contracts;
+using FindTheBug.WebAPI.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FindTheBug.Domain.Contracts;
 
 namespace FindTheBug.WebAPI.Controllers;
 

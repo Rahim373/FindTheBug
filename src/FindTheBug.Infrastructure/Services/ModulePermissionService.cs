@@ -99,7 +99,7 @@ public class ModulePermissionService : IModulePermissionService
         foreach (var rolePermission in rolePermissions)
         {
             var moduleName = rolePermission.Module.Name;
-            
+
             if (!permissions.ContainsKey(moduleName))
             {
                 permissions[moduleName] = ModulePermission.None;
