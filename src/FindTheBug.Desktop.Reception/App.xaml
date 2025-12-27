@@ -11,8 +11,9 @@
         
         <Style TargetType="{x:Type Label}">
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#7F8C8D"/>
+            <Setter Property="Foreground" Value="#FF5B5B5B"/>
             <Setter Property="Margin" Value="0,0,0,5"/>
         </Style>
         
@@ -49,7 +50,7 @@
         
         <Style TargetType="{x:Type Button}">
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12 6"/>
+            <Setter Property="Padding" Value="12 11"/>
             <Setter Property="BorderBrush" Value="#3498DB"/>
             <Setter Property="Background" Value="#3498DB"/>
             <Setter Property="Foreground" Value="White"/>
@@ -134,6 +135,14 @@
                     </Style>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <Style x:Key="BoxBorder" TargetType="{x:Type Border}">
+            <Setter Property="CornerRadius" Value="5"></Setter>
+            <Setter Property="Padding" Value="10 5"></Setter>
+            <Setter Property="Margin" Value="0 0 0 15"></Setter>
+            <Setter Property="Background" Value="#F5F5F5"></Setter>
+            
         </Style>
     </Application.Resources>
 </Application>

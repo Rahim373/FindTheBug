@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FindTheBug.Desktop.Reception"
         mc:Ignorable="d"
         Title="FindTheBug Reception" Height="600" Width="900"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow">
 
     <Window.Resources>
         <Style TargetType="Menu">
@@ -19,6 +19,14 @@
             <Setter Property="Padding" Value="10,8"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="#FF174F8E"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF174F8E"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -29,15 +37,21 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="#FF0E3175">
+        <Grid Grid.Row="0">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF174F8E"/>
+                    <GradientStop Color="#FF2C3E50" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
+
             <StackPanel Grid.Column="0" >
-                <TextBlock FontSize="17" Padding="10 3" Foreground="White" FontWeight="Bold">Mathbaria Al-Razi Diagnostics and Consultation Center</TextBlock>
-                <TextBlock FontSize="20" Padding="10 0 0 10" Foreground="White">Reception App</TextBlock>
+                <TextBlock FontSize="20" Padding="10 20 0 0" Foreground="White" FontWeight="Bold">Mathbaria Al-Razi Diagnostics and Consultation Center</TextBlock>
+                <TextBlock FontSize="25" Padding="10 0 0 20" Foreground="White">Reception App</TextBlock>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -59,7 +73,7 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
-        
+
 
         <!-- Top Menu Bar - Only visible when logged in -->
         <Menu Grid.Row="1" 

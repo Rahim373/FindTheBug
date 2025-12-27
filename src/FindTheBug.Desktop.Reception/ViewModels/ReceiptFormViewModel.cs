@@ -1,75 +1,45 @@
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using FindTheBug.Desktop.Reception.Commands;
+using FindTheBug.Desktop.Reception.Dtos;
 
 namespace FindTheBug.Desktop.Reception.ViewModels;
 
 public class ReceiptFormViewModel : BaseViewModel
 {
-    private string _receiptNumber = string.Empty;
-    private string _patientName = string.Empty;
-    private string _amount = string.Empty;
-    private string _status = string.Empty;
-    private readonly Action<object?>? _onLogout;
-    private readonly Action<object?>? _onSyncData;
+    private ObservableCollection<LabTestDto> _tests;
+
+
+    public ICommand AddTestCommand { get; }
 
     public ReceiptFormViewModel(Action<object?>? onLogout = null, Action<object?>? onSyncData = null)
     {
-        _onLogout = onLogout;
-        _onSyncData = onSyncData;
-        LogoutCommand = new RelayCommand(ExecuteLogout);
-        SyncDataCommand = new RelayCommand(ExecuteSyncData);
+        AddTestCommand = new RelayCommand(AddTest);
+        Tests = new ObservableCollection<LabTestDto>();
 
-        // Initialize with sample data
-        InitializeSampleData();
+
     }
 
-    public string ReceiptNumber
+    public ObservableCollection<LabTestDto> Tests
     {
-        get => _receiptNumber;
-        set => SetProperty(ref _receiptNumber, value);
+        get => _tests;
+        set => SetProperty(ref _tests, value);
     }
 
-    public string PatientName
+    private void AddTest(object? parameter)
     {
-        get => _patientName;
-        set => SetProperty(ref _patientName, value);
-    }
+        Tests.Add(new LabTestDto
+        {
+            Name = "X-Ray",
+            Amount = 1000,
+            Discount = 0
+        });
 
-    public string Amount
-    {
-        get => _amount;
-        set => SetProperty(ref _amount, value);
-    }
-
-    public string Status
-    {
-        get => _status;
-        set => SetProperty(ref _status, value);
-    }
-
-    public ICommand LogoutCommand { get; }
-
-    public ICommand SyncDataCommand { get; }
-
-    private void ExecuteLogout(object? parameter)
-    {
-        _onLogout?.Invoke(parameter);
-    }
-
-    private void ExecuteSyncData(object? parameter)
-    {
-        // In production, this would sync data with the server
-        Status = "Syncing data...";
-        System.Threading.Thread.Sleep(1000); // Simulate sync
-        Status = "Data synced successfully at " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        _onSyncData?.Invoke(parameter);
+        OnPropertyChanged(nameof(Tests));
     }
 
     private void InitializeSampleData()
     {
-        ReceiptNumber = "RCT-" + DateTime.Now.ToString("yyyyMMdd") + "-" + new Random().Next(1000, 9999);
-        PatientName = "Sample Patient";
-        Amount = "$500.00";
-        Status = "Ready";
+        
     }
 }

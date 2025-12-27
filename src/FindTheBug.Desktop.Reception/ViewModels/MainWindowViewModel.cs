@@ -12,6 +12,10 @@ public class MainWindowViewModel : BaseViewModel
     private string _selectedMenuItem = string.Empty;
     private readonly SyncState _syncState;
 
+    private const string MENU_HOME = "Home";
+    private const string MENU_DOCTORS = "Doctors";
+    private const string MENU_RECEIPTS = "Receipts";
+
     public MainWindowViewModel(SyncState syncState)
     {
         _syncState = syncState;
@@ -111,15 +115,20 @@ public class MainWindowViewModel : BaseViewModel
 
     private void ExecuteNavigateToHome(object? parameter)
     {
-        SelectedMenuItem = "Home";
-        var receiptViewModel = new ReceiptFormViewModel(ExecuteLogout, ExecuteSyncDataFromMenu);
+        if (SelectedMenuItem == MENU_HOME)
+            return;
+        SelectedMenuItem = MENU_HOME;
+        var receiptViewModel = new ReceiptFormViewModel();
         _currentView = new Views.ReceiptView { DataContext = receiptViewModel };
         OnPropertyChanged(nameof(CurrentView));
     }
 
     private void ExecuteNavigateToReceipts(object? parameter)
     {
-        SelectedMenuItem = "Receipts";
+        if (SelectedMenuItem == MENU_RECEIPTS)
+            return;
+
+        SelectedMenuItem = MENU_RECEIPTS;
         var receiptsViewModel = new ReceiptsViewModel();
         _currentView = new Views.ReceiptsView { DataContext = receiptsViewModel };
         OnPropertyChanged(nameof(CurrentView));
@@ -127,16 +136,13 @@ public class MainWindowViewModel : BaseViewModel
 
     private void ExecuteNavigateToDoctors(object? parameter)
     {
-        SelectedMenuItem = "Doctors";
+        if (SelectedMenuItem == MENU_DOCTORS)
+            return;
+
+        SelectedMenuItem = MENU_DOCTORS;
         var doctorsViewModel = new DoctorsViewModel();
         _currentView = new Views.DoctorsView { DataContext = doctorsViewModel };
         OnPropertyChanged(nameof(CurrentView));
-    }
-
-    private void ExecuteSyncDataFromMenu(object? parameter)
-    {
-        // Sync data called from menu
-        // This can be expanded to show a message or update status
     }
 
     private void ExecuteLogout(object? parameter)

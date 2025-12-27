@@ -15,101 +15,145 @@
                 <DropShadowEffect Color="Black" Opacity="0.1" BlurRadius="5" ShadowDepth="2"/>
             </Border.Effect>
             
-            <StackPanel>
-                <TextBlock Text="Doctors List" 
-                           FontSize="28" 
-                           FontWeight="Bold" 
-                           Foreground="#2C3E50" 
-                           Margin="0,0,0,20"/>
-                
-                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                         FontSize="14" 
-                         Padding="10" 
-                         BorderBrush="#BDC3C7" 
-                         BorderThickness="1" 
-                         Margin="0,0,0,20"
-                         Width="300"
-                         HorizontalAlignment="Left">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="TextBox">
-                                        <Border Background="{TemplateBinding Background}" 
-                                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                                CornerRadius="5" 
-                                                Padding="{TemplateBinding Padding}">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Text="🔍" 
-                                                           Grid.Column="0" 
-                                                           VerticalAlignment="Center" 
-                                                           Margin="0,0,10,0"
-                                                           FontSize="16"/>
-                                                <ScrollViewer Grid.Column="1" 
-                                                            VerticalAlignment="Center" 
-                                                            x:Name="PART_ContentHost"/>
-                                            </Grid>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-                
-                <Border Background="#ECF0F1" 
-                        CornerRadius="5" 
-                        Padding="0">
-                    <DataGrid ItemsSource="{Binding Doctors}" 
-                              AutoGenerateColumns="False" 
-                              IsReadOnly="True" 
-                              RowHeight="40"
-                              FontSize="18"
-                              AlternatingRowBackground="AliceBlue"
-                              CanUserResizeColumns="True"
-                              CanUserAddRows="False"
-                              CanUserDeleteRows="False"
-                              GridLinesVisibility="Horizontal"
-                              HeadersVisibility="Column"
-                              Background="Transparent"
-                              BorderThickness="0">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" 
-                                                Binding="{Binding Name}" 
-                                                CanUserSort="True"
-                                                Width="*"/>
-                            <DataGridTextColumn Header="Degree" 
-                                                Binding="{Binding Degree}"
-                                                CanUserSort="True"
-                                                Width="*"
-                                                CanUserResize="False"/>
-                            <DataGridTextColumn Header="Speciality" 
-                                                Binding="{Binding Speciality}" 
-                                                CanUserSort="True"
-                                                Width="*"/>
-                            <DataGridTextColumn Header="Phone" 
-                                                Binding="{Binding Phone}" 
-                                                CanUserSort="True"
-                                                Width="300"/>
-                        </DataGrid.Columns>
-                        <DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#E8F6F3"/>
-                                    </Trigger>
-                                </Style.Triggers>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" 
+                   Text="Doctors" 
+                   Style="{DynamicResource PageHeader}"/>
+
+                <Border Grid.Row="1"
+                    Background="#F5F5F5" 
+                    CornerRadius="5" 
+                    Padding="10 5"
+                    Margin="0,0,0,15">
+                    <!-- First Row of Filters -->
+                    <Grid>
+                        <Grid.Resources>
+                            <!-- Applies a bottom margin of 4 to all TextBoxes in this Grid -->
+                            <Style TargetType="{x:Type StackPanel}">
+                                <Setter Property="Margin" Value="0,0,5,0" />
                             </Style>
-                        </DataGrid.RowStyle>
-                    </DataGrid>
+                        </Grid.Resources>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <Label Content="Dr. Name" />
+                            <TextBox Text="{Binding NameFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <Label Content="Speciality"/>
+                            <TextBox Text="{Binding SpecialityFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <Label Content="Phone"/>
+                            <TextBox Text="{Binding PhoneFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        
+                        <Button Grid.Column="5" 
+                            Height="38"
+                            Margin="0 4 0 0"
+                            Content="Clear Filters" 
+                            Command="{Binding ClearFiltersCommand}">
+                        </Button>
+                    </Grid>
                 </Border>
-            </StackPanel>
+
+                <DataGrid ItemsSource="{Binding Doctors}" Grid.Row="2">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" 
+                                            Binding="{Binding Name}" 
+                                            CanUserSort="True"
+                                            Width="*"/>
+                        <DataGridTextColumn Header="Degree" 
+                                            Binding="{Binding Degree}"
+                                            CanUserSort="True"
+                                            Width="*"
+                                            CanUserResize="False"/>
+                        <DataGridTextColumn Header="Speciality" 
+                                            Binding="{Binding Speciality}" 
+                                            CanUserSort="True"
+                                            Width="*"/>
+                        <DataGridTextColumn Header="Phone" 
+                                            Binding="{Binding Phone}" 
+                                            CanUserSort="True"
+                                            Width="300"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Pagination Controls -->
+                <Border Grid.Row="3"
+        Background="#F5F5F5" 
+        CornerRadius="5" 
+        Padding="15"
+        Margin="0,15,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Page Info -->
+                        <Label Grid.Column="0"
+               Content="{Binding PageInfo}"
+               VerticalAlignment="Center"/>
+
+                        <!-- Navigation Buttons -->
+                        <StackPanel Grid.Column="1" 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+
+                            <Button Content="&#171; First"
+                    Margin="0 0 5 0"
+                    Command="{Binding FirstPageCommand}"
+                    IsEnabled="{Binding CanGoToPreviousPage}">
+                            </Button>
+
+                            <Button Content="&#8249; Previous"
+                    Margin="0 0 5 0"
+                    Command="{Binding PreviousPageCommand}"
+                    IsEnabled="{Binding CanGoToPreviousPage}">
+                            </Button>
+
+                            <Button Content="Next &#8250;" 
+                    Margin="0 0 5 0"
+                    Command="{Binding NextPageCommand}"
+                    IsEnabled="{Binding CanGoToNextPage}">
+                            </Button>
+
+                            <Button Content="Last &#187;" 
+                    Command="{Binding LastPageCommand}"
+                    IsEnabled="{Binding CanGoToNextPage}">
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" 
+                                HorizontalAlignment="Right" 
+                                VerticalAlignment="Center">
+                            <Label Content="Items per page"/>
+                            <ComboBox ItemsSource="{Binding PageSizeOptions}"
+                            SelectedItem="{Binding PageSize}" Margin="0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>
