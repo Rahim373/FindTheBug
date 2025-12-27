@@ -70,10 +70,16 @@
                               IsReadOnly="True" 
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
-                              GridLinesVisibility="Horizontal"
+                              GridLinesVisibility="None"
                               HeadersVisibility="Column"
                               Background="Transparent"
-                              BorderThickness="0">
+                              RowHeight="30"
+                              FontSize="18"
+                              AlternatingRowBackground="AliceBlue"
+                              BorderThickness="1"
+                              BorderBrush="AliceBlue"
+                              VerticalScrollBarVisibility="Auto"
+                              VerticalContentAlignment="Center" FrozenColumnCount="1">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Receipt Number" 
                                                 Binding="{Binding ReceiptNumber}" 

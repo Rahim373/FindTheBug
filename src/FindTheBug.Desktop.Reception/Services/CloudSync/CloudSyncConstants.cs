@@ -10,9 +10,9 @@ public static class CloudSyncConstants
     /// </summary>
     public const string ApiBasePath = "/api/service-sync";
     /// <summary>
-    /// Endpoint for syncing modules
+    /// Endpoint for syncing doctors
     /// </summary>
-    public const string ModulesEndpoint = $"{ApiBasePath}/modules";
+    public const string DoctorsEndpoint = $"{ApiBasePath}/doctors";
     /// <summary>
     /// Endpoint for syncing users
     /// </summary>

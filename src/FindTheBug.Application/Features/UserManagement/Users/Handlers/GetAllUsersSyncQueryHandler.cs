@@ -16,7 +16,8 @@ public class GetAllUsersSyncQueryHandler(IUnitOfWork unitOfWork)
         IQueryable<User> query = unitOfWork.Repository<User>().GetQueryable()
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role.RoleModulePermissions)
-            .ThenInclude(rmp => rmp.Module);
+            .ThenInclude(rmp => rmp.Module)
+            .AsNoTracking();
 
         query = query.OrderBy(u => u.CreatedBy);
 

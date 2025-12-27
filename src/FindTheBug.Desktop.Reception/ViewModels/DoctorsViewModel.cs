@@ -37,6 +37,7 @@ public class DoctorsViewModel : BaseViewModel
             Doctors.Add(new DoctorItem
             {
                 Id = item.Id.ToString(),
+                Degree = item.Degree,
                 Name = item.Name,
                 Phone = item.PhoneNumber,
                 Speciality = string.Join(", ", item.DoctorSpecialities.Select(x => x.DoctorSpeciality.Name)),

@@ -98,7 +98,7 @@ public class CloudSyncService
             var tasks = new[]
             {
                 SyncEntityAsync<User, User>(CloudSyncConstants.UsersEndpoint, SaveUsersToLocal),
-                SyncEntityAsync<ModuleDto, Module>(CloudSyncConstants.ModulesEndpoint)
+                SyncEntityAsync<Doctor, Doctor>(CloudSyncConstants.DoctorsEndpoint, SaveDoctorsToLocal)
             };
 
             await Task.WhenAll(tasks);
@@ -112,6 +112,39 @@ public class CloudSyncService
             _logger.LogError(ex, "Error during RBAC sync");
             throw;
         }
+    }
+
+    private void SaveDoctorsToLocal(Result<PagedResult<Doctor>> response, ReceptionDbContext dbContext)
+    {
+        var doctorSpecialityMaps = response.Data.Items.SelectMany(x => x.DoctorSpecialities).Distinct();
+        var doctorSpecialities = doctorSpecialityMaps.Select(x => x.DoctorSpeciality).Distinct();
+        var doctors = response.Data.Items;
+
+        foreach (var doctor in doctors)
+        {
+            if (dbContext.Doctors.Any(x => x.Id == doctor.Id))
+                dbContext.Doctors.Update(doctor);
+            else
+                dbContext.Doctors.Add(doctor);
+        }
+
+        foreach (var speciality in doctorSpecialities)
+        {
+            if (dbContext.DoctorSpecialities.Any(x => x.Id == speciality.Id))
+                dbContext.DoctorSpecialities.Update(speciality);
+            else
+                dbContext.DoctorSpecialities.Add(speciality);
+        }
+
+        foreach (var mapping in doctorSpecialityMaps)
+        {
+            if (dbContext.DoctorSpecialityMappings.Any(x => x.Id == mapping.Id))
+                dbContext.DoctorSpecialityMappings.Update(mapping);
+            else
+                dbContext.DoctorSpecialityMappings.Add(mapping);
+        }
+
+        dbContext.SaveChangesAsync();
     }
 
     private void SaveUsersToLocal(Result<PagedResult<User>> response, ReceptionDbContext dbContext)
@@ -129,7 +162,7 @@ public class CloudSyncService
             else
                 dbContext.Users.Add(user);
         }
-        
+
         foreach (var module in modules)
         {
             if (dbContext.Modules.Any(x => x.Id == module.Id))

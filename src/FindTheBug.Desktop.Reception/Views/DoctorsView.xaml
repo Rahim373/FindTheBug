@@ -68,6 +68,10 @@
                     <DataGrid ItemsSource="{Binding Doctors}" 
                               AutoGenerateColumns="False" 
                               IsReadOnly="True" 
+                              RowHeight="40"
+                              FontSize="18"
+                              AlternatingRowBackground="AliceBlue"
+                              CanUserResizeColumns="True"
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
                               GridLinesVisibility="Horizontal"
@@ -75,21 +79,23 @@
                               Background="Transparent"
                               BorderThickness="0">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" 
-                                                Binding="{Binding Id}" 
-                                                Width="*"/>
                             <DataGridTextColumn Header="Name" 
                                                 Binding="{Binding Name}" 
+                                                CanUserSort="True"
                                                 Width="*"/>
+                            <DataGridTextColumn Header="Degree" 
+                                                Binding="{Binding Degree}"
+                                                CanUserSort="True"
+                                                Width="*"
+                                                CanUserResize="False"/>
                             <DataGridTextColumn Header="Speciality" 
                                                 Binding="{Binding Speciality}" 
+                                                CanUserSort="True"
                                                 Width="*"/>
                             <DataGridTextColumn Header="Phone" 
                                                 Binding="{Binding Phone}" 
-                                                Width="*"/>
-                            <DataGridTextColumn Header="Status" 
-                                                Binding="{Binding Status}" 
-                                                Width="*"/>
+                                                CanUserSort="True"
+                                                Width="300"/>
                         </DataGrid.Columns>
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">

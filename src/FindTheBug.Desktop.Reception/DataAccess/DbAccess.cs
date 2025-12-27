@@ -33,7 +33,7 @@ public static class DbAccess
     /// </summary>
     public static async Task<List<Doctor>> GetAllDoctorsAsync()
     {
-        using var dbContext = GetDbContext();
+        var dbContext = GetDbContext();
         return await dbContext.Doctors
             .Include(d => d.DoctorSpecialities)
             .ThenInclude(dsm => dsm.DoctorSpeciality)
