@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:FindTheBug.Desktop.Reception.Views"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="900">
     <Grid Background="#F5F5F5">
         <Border Background="White" 
                 CornerRadius="10" 
@@ -14,102 +14,167 @@
             <Border.Effect>
                 <DropShadowEffect Color="Black" Opacity="0.1" BlurRadius="5" ShadowDepth="2"/>
             </Border.Effect>
-            
-            <StackPanel>
-                <TextBlock Text="Receipts List" 
-                           FontSize="28" 
-                           FontWeight="Bold" 
-                           Foreground="#2C3E50" 
-                           Margin="0,0,0,20"/>
-                
-                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                         FontSize="14" 
-                         Padding="10" 
-                         BorderBrush="#BDC3C7" 
-                         BorderThickness="1" 
-                         Margin="0,0,0,20"
-                         Width="300"
-                         HorizontalAlignment="Left">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="TextBox">
-                                        <Border Background="{TemplateBinding Background}" 
-                                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                                CornerRadius="5" 
-                                                Padding="{TemplateBinding Padding}">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Text="🔍" 
-                                                           Grid.Column="0" 
-                                                           VerticalAlignment="Center" 
-                                                           Margin="0,0,10,0"
-                                                           FontSize="16"/>
-                                                <ScrollViewer Grid.Column="1" 
-                                                            VerticalAlignment="Center" 
-                                                            x:Name="PART_ContentHost"/>
-                                            </Grid>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-                
-                <Border Background="#ECF0F1" 
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <TextBlock Grid.Row="0" 
+                           Text="Receipts List" 
+                           Style="{DynamicResource PageHeader}"/>
+
+                <!-- Filter Panel -->
+                <Border Grid.Row="1"
+                        Background="#ECF0F1" 
                         CornerRadius="5" 
-                        Padding="0">
-                    <DataGrid ItemsSource="{Binding Receipts}" 
-                              AutoGenerateColumns="False" 
-                              IsReadOnly="True" 
-                              CanUserAddRows="False"
-                              CanUserDeleteRows="False"
-                              GridLinesVisibility="None"
-                              HeadersVisibility="Column"
-                              Background="Transparent"
-                              RowHeight="30"
-                              FontSize="18"
-                              AlternatingRowBackground="AliceBlue"
-                              BorderThickness="1"
-                              BorderBrush="AliceBlue"
-                              VerticalScrollBarVisibility="Auto"
-                              VerticalContentAlignment="Center" FrozenColumnCount="1">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Receipt Number" 
-                                                Binding="{Binding ReceiptNumber}" 
-                                                Width="*"/>
-                            <DataGridTextColumn Header="Patient Name" 
-                                                Binding="{Binding PatientName}" 
-                                                Width="*"/>
-                            <DataGridTextColumn Header="Date" 
-                                                Binding="{Binding Date, StringFormat=yyyy-MM-dd}" 
-                                                Width="*"/>
-                            <DataGridTextColumn Header="Amount" 
-                                                Binding="{Binding Amount}" 
-                                                Width="*"/>
-                            <DataGridTextColumn Header="Status" 
-                                                Binding="{Binding Status}" 
-                                                Width="*"/>
-                        </DataGrid.Columns>
-                        <DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#E8F6F3"/>
-                                    </Trigger>
-                                </Style.Triggers>
+                        Padding="10 5"
+                        Margin="0,0,0,15">
+                    <!-- First Row of Filters -->
+                    <Grid>
+                        <Grid.Resources>
+                            <!-- Applies a bottom margin of 4 to all TextBoxes in this Grid -->
+                            <Style TargetType="{x:Type StackPanel}">
+                                <Setter Property="Margin" Value="0,0,5,0" />
                             </Style>
-                        </DataGrid.RowStyle>
-                    </DataGrid>
+                        </Grid.Resources>
+                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <Label Content="Receipt Number" />
+                            <TextBox Text="{Binding ReceiptNumberFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <Label Content="Patient Name"/>
+                            <TextBox Text="{Binding PatientNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <Label Content="Start Date"/>
+                            <DatePicker SelectedDate="{Binding StartDateFilter}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3">
+                            <Label Content="End Date"/>
+                            <DatePicker SelectedDate="{Binding EndDateFilter}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4">
+                            <Label Content="Status"/>
+                            <ComboBox ItemsSource="{Binding StatusOptions}"
+                                        SelectedItem="{Binding StatusFilter}"/>
+                        </StackPanel>
+
+                        <Button Grid.Column="5" 
+                                Height="38"
+                                Margin="0 10 0 0"
+                                Content="Clear Filters" 
+                                Command="{Binding ClearFiltersCommand}">
+                        </Button>
+                    </Grid>
                 </Border>
-            </StackPanel>
+
+                <!-- Data Grid -->
+
+                <DataGrid 
+                    Grid.Row="2"
+                    ItemsSource="{Binding Receipts}">
+                    
+                    <DataGrid.Columns>
+                        <DataGridTextColumn 
+                            Header="Receipt Number" 
+                            Binding="{Binding ReceiptNumber}" 
+                            Width="1.2*"/>
+                        <DataGridTextColumn 
+                            Header="Patient Name" 
+                            Binding="{Binding PatientName}" 
+                            Width="1.5*"/>
+                        <DataGridTextColumn 
+                            Header="Date" 
+                            Binding="{Binding Date, StringFormat=yyyy-MM-dd}" 
+                            Width="*"/>
+                        <DataGridTextColumn 
+                            Header="Amount" 
+                            Binding="{Binding Amount}" 
+                            Width="*"/>
+                        <DataGridTextColumn 
+                            Header="Status" 
+                            Binding="{Binding Status}" 
+                            Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Pagination Controls -->
+                <Border Grid.Row="3"
+                        Background="#ECF0F1" 
+                        CornerRadius="5" 
+                        Padding="15"
+                        Margin="0,15,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Page Info -->
+                        <Label Grid.Column="0"
+                               Content="{Binding PageInfo}"
+                               VerticalAlignment="Center"/>
+
+                        <!-- Navigation Buttons -->
+                        <StackPanel Grid.Column="1" 
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+
+                            <Button Content="&#171; First"
+                                    Margin="0 0 5 0"
+                                    Command="{Binding FirstPageCommand}"
+                                    IsEnabled="{Binding CanGoToPreviousPage}">
+                            </Button>
+
+                            <Button Content="&#8249; Previous"
+                                    Margin="0 0 5 0"
+                                    Command="{Binding PreviousPageCommand}"
+                                    IsEnabled="{Binding CanGoToPreviousPage}">
+                            </Button>
+
+                            <Button Content="Next &#8250;" 
+                                    Margin="0 0 5 0"
+                                    Command="{Binding NextPageCommand}"
+                                    IsEnabled="{Binding CanGoToNextPage}">
+                            </Button>
+
+                            <Button Content="Last &#187;" 
+                                    Command="{Binding LastPageCommand}"
+                                    IsEnabled="{Binding CanGoToNextPage}">
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" 
+                                    HorizontalAlignment="Right" 
+                                    VerticalAlignment="Center">
+                            <Label Content="Items per page"/>
+                            <ComboBox ItemsSource="{Binding PageSizeOptions}"
+                                SelectedItem="{Binding PageSize}" Margin="0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

@@ -24,22 +24,11 @@
                            Foreground="#2C3E50" 
                            HorizontalAlignment="Center" 
                            Margin="0,0,0,30"/>
+
+                <Label Content="Phone Number"/>
+                <TextBox Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}" />
                 
-                <TextBlock Text="Phone Number" 
-                           FontSize="14" 
-                           Foreground="#34495E" 
-                           Margin="0,0,0,5"/>
-                <TextBox Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}" 
-                         FontSize="14" 
-                         Padding="10" 
-                         BorderBrush="#BDC3C7" 
-                         BorderThickness="1" 
-                         Margin="0,0,0,20"/>
-                
-                <TextBlock Text="Password" 
-                           FontSize="14" 
-                           Foreground="#34495E" 
-                           Margin="0,0,0,5"/>
+                <Label Content="Password" Style="{DynamicResource FormLabel}"/>
                 <PasswordBox x:Name="PasswordBox"
                             FontSize="14" 
                             Padding="10" 

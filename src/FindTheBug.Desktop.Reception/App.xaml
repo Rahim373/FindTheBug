@@ -8,5 +8,132 @@
         <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:SyncStatusColorConverter x:Key="SyncStatusColorConverter"/>
+        
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#7F8C8D"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+        
+        <Style TargetType="{x:Type TextBlock}" x:Key="PageHeader">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+        </Style>
+        
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+        </Style>
+        
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+        </Style>
+        
+        <Style TargetType="{x:Type DatePicker}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="9"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="Background" Value="white"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+        </Style>
+        
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="12 6"/>
+            <Setter Property="BorderBrush" Value="#3498DB"/>
+            <Setter Property="Background" Value="#3498DB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                    CornerRadius="3" 
+                    Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#95A5A6"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2980B9"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="AutoGenerateColumns" Value="False"></Setter>
+            <Setter Property="IsReadOnly" Value="True"></Setter>
+            <Setter Property="CanUserAddRows" Value="False"></Setter>
+            <Setter Property="CanUserDeleteRows" Value="False"></Setter>
+            <Setter Property="CanUserSortColumns" Value="True"></Setter>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"></Setter>
+            <Setter Property="HorizontalGridLinesBrush" Value="LightGray"></Setter>
+            <Setter Property="HeadersVisibility" Value="Column"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="RowHeight" Value="35"></Setter>
+            <Setter Property="BorderBrush" Value="LightGray"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="ColumnHeaderHeight" Value="35"></Setter>
+            <Setter Property="AlternatingRowBackground" Value="#F9F9F9"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"></Setter>
+
+            <Setter Property="RowStyle">
+                <Setter.Value>
+                    <!-- This is the Style for the DataGridRow -->
+                    <Style TargetType="{x:Type DataGridRow}">
+                        <!-- Default properties for the row -->
+                        <Setter Property="BorderBrush" Value="#E0E0E0" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+
+                        <Style.Triggers>
+                            <!-- Mouse over effect -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E8F6F3"/>
+                            </Trigger>
+
+                            <!-- Selected row styling (when the grid does not have focus) -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#D1F2EB"/>
+                            </Trigger>
+
+                            <!-- Selected row styling when the grid IS focused -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True" />
+                                    <Condition Property="IsFocused" Value="False" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" Value="#D1F2EB"/>
+                            </MultiTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Setter Property="FontWeight" Value="Bold" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>
