@@ -1,4 +1,6 @@
 using FindTheBug.Desktop.Reception.Data;
+using FindTheBug.Desktop.Reception.Utils;
+using FindTheBug.Domain.Contracts;
 using FindTheBug.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -261,6 +263,23 @@ public static class DbAccess
         await dbContext.SaveChangesAsync();
         
         return true;
+    }
+
+    internal static async Task<bool> CheckLogin(string phoneNumber, string password)
+    {
+        var dbContext = GetDbContext();
+
+        var user = await dbContext.Users.Where(x => x.Phone == phoneNumber && x.IsActive
+                && x.UserRoles.Any(y => y.Role.RoleModulePermissions
+                    .Any(z => z.Module.Name == ModuleConstants.Reception && z.CanView)))
+            .FirstOrDefaultAsync();
+
+        if (user is null)
+        {
+            return false;
+        }
+
+        return PasswordHasher.VerifyPassword(password, user.PasswordHash);
     }
 
     #endregion

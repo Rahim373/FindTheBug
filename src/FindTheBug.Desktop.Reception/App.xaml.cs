@@ -36,7 +36,7 @@ namespace FindTheBug.Desktop.Reception
 
             // Apply migrations to ensure database is up-to-date
             var dbContext = ServiceProvider.GetRequiredService<ReceptionDbContext>();
-            if (dbContext.Database.HasPendingModelChanges())
+            if (dbContext.Database.GetPendingMigrations().Any())
             {
                 dbContext.Database.MigrateAsync().GetAwaiter();
             }
@@ -68,6 +68,7 @@ namespace FindTheBug.Desktop.Reception
 
             // Register ViewModels
             services.AddTransient<MainWindowViewModel>();
+
             // Register Views
             services.AddTransient<MainWindow>();
         }

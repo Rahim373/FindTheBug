@@ -1,11 +1,6 @@
-﻿using FindTheBug.Application.Common.Models;
-using FindTheBug.Application.Features.UserManagement.Modules.DTOs;
+﻿using FindTheBug.Application.Features.UserManagement.Modules.DTOs;
 using FindTheBug.Application.Features.UserManagement.Modules.Queries;
-using FindTheBug.Application.Features.UserManagement.Roles.DTOs;
-using FindTheBug.Application.Features.UserManagement.Roles.Queries;
 using FindTheBug.Application.Features.UserManagement.Users.Queries;
-using FindTheBug.Domain.Common;
-using FindTheBug.Domain.Contracts;
 using FindTheBug.WebAPI.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

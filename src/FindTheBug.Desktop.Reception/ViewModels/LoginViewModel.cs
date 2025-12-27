@@ -1,4 +1,5 @@
 using FindTheBug.Desktop.Reception.Commands;
+using FindTheBug.Desktop.Reception.DataAccess;
 using System.Windows.Input;
 
 namespace FindTheBug.Desktop.Reception.ViewModels
@@ -43,8 +44,8 @@ namespace FindTheBug.Desktop.Reception.ViewModels
 
         private void ExecuteLogin(object? parameter)
         {
-            // Simple validation logic - in production, this would call an authentication service
-            if (PhoneNumber == "admin" && Password == "admin123")
+            var success = DbAccess.CheckLogin(PhoneNumber, Password).GetAwaiter().GetResult();
+            if (success)
             {
                 ErrorMessage = string.Empty;
                 _onLoginSuccess?.Invoke();

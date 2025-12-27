@@ -1,8 +1,3 @@
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
 using FindTheBug.Desktop.Reception.Data;
 using FindTheBug.Desktop.Reception.Dtos;
 using FindTheBug.Desktop.Reception.Services.CloudSync.Mappers;
@@ -13,6 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Retry;
+using System.Data;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 
 namespace FindTheBug.Desktop.Reception.Services.CloudSync;
 
@@ -116,12 +116,53 @@ public class CloudSyncService
 
     private void SaveUsersToLocal(Result<PagedResult<User>> response, ReceptionDbContext dbContext)
     {
-        foreach (var user in response.Data.Items)
-        {
-            var exists = dbContext.Users.Any(x => x.Id == user.Id);
+        var roleModulePermissions = response.Data.Items.SelectMany(x => x.UserRoles.SelectMany(x => x.Role.RoleModulePermissions)).Distinct();
+        var modules = roleModulePermissions.Select(x => x.Module);
+        var roles = response.Data.Items.SelectMany(x => x.UserRoles.Select(y => y.Role)).Distinct();
+        var users = response.Data.Items;
+        var usersRoles = response.Data.Items.SelectMany(x => x.UserRoles).Distinct();
 
-            dbContext.Entry(user).State = exists ? EntityState.Modified : EntityState.Added;
+        foreach (var user in users)
+        {
+            if (dbContext.Users.Any(x => x.Id == user.Id))
+                dbContext.Users.Update(user);
+            else
+                dbContext.Users.Add(user);
         }
+        
+        foreach (var module in modules)
+        {
+            if (dbContext.Modules.Any(x => x.Id == module.Id))
+                dbContext.Modules.Update(module);
+            else
+                dbContext.Modules.Add(module);
+        }
+
+        foreach (var role in roles)
+        {
+            if (dbContext.Roles.Any(x => x.Id == role.Id))
+                dbContext.Roles.Update(role);
+            else
+                dbContext.Roles.Add(role);
+        }
+
+        foreach (var userRole in usersRoles)
+        {
+            if (dbContext.UserRoles.Any(x => x.Id == userRole.Id))
+                dbContext.UserRoles.Update(userRole);
+            else
+                dbContext.UserRoles.Add(userRole);
+        }
+
+        foreach (var roleModulePermission in roleModulePermissions)
+        {
+            if (dbContext.RoleModulePermissions.Any(x => x.Id == roleModulePermission.Id))
+                dbContext.RoleModulePermissions.Update(roleModulePermission);
+            else
+                dbContext.RoleModulePermissions.Add(roleModulePermission);
+        }
+
+        dbContext.SaveChangesAsync();
     }
 
     /// <summary>

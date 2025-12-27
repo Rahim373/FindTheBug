@@ -59,6 +59,7 @@ public class DbInitializer
             new { Name = ModuleConstants.UserManagement, DisplayName = "User Management", Description = "Manage system users and their access" },
             new { Name = ModuleConstants.Dispensary, DisplayName = "Dispensary Management", Description = "Manage dispensary, product and sales" },
             new { Name = ModuleConstants.Accounts, DisplayName = "Accounts Management", Description = "Manage expensed, money flow" },
+            new { Name = ModuleConstants.Reception, DisplayName = "Receiption Management", Description = "Manage receipts, ticketing, serials" },
         };
 
         foreach (var moduleDef in moduleDefinitions)

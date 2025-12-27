@@ -3,6 +3,7 @@ using System;
 using FindTheBug.Desktop.Reception.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FindTheBug.Desktop.Reception.Migrations
 {
     [DbContext(typeof(ReceptionDbContext))]
-    partial class ReceptionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251226221352_AddRBACTables")]
+    partial class AddRBACTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.1");

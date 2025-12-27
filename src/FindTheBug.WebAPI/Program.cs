@@ -49,9 +49,6 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 // Add Global Exception Handler Middleware
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-// Add Result Wrapper Middleware (wraps all responses in Result class)
-app.UseMiddleware<ResultWrapperMiddleware>();
-
 // Add HTTP metrics middleware (tracks request count, duration, etc.)
 app.UseHttpMetrics();
 
