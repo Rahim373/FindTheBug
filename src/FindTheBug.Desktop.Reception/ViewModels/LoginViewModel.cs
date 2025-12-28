@@ -1,59 +1,48 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using FindTheBug.Desktop.Reception.Commands;
 using FindTheBug.Desktop.Reception.DataAccess;
-using System.Windows.Input;
+using FindTheBug.Desktop.Reception.Messages;
+using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Desktop.Reception.ViewModels
 {
-    public class LoginViewModel : BaseViewModel
+    public partial class LoginViewModel : ObservableObject
     {
+        [ObservableProperty]
         private string _phoneNumber = string.Empty;
+
+        [ObservableProperty]
         private string _password = string.Empty;
+
+        [ObservableProperty]
         private string _errorMessage = string.Empty;
-        private readonly Action? _onLoginSuccess;
 
-        public LoginViewModel(Action? onLoginSuccess = null)
+
+        [RelayCommand(AllowConcurrentExecutions = false)]
+        private async Task LoginAsync(object? parameter)
         {
-            _onLoginSuccess = onLoginSuccess;
-            LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
+            if (!CanExecuteLogin())
+            {
+                ErrorMessage = "Invalid phone number or password.";
+            }
+
+            var user = await DbAccess.CheckLoginAsync(PhoneNumber, Password);
+            if (user is null)
+            {
+                ErrorMessage = "Invalid username or password";
+                return;
+            }
+
+            ErrorMessage = string.Empty;
+            WeakReferenceMessenger.Default.Send(new UserLoggedInMessage(user));
         }
 
-        public string PhoneNumber
-        {
-            get => _phoneNumber;
-            set => SetProperty(ref _phoneNumber, value);
-        }
-
-        public string Password
-        {
-            get => _password;
-            set => SetProperty(ref _password, value);
-        }
-
-        public string ErrorMessage
-        {
-            get => _errorMessage;
-            set => SetProperty(ref _errorMessage, value);
-        }
-
-        public ICommand LoginCommand { get; }
-
-        private bool CanExecuteLogin(object? parameter)
+        private bool CanExecuteLogin()
         {
             return !string.IsNullOrWhiteSpace(PhoneNumber) && !string.IsNullOrWhiteSpace(Password);
         }
 
-        private void ExecuteLogin(object? parameter)
-        {
-            var success = DbAccess.CheckLogin(PhoneNumber, Password).GetAwaiter().GetResult();
-            if (success)
-            {
-                ErrorMessage = string.Empty;
-                _onLoginSuccess?.Invoke();
-            }
-            else
-            {
-                ErrorMessage = "Invalid username or password. Try: admin / admin123";
-            }
-        }
     }
 }

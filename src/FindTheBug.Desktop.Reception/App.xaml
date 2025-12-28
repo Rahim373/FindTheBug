@@ -8,6 +8,7 @@
         <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:SyncStatusColorConverter x:Key="SyncStatusColorConverter"/>
+        <converters:NegationConverter x:Key="NegationConverter"/>
         
         <Style TargetType="{x:Type Label}">
             <Setter Property="FontSize" Value="14"/>
@@ -22,13 +23,19 @@
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Margin" Value="0,0,0,15"/>
         </Style>
-        
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="ErrorMessage">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="BorderBrush" Value="#BDC3C7"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
         </Style>
         
         <Style TargetType="{x:Type ComboBox}">
@@ -36,7 +43,7 @@
             <Setter Property="Padding" Value="10"/>
             <Setter Property="BorderBrush" Value="#BDC3C7"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
         </Style>
         
         <Style TargetType="{x:Type DatePicker}">

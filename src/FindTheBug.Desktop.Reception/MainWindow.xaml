@@ -55,22 +55,29 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Padding="5 3" Foreground="White" FontWeight="Bold" Text="Cloud" />
-                    <Ellipse Width="10" Height="10" Margin="5 8 10 3" VerticalAlignment="Top">
-                        <Ellipse.Fill>
-                            <SolidColorBrush Color="{Binding CloudOnlineColor}"/>
-                        </Ellipse.Fill>
-                    </Ellipse>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Padding="5 3" Foreground="White" FontWeight="Bold" Text="Sync" />
-                    <Ellipse Width="10" Height="10" Margin="5 8 10 3" VerticalAlignment="Top">
-                        <Ellipse.Fill>
-                            <SolidColorBrush Color="{Binding IsSyncing, Converter={StaticResource SyncStatusColorConverter}}"/>
-                        </Ellipse.Fill>
-                    </Ellipse>
-                </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Padding="5 3" Foreground="White" FontWeight="Bold" Text="Sync" />
+                        <Ellipse Width="10" Height="10" Margin="5 8 10 3" VerticalAlignment="Top">
+                            <Ellipse.Fill>
+                                <SolidColorBrush Color="{Binding SyncStatus, Converter={StaticResource SyncStatusColorConverter}}"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="1" TextAlignment="Right"
+                               Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}"
+                               HorizontalAlignment="Right" Padding="10" 
+                               Text="{Binding UserName}"
+                               FontWeight="Bold"
+                               Foreground="White"></TextBlock>
+                </Grid>
+                
             </StackPanel>
         </Grid>
 

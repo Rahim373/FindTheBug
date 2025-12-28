@@ -77,39 +77,29 @@ public class CloudSyncService
                 });
     }
 
-    /// <summary>
-    /// Synchronizes all RBAC data from cloud to local database
-    /// </summary>
     public async Task SyncAsync()
     {
-        await HealthCheckAsync();
-
-        if (_state.IsSyncing)
+        if (_state.IsSyncing())
         {
             _logger.LogWarning("Sync already in progress, skipping");
             return;
         }
 
         _state.StartSync();
-        _logger.LogInformation("Starting RBAC sync from cloud...");
+        _logger.LogInformation("Starting Syncing");
 
         try
         {
-            var tasks = new[]
-            {
-                SyncEntityAsync<User, User>(CloudSyncConstants.UsersEndpoint, SaveUsersToLocal),
-                SyncEntityAsync<Doctor, Doctor>(CloudSyncConstants.DoctorsEndpoint, SaveDoctorsToLocal)
-            };
-
-            await Task.WhenAll(tasks);
+            await SyncEntityAsync<User, User>(CloudSyncConstants.UsersEndpoint, SaveUsersToLocal);
+            await SyncEntityAsync<Doctor, Doctor>(CloudSyncConstants.DoctorsEndpoint, SaveDoctorsToLocal);
 
             _state.CompleteSync();
-            _logger.LogInformation("RBAC sync completed successfully");
+            _logger.LogInformation("Completed Syncing");
         }
         catch (Exception ex)
         {
-            _state.FailSync(ex.Message);
-            _logger.LogError(ex, "Error during RBAC sync");
+            _state.FailSync();
+            _logger.LogError(ex, "Error during sync");
             throw;
         }
     }
@@ -196,25 +186,6 @@ public class CloudSyncService
         }
 
         dbContext.SaveChangesAsync();
-    }
-
-    /// <summary>
-    /// Performs a health check on the cloud API to verify connectivity
-    /// </summary>
-    private async Task HealthCheckAsync()
-    {
-        try
-        {
-            var response = await _httpClient.GetAsync(CloudSyncConstants.HealthCheckEndpoint);
-            response.EnsureSuccessStatusCode();
-            _state.IsCloudOnline = true;
-            _logger.LogInformation("Cloud API is online");
-        }
-        catch (Exception ex)
-        {
-            _state.IsCloudOnline = false;
-            _logger.LogWarning(ex, "Cloud API is offline or unreachable");
-        }
     }
 
     /// <summary>
@@ -323,7 +294,7 @@ public class CloudSyncService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error syncing {EntityName}", entityName);
-            // Don't throw - allow other entity types to sync
+            throw;
         }
     }
 

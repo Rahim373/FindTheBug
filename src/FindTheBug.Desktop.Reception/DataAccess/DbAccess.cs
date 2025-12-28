@@ -265,21 +265,21 @@ public static class DbAccess
         return true;
     }
 
-    internal static async Task<bool> CheckLogin(string phoneNumber, string password)
+    internal static async Task<User?> CheckLoginAsync(string phoneNumber, string password)
     {
         var dbContext = GetDbContext();
 
-        var user = await dbContext.Users.Where(x => x.Phone == phoneNumber && x.IsActive
+        var dbUser = await dbContext.Users.Where(x => x.Phone == phoneNumber && x.IsActive
                 && x.UserRoles.Any(y => y.Role.RoleModulePermissions
                     .Any(z => z.Module.Name == ModuleConstants.Reception && z.CanView)))
             .FirstOrDefaultAsync();
 
-        if (user is null)
+        if (dbUser is not null && PasswordHasher.VerifyPassword(password, dbUser.PasswordHash))
         {
-            return false;
+            return dbUser;
         }
 
-        return PasswordHasher.VerifyPassword(password, user.PasswordHash);
+        return null;
     }
 
     #endregion
