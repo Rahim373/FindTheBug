@@ -59,6 +59,21 @@ public class RoleModulePermissionDto
     public DateTime UpdatedAt { get; set; }
 }
 
+public class DiagnosticTestDto
+{
+    public Guid Id { get; set; }
+    public string TestCode { get; set; } = string.Empty;
+    public string TestName { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string Category { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public string? Duration { get; set; }
+    public bool RequiresFasting { get; set; }
+    public bool IsActive { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}
+
 public class SyncResponse<T>
 {
     public bool Success { get; set; }

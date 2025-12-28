@@ -9,7 +9,9 @@
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:SyncStatusColorConverter x:Key="SyncStatusColorConverter"/>
         <converters:NegationConverter x:Key="NegationConverter"/>
-        
+        <converters:ZeroToEmptyStringConverter x:Key="ZeroToEmptyStringConverter"/>
+        <converters:NumberToPercentageStringConverter x:Key="NumberToPercentageStringConverter"/>
+
         <Style TargetType="{x:Type Label}">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="0"/>

@@ -1,4 +1,5 @@
 using FindTheBug.Desktop.Reception.Data;
+using FindTheBug.Desktop.Reception.Dtos;
 using FindTheBug.Desktop.Reception.Models;
 using FindTheBug.Desktop.Reception.Utils;
 using FindTheBug.Domain.Contracts;
@@ -286,6 +287,39 @@ public static class DbAccess
     internal static async Task SaveReceiptAsync(PatientInformation patientInfo, TestInformation testInfo)
     {
         // throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Gets all doctor specialties from the database asynchronously.
+    /// </summary>
+    public static async Task<List<DropdownOption>> GetAllDiagnosticsTestForDropdownAsync()
+    {
+        var dbContext = GetDbContext();
+        return await dbContext.DiagnosticTests
+            .Where(ds => ds.IsActive)
+            .OrderBy(ds => ds.TestName)
+            .Select(dt => new DropdownOption(dt.Id, dt.TestName, dt.Category))
+            .ToListAsync();
+    }
+
+    /// <summary>
+    /// Gets all doctors from the database asynchronously.
+    /// </summary>
+    public static async Task<List<DropdownOption>> GetAllDoctorsForDropdownAsync()
+    {
+        var dbContext = GetDbContext();
+        return await dbContext.Doctors
+            .Where(d => d.IsActive)
+            .OrderBy(d => d.Name)
+            .Select(d => new DropdownOption(d.Id, $"{d.Name} ({d.Degree})"))
+            .ToListAsync();
+    }
+
+    internal static async Task<DiagnosticTest?> GetDiagnosticsTestByIdAsync(Guid value)
+    {
+        var dbContext = GetDbContext();
+        return await dbContext.DiagnosticTests
+            .FindAsync(value);
     }
 
     #endregion

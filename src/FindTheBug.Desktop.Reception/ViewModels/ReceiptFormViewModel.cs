@@ -4,59 +4,99 @@ using FindTheBug.Desktop.Reception.Commands;
 using FindTheBug.Desktop.Reception.DataAccess;
 using FindTheBug.Desktop.Reception.Dtos;
 using FindTheBug.Desktop.Reception.Models;
-using FindTheBug.Domain.Entities;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Input;
 
 namespace FindTheBug.Desktop.Reception.ViewModels;
 
 public partial class ReceiptFormViewModel : ObservableObject
 {
+    const string CREATE_NEW_RECEIPT = "Create New Receipt";
+
     #region Fields
 
     [ObservableProperty]
-    private ObservableCollection<LabTestDto> _tests;
+    private ObservableCollection<DropdownOption> _tests;
 
     [ObservableProperty]
-    private ObservableCollection<DoctorItem> _doctors;
+    private ObservableCollection<DropdownOption> _doctors;
+
+    [ObservableProperty]
+    private ObservableCollection<LabTestDto> _selectedTests;
+
+    [ObservableProperty]
+    private string pageTitle;
+
+    public Task InitializationTask { get; private set; }
 
     public bool IsSaved => !string.IsNullOrEmpty(PatientInfo.InvoiceNumber);
-    
+
     public PatientInformation PatientInfo { get; private set; }
-    
+
     public TestInformation TestInfo { get; private set; }
+
+    [ObservableProperty]
+    private decimal _subTotal;
+    [ObservableProperty]
+    private decimal _discount;
+    [ObservableProperty]
+    private decimal _total;
+    [ObservableProperty]
+    private decimal _due;
+    [ObservableProperty]
+    private decimal _balance;
+
 
     #endregion
 
     public ReceiptFormViewModel()
     {
-        Doctors = new ObservableCollection<DoctorItem>
+        PageTitle = CREATE_NEW_RECEIPT;
+        Doctors = new ObservableCollection<DropdownOption>
         {
-            new DoctorItem{ Name = "Self", Id = string.Empty}
+            new DropdownOption(Guid.Empty, "Self")
         };
 
-        Tests = new ObservableCollection<LabTestDto>();
+        Tests = new ObservableCollection<DropdownOption>();
+        SelectedTests = new ObservableCollection<LabTestDto>();
+        SelectedTests.CollectionChanged += SelectedTests_CollectionChanged;
 
         // Initialize information models
         PatientInfo = new PatientInformation();
         TestInfo = new TestInformation();
 
-        LoadDoctors();
+        InitializationTask = Task.WhenAll([
+            LoadDoctorsAsync(),
+            LoadDiagnosticsTestAsync()
+        ]);
     }
 
-    private void LoadDoctors()
+    private void SelectedTests_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-        var doctors = DbAccess.GetAllDoctorsAsync().GetAwaiter().GetResult();
+        var subTotal = 0m;
+        var discount = 0m;
 
-        foreach (var doctor in doctors)
+        foreach (var test in SelectedTests)
         {
-            Doctors.Add(new DoctorItem
-            {
-                Id = doctor.Id.ToString(),
-                Name = $"{doctor.Name} ({doctor.Degree})"
-            });
+            subTotal += test.Total;
+            discount += test.Discount;
         }
+
+        SubTotal = Math.Round(subTotal, 0);
+        Discount = Math.Round(discount, 0);
+        Total = SubTotal - Discount;
+    }
+
+    private async Task LoadDoctorsAsync()
+    {
+        var doctors = await DbAccess.GetAllDoctorsForDropdownAsync();
+        doctors.ForEach(Doctors.Add);
+    }
+
+    private async Task LoadDiagnosticsTestAsync()
+    {
+        var tests = await DbAccess.GetAllDiagnosticsTestForDropdownAsync();
+        tests.ForEach(Tests.Add);
     }
 
     [RelayCommand]
@@ -74,8 +114,9 @@ public partial class ReceiptFormViewModel : ObservableObject
             return;
         }
 
-        Tests.Add(new LabTestDto
+        SelectedTests.Add(new LabTestDto
         {
+            Id = TestInfo.Id.Value,
             Name = TestInfo.TestName.Value ?? string.Empty,
             Amount = TestInfo.TestAmount.Value,
             Discount = TestInfo.TestDiscount.Value
@@ -87,7 +128,27 @@ public partial class ReceiptFormViewModel : ObservableObject
         TestInfo.ClearAll();
     }
 
-    [RelayCommand(CanExecute = nameof(CanReset))]
+    [RelayCommand]
+    private void DueChanged()
+    {
+        Balance = SubTotal - Due;
+    }
+
+    [RelayCommand]
+    private async Task TestSelectionChangedAsync()
+    {
+        if (TestInfo.Id.IsValid)
+        {
+            var test = await DbAccess.GetDiagnosticsTestByIdAsync(TestInfo.Id.Value);
+            if (test is not null) {
+                TestInfo.TestAmount.Value = test.Price;
+                TestInfo.TestDiscount.Value = 0M;
+                TestInfo.TestName.Value = test.TestName;
+            }
+        }
+    }
+
+    [RelayCommand]
     private void Reset()
     {
         MessageBoxResult messageBoxResult = MessageBox.Show(
@@ -100,8 +161,9 @@ public partial class ReceiptFormViewModel : ObservableObject
         {
             PatientInfo.ClearAll();
             TestInfo.ClearAll();
-            Tests.Clear();
+            SelectedTests.Clear();
             OnPropertyChanged(nameof(Tests));
+            PageTitle = CREATE_NEW_RECEIPT;
         }
     }
 
@@ -114,13 +176,21 @@ public partial class ReceiptFormViewModel : ObservableObject
             return;
         }
 
-        
-        if (!TestInfo.ValidateAll())
+
+        if (!SelectedTests.Any())
         {
             return;
         }
-
+        PatientInfo.InvoiceNumber = "MARC2502-0000012";
         await DbAccess.SaveReceiptAsync(PatientInfo, TestInfo);
+        PageTitle = $"Receipt : {PatientInfo.InvoiceNumber}";
+    }
+
+    [RelayCommand]
+    private void CreateNew()
+    {
+        Reset();
+        PageTitle = CREATE_NEW_RECEIPT;
     }
 
     /// <summary>
@@ -134,11 +204,11 @@ public partial class ReceiptFormViewModel : ObservableObject
 
     private bool CanReset()
     {
-        return Tests.Any() || PatientInfo.HasValue();
+        return SelectedTests.Any() || PatientInfo.HasValue();
     }
-    
+
     private bool CanSave()
     {
-        return Tests.Any() && PatientInfo.ValidateAll();
+        return SelectedTests.Any() && PatientInfo.ValidateAll();
     }
 }

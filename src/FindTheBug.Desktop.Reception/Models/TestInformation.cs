@@ -1,4 +1,5 @@
 using FindTheBug.Desktop.Reception.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace FindTheBug.Desktop.Reception.Models;
 
@@ -7,9 +8,10 @@ namespace FindTheBug.Desktop.Reception.Models;
 /// </summary>
 public class TestInformation
 {
-    public ValidatableObject<string> TestName { get; private set; }
+    public ValidatableObject<Guid> Id { get; private set; }
     public ValidatableObject<decimal> TestAmount { get; private set; }
     public ValidatableObject<decimal> TestDiscount { get; private set; }
+    public ValidatableObject<string> TestName { get; private set; }
 
     public TestInformation()
     {
@@ -18,15 +20,20 @@ public class TestInformation
 
     private void InitializeFields()
     {
+        InitializeId();
         InitializeTestName();
         InitializeTestAmount();
         InitializeTestDiscount();
     }
 
-    private void InitializeTestName()
+    private void InitializeId()
     {
+        Id = new ValidatableObject<Guid>(); 
+        Id.AddValidationRule(Validators.IsGuidNotEmpty("Test", "Please select a test"));
+    }
+
+    private void InitializeTestName() {
         TestName = new ValidatableObject<string>();
-        TestName.AddValidationRule(Validators.IsNotEmpty("Test Name", "Please select a test"));
     }
 
     private void InitializeTestAmount()
@@ -45,7 +52,7 @@ public class TestInformation
     public bool ValidateAll()
     {
         bool isValid = true;
-        isValid &= TestName.Validate();
+        isValid &= Id.Validate();
         isValid &= TestAmount.Validate();
         isValid &= TestDiscount.Validate();
         return isValid;
@@ -53,8 +60,10 @@ public class TestInformation
 
     public void ClearAll()
     {
+        Id.Value = Guid.Empty;
+        Id.ClearErrors();
+
         TestName.Value = string.Empty;
-        TestName.ClearErrors();
 
         TestAmount.Value = 0;
         TestAmount.ClearErrors();
@@ -64,7 +73,7 @@ public class TestInformation
 
     public void ForceValidateAll()
     {
-        TestName.ForceValidation();
+        Id.ForceValidation();
         TestAmount.ForceValidation();
         TestDiscount.ForceValidation();
     }

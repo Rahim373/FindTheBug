@@ -153,4 +153,39 @@ public static class SyncMappers
         // Note: CanApprove is not in the entity, ignore it
         entity.UpdatedAt = dto.UpdatedAt;
     }
+
+    /// <summary>
+    /// Maps DiagnosticTestDto to DiagnosticTest entity
+    /// </summary>
+    public static DiagnosticTest ToEntity(this DiagnosticTestDto dto)
+    {
+        return new DiagnosticTest
+        {
+            Id = dto.Id,
+            TestName = dto.TestName,
+            Description = dto.Description,
+            Category = dto.Category,
+            Price = dto.Price,
+            Duration = dto.Duration,
+            RequiresFasting = dto.RequiresFasting,
+            IsActive = dto.IsActive,
+            CreatedAt = dto.CreatedAt,
+            UpdatedAt = dto.UpdatedAt
+        };
+    }
+
+    /// <summary>
+    /// Updates an existing DiagnosticTest entity from DiagnosticTestDto
+    /// </summary>
+    public static void UpdateEntity(this DiagnosticTestDto dto, DiagnosticTest entity)
+    {
+        entity.TestName = dto.TestName;
+        entity.Description = dto.Description;
+        entity.Category = dto.Category;
+        entity.Price = dto.Price;
+        entity.Duration = dto.Duration;
+        entity.RequiresFasting = dto.RequiresFasting;
+        entity.IsActive = dto.IsActive;
+        entity.UpdatedAt = dto.UpdatedAt;
+    }
 }

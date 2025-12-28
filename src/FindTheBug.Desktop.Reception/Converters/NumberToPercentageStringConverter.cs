@@ -1,14 +1,13 @@
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
 
 namespace FindTheBug.Desktop.Reception.Converters;
 
-public class StringToVisibilityConverter : IValueConverter
+public class NumberToPercentageStringConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return string.IsNullOrWhiteSpace(value as string) ? Visibility.Collapsed : Visibility.Visible;
+        return value.ToString() + "%";
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

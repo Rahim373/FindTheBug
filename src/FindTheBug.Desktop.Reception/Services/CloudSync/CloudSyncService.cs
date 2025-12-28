@@ -92,6 +92,7 @@ public class CloudSyncService
         {
             await SyncEntityAsync<User, User>(CloudSyncConstants.UsersEndpoint, SaveUsersToLocal);
             await SyncEntityAsync<Doctor, Doctor>(CloudSyncConstants.DoctorsEndpoint, SaveDoctorsToLocal);
+            await SyncEntityAsync<DiagnosticTestDto, DiagnosticTest>(CloudSyncConstants.DiagnosticTestsEndpoint, SaveDiagnosticTestsToLocal);
 
             _state.CompleteSync();
             _logger.LogInformation("Completed Syncing");
@@ -183,6 +184,28 @@ public class CloudSyncService
                 dbContext.RoleModulePermissions.Update(roleModulePermission);
             else
                 dbContext.RoleModulePermissions.Add(roleModulePermission);
+        }
+
+        dbContext.SaveChangesAsync();
+    }
+
+    private void SaveDiagnosticTestsToLocal(Result<PagedResult<DiagnosticTestDto>> response, ReceptionDbContext dbContext)
+    {
+        var diagnosticTests = response.Data.Items;
+
+        foreach (var dto in diagnosticTests)
+        {
+            var existingTest = dbContext.DiagnosticTests.FirstOrDefault(x => x.Id == dto.Id);
+            if (existingTest != null)
+            {
+                dto.UpdateEntity(existingTest);
+                dbContext.DiagnosticTests.Update(existingTest);
+            }
+            else
+            {
+                var newTest = dto.ToEntity();
+                dbContext.DiagnosticTests.Add(newTest);
+            }
         }
 
         dbContext.SaveChangesAsync();
@@ -339,6 +362,9 @@ public class CloudSyncService
                 break;
             case RoleModulePermissionDto permissionDto when entity is RoleModulePermission permission:
                 permissionDto.UpdateEntity(permission);
+                break;
+            case DiagnosticTestDto testDto when entity is DiagnosticTest test:
+                testDto.UpdateEntity(test);
                 break;
         }
     }

@@ -19,6 +19,19 @@ public static class Validators
     }
 
     /// <summary>
+    /// Validates that a GUID is not Empty
+    /// </summary>
+    public static ValidationRule<Guid> IsGuidNotEmpty(string propertyName, string? errorMessage = null)
+    {
+        return new ValidationRule<Guid>
+        {
+            PropertyName = propertyName,
+            ErrorMessage = errorMessage ?? $"{propertyName} is required",
+            ValidationDelegate = value => Guid.Empty != value
+        };
+    }
+
+    /// <summary>
     /// Validates that a string has a minimum length
     /// </summary>
     public static ValidationRule<string> MinLength(int minLength, string propertyName, string? errorMessage = null)

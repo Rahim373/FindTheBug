@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:FindTheBug.Desktop.Reception.Views"
              xmlns:converters="clr-namespace:FindTheBug.Desktop.Reception.Converters"
@@ -39,7 +40,7 @@
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="Create New Receipt" Style="{DynamicResource PageHeader}"/>
+                    <TextBlock Grid.Row="0" Text="{Binding PageTitle}" Style="{DynamicResource PageHeader}"/>
 
                     <Border 
                 Grid.Row="1"
@@ -143,13 +144,25 @@
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
 
-                                <DataGrid Height="400" Grid.Column="0" ItemsSource="{Binding Tests}">
-                                    <DataGrid.Columns >
-                                        <DataGridTextColumn Header="Test Name" Binding="{Binding Name}" Width="3*"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="*"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="Discount" Binding="{Binding Discount}" Width="*"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="*"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="Delete" Width="*"></DataGridTextColumn>
+                                <DataGrid Height="400" Grid.Column="0" ItemsSource="{Binding SelectedTests}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Test Name" Width="600" Binding="{Binding Name}"/>
+                                        <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="100"/>
+                                        <DataGridTemplateColumn Header="Delete" Width="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Discount, Converter={StaticResource NumberToPercentageStringConverter}}"></TextBlock>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="100"/>
+                                        <DataGridTemplateColumn Header="Delete" Width="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button>Delete</Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
 
@@ -167,21 +180,25 @@
 
                                     <StackPanel Margin="2 0" Grid.Column="0">
                                         <Label Content="Test Name"></Label>
-                                        <ComboBox SelectedItem="{Binding TestInfo.TestName.Value}">
-                                            <ComboBoxItem Content="X-Ray"></ComboBoxItem>
-                                            <ComboBoxItem Content="MRI Scan"></ComboBoxItem>
-                                            <ComboBoxItem Content="CT Scan"></ComboBoxItem>
-                                            <ComboBoxItem Content="Blood Test"></ComboBoxItem>
-                                            <ComboBoxItem Content="Urine Test"></ComboBoxItem>
+                                        <ComboBox SelectedValue="{Binding TestInfo.Id.Value}" ItemsSource="{Binding Tests}"
+                                                  DisplayMemberPath="Name" SelectedValuePath="Id"
+                                                  IsTextSearchEnabled="True" >
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="SelectionChanged">
+                                                    <i:InvokeCommandAction Command="{Binding TestSelectionChangedCommand}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
                                         </ComboBox>
-                                        <TextBlock Text="{Binding TestInfo.TestName.Error}" 
+                                        <TextBlock Text="{Binding TestInfo.Id.Error}" 
                                                    Style="{DynamicResource ErrorMessage}"
-                                                   Visibility="{Binding TestInfo.TestName.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                                   Visibility="{Binding TestInfo.Id.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
                                     </StackPanel>
                                     <StackPanel Margin="2 0" Grid.Column="1">
                                         <Label Content="Amount (BDT &#x09F3;)"></Label>
-                                        <TextBox Text="{Binding TestInfo.TestAmount.Value, UpdateSourceTrigger=PropertyChanged}"
-                                                 TextAlignment="Center">
+                                        <TextBox Text="{Binding TestInfo.TestAmount.Value,
+                                            Converter={StaticResource ZeroToEmptyStringConverter}, 
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            Mode=TwoWay}" TextAlignment="Center" IsReadOnly="True">
                                         </TextBox>
                                         <TextBlock Text="{Binding TestInfo.TestAmount.Error}" 
                                                    Style="{DynamicResource ErrorMessage}"
@@ -189,8 +206,10 @@
                                     </StackPanel>
                                     <StackPanel Margin="2 0" Grid.Column="2">
                                         <Label Content="Discount % (Optional)"></Label>
-                                        <TextBox Text="{Binding TestInfo.TestDiscount.Value, UpdateSourceTrigger=PropertyChanged}"
-                                                 TextAlignment="Center">
+                                        <TextBox Text="{Binding TestInfo.TestDiscount.Value,
+                                            Converter={StaticResource ZeroToEmptyStringConverter}, 
+                                            UpdateSourceTrigger=PropertyChanged,
+                                            Mode=TwoWay}" TextAlignment="Center">
                                         </TextBox>
                                         <TextBlock Text="{Binding TestInfo.TestDiscount.Error}" 
                                                    Style="{DynamicResource ErrorMessage}"
@@ -218,28 +237,34 @@
                                         <Label Grid.Row="0" Grid.Column="0" Content="Sub-Total" 
                                                    HorizontalAlignment="Right" 
                                                    VerticalAlignment="Center"></Label>
-                                        <TextBox Grid.Row="0" Grid.Column="2"  Text="500" 
-                                                 Margin="0" TextAlignment="Right"/>
+                                        <TextBox Text="{Binding SubTotal, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="0" Grid.Column="2"
+                                                 Margin="0" TextAlignment="Right" IsReadOnly="True"/>
 
                                         <Label Grid.Row="1" Grid.Column="0" Content="Discount"
                                                HorizontalAlignment="Right"
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Grid.Row="1" Grid.Column="2" Text="500" Margin="0" TextAlignment="Right"/>
+                                        <TextBox Text="{Binding Discount, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="1" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
 
                                         <Label Grid.Row="2" Grid.Column="0" Content="Total"
                                                HorizontalAlignment="Right" 
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Grid.Row="2" Grid.Column="2" Text="500" Margin="0" TextAlignment="Right"/>
+                                        <TextBox Text="{Binding Total, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="2" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
 
                                         <Label Grid.Row="3" Grid.Column="0" Content="Due"
                                                HorizontalAlignment="Right" 
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Grid.Row="3" Grid.Column="2" Text="500" Margin="0" TextAlignment="Right"/>
+                                        <TextBox Text="{Binding Due, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="3" Grid.Column="2"  Margin="0" TextAlignment="Right">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Window_KeyUp">
+                                                    <i:InvokeCommandAction Command="{Binding DueChangedCommand}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
 
                                         <Label Grid.Row="4" Grid.Column="0" Content="Balace" 
                                                HorizontalAlignment="Right" 
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Grid.Row="4" Grid.Column="2" Text="500" Margin="0" TextAlignment="Right"/>
+                                        <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Balance, Converter={StaticResource ZeroToEmptyStringConverter}}" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
                                     </Grid >
                                 </Grid>
                             </Grid>
@@ -257,14 +282,14 @@
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            
+
                             <Button Content="Reset" 
                                     Command="{Binding ResetCommand}" 
-                                    IsEnabled="{Binding IsSaved.Error, Converter={StaticResource NegationConverter}}"
+                                    IsEnabled="{Binding IsSaved, Converter={StaticResource NegationConverter}}"
                                     Background="OrangeRed" 
                                     Margin="0 0 5 0" 
                                     Grid.Column="3"/>
-                            
+
                             <Button Content="Confirm Save" 
                                     Command="{Binding SaveCommand}" 
                                     Background="ForestGreen" 
@@ -276,8 +301,9 @@
                                     IsEnabled="{Binding IsSaved}"
                                     Grid.Column="5" 
                                     Margin="0 0 5 0"/>
-                            
+
                             <Button Content="Create New"
+                                    Command="{Binding CreateNewCommand}"
                                     IsEnabled="{Binding IsSaved}"
                                     Grid.Column="6"/>
                         </Grid>
