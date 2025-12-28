@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FindTheBug.Desktop.Reception.Migrations
 {
     [DbContext(typeof(ReceptionDbContext))]
-    [Migration("20251226221352_AddRBACTables")]
-    partial class AddRBACTables
+    [Migration("20251228081154_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,8 +39,8 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("Duration")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Duration")
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
@@ -50,10 +50,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.Property<bool>("RequiresFasting")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("TestCode")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("TestName")
                         .IsRequired()
@@ -67,7 +63,7 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DiagnosticTest");
+                    b.ToTable("DiagnosticTests");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.Doctor", b =>
@@ -83,7 +79,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Degree")
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
@@ -91,16 +86,13 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Office")
-                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -134,7 +126,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -185,7 +176,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("DiscountAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DueDate")
@@ -196,11 +186,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.Property<string>("InvoiceNumber")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Notes")
-                        .HasMaxLength(1000)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("PatientId")
@@ -210,24 +198,19 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PaymentMethod")
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("SubTotal")
-                        .HasPrecision(18, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("TaxAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -250,7 +233,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -261,15 +243,12 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("DiscountAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("DiscountPercentage")
-                        .HasPrecision(5, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("InvoiceId")
@@ -282,7 +261,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasPrecision(18, 2)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -343,14 +321,12 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("Age")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("City")
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -363,20 +339,16 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EmergencyContact")
-                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EmergencyContactNumber")
-                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Gender")
@@ -387,21 +359,17 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MobileNumber")
                         .IsRequired()
-                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PatientCode")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PostalCode")
-                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -803,7 +771,7 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.HasOne("FindTheBug.Domain.Entities.Patient", "Patient")
                         .WithMany("Invoices")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Patient");

@@ -1,7 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using FindTheBug.Desktop.Reception.Commands;
+using FindTheBug.Desktop.Reception.DataAccess;
 using FindTheBug.Desktop.Reception.Dtos;
 using FindTheBug.Desktop.Reception.Models;
+using FindTheBug.Domain.Entities;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -12,59 +15,58 @@ public partial class ReceiptFormViewModel : ObservableObject
 {
     #region Fields
 
-    private ObservableCollection<LabTestDto> _tests;
-    private ObservableCollection<DoctorItem> _doctors = new ObservableCollection<DoctorItem>();
-    public bool IsSaved => !string.IsNullOrEmpty(InvoiceNumber);
-    public PatientInformation PatientInfo { get; private set; }
-    public TestInformation TestInfo { get; private set; }
-    
     [ObservableProperty]
-    private string _invoiceNumber; 
+    private ObservableCollection<LabTestDto> _tests;
+
+    [ObservableProperty]
+    private ObservableCollection<DoctorItem> _doctors;
+
+    public bool IsSaved => !string.IsNullOrEmpty(PatientInfo.InvoiceNumber);
+    
+    public PatientInformation PatientInfo { get; private set; }
+    
+    public TestInformation TestInfo { get; private set; }
 
     #endregion
 
-    #region Commands
-
-    public ICommand AddTestCommand { get; }
-    public ICommand PrintCommand { get; }
-    public ICommand ResetCommand { get; }
-    public ICommand SaveCommand { get; } 
-
-    #endregion
-
-
-    public ObservableCollection<DoctorItem> Doctors
+    public ReceiptFormViewModel()
     {
-        get => _doctors;
-        set => SetProperty(ref _doctors, value);
-    }
-    public ObservableCollection<LabTestDto> Tests
-    {
-        get => _tests;
-        set => SetProperty(ref _tests, value);
-    }
+        Doctors = new ObservableCollection<DoctorItem>
+        {
+            new DoctorItem{ Name = "Self", Id = string.Empty}
+        };
 
-    public ReceiptFormViewModel(Action<object?>? onLogout = null, Action<object?>? onSyncData = null)
-    {
-        AddTestCommand = new RelayCommand(AddTest);
-        PrintCommand = new RelayCommand(PrintInvoice);
-        ResetCommand = new RelayCommand(ResetForm, CanReset);
-        SaveCommand = new RelayCommand(SaveReceipt, CanSave);
         Tests = new ObservableCollection<LabTestDto>();
 
         // Initialize information models
         PatientInfo = new PatientInformation();
         TestInfo = new TestInformation();
 
-        //LoadDoctors();
+        LoadDoctors();
     }
 
-    private void PrintInvoice(object? obj)
+    private void LoadDoctors()
+    {
+        var doctors = DbAccess.GetAllDoctorsAsync().GetAwaiter().GetResult();
+
+        foreach (var doctor in doctors)
+        {
+            Doctors.Add(new DoctorItem
+            {
+                Id = doctor.Id.ToString(),
+                Name = $"{doctor.Name} ({doctor.Degree})"
+            });
+        }
+    }
+
+    [RelayCommand]
+    private void Print()
     {
         MessageBox.Show("Print");
     }
 
-    private void AddTest(object? parameter)
+    [RelayCommand]
+    private void AddTest()
     {
         // Validate test fields before adding
         if (!TestInfo.ValidateAll())
@@ -85,17 +87,8 @@ public partial class ReceiptFormViewModel : ObservableObject
         TestInfo.ClearAll();
     }
 
-    private bool CanReset(object? parameter)
-    {
-        return Tests.Any() || PatientInfo.HasValue();
-    }
-
-    private bool CanSave(object? parameter)
-    {
-        return Tests.Any() && PatientInfo.ValidateAll();
-    }
-
-    private void ResetForm(object? parameter)
+    [RelayCommand(CanExecute = nameof(CanReset))]
+    private void Reset()
     {
         MessageBoxResult messageBoxResult = MessageBox.Show(
             "Are you sure you want to reset this receipt?",
@@ -108,12 +101,12 @@ public partial class ReceiptFormViewModel : ObservableObject
             PatientInfo.ClearAll();
             TestInfo.ClearAll();
             Tests.Clear();
-            InvoiceNumber = string.Empty;
             OnPropertyChanged(nameof(Tests));
         }
     }
 
-    private void SaveReceipt(object? parameter)
+    [RelayCommand(AllowConcurrentExecutions = false)]
+    private async Task SaveAsync()
     {
         // Validate all patient information
         if (!PatientInfo.ValidateAll())
@@ -121,19 +114,13 @@ public partial class ReceiptFormViewModel : ObservableObject
             return;
         }
 
-        // Validate that at least one test is added
-        if (!Tests.Any())
+        
+        if (!TestInfo.ValidateAll())
         {
-            // TODO: Show message to user
             return;
         }
 
-        // TODO: Implement save logic
-        // Here you would:
-        // 1. Create the receipt entity
-        // 2. Save to local database
-        // 3. Sync with cloud (if needed)
-        // 4. Show success message
+        await DbAccess.SaveReceiptAsync(PatientInfo, TestInfo);
     }
 
     /// <summary>
@@ -143,5 +130,15 @@ public partial class ReceiptFormViewModel : ObservableObject
     {
         PatientInfo.ForceValidateAll();
         TestInfo.ForceValidateAll();
+    }
+
+    private bool CanReset()
+    {
+        return Tests.Any() || PatientInfo.HasValue();
+    }
+    
+    private bool CanSave()
+    {
+        return Tests.Any() && PatientInfo.ValidateAll();
     }
 }

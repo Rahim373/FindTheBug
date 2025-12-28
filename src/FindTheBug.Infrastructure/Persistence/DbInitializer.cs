@@ -41,6 +41,9 @@ public class DbInitializer
             // Seed Doctor Specialities
             await SeedDoctorSpecialitiesAsync(context);
 
+            // Seed Diagnostic Tests
+            await SeedDiagnosticTestsAsync(context);
+
             // Seed SuperUser
             await SeedSuperUserAsync(context, scope.ServiceProvider);
         }
@@ -210,6 +213,156 @@ public class DbInitializer
 
         await context.SaveChangesAsync();
         _logger.LogInformation("Doctor specialities seeded successfully");
+    }
+
+    private async Task SeedDiagnosticTestsAsync(ApplicationDbContext context)
+    {
+        // Seed Diagnostic Tests from CSV data
+        var diagnosticTestsData = new[]
+        {
+            // Hematology
+            new { TestName = "CBC (Cell Counter)", Category = "Hematology", Price = 400m },
+            new { TestName = "HB%", Category = "Hematology", Price = 200m },
+            new { TestName = "BT/CT", Category = "Hematology", Price = 600m },
+            new { TestName = "ESR", Category = "Hematology", Price = 200m },
+            new { TestName = "Blood Grouping", Category = "Hematology", Price = 100m },
+            new { TestName = "Platelet Test", Category = "Hematology", Price = 250m },
+            new { TestName = "Cross Matching & Screening", Category = "Hematology", Price = 1200m },
+            new { TestName = "Total Circuiting Eosinophil Count", Category = "Hematology", Price = 300m },
+            
+            // Biochemistry
+            new { TestName = "RBS With CUS", Category = "Biochemistry", Price = 150m },
+            new { TestName = "FBS & 2HABF With CUS", Category = "Biochemistry", Price = 300m },
+            new { TestName = "Serum Creatinine", Category = "Biochemistry", Price = 500m },
+            new { TestName = "Serum Bilirubin (Total)", Category = "Biochemistry", Price = 400m },
+            new { TestName = "Serum Bilirubin (Total+ Direct + Indirect)", Category = "Biochemistry", Price = 900m },
+            new { TestName = "Serum Albumin", Category = "Biochemistry", Price = 800m },
+            new { TestName = "Serum Urea", Category = "Biochemistry", Price = 500m },
+            new { TestName = "S.AST (SGPT)", Category = "Biochemistry", Price = 400m },
+            new { TestName = "S.AST (SGOT)", Category = "Biochemistry", Price = 400m },
+            new { TestName = "S. ALP (Alkaline phosphatase)", Category = "Biochemistry", Price = 800m },
+            new { TestName = "Serum Calcium", Category = "Biochemistry", Price = 800m },
+            new { TestName = "Serum Uric Acid", Category = "Biochemistry", Price = 500m },
+            new { TestName = "Serum Magnesium", Category = "Biochemistry", Price = 800m },
+            new { TestName = "Serum Total Protein", Category = "Biochemistry", Price = 800m },
+            new { TestName = "S. Total Cholesterol", Category = "Biochemistry", Price = 300m },
+            new { TestName = "S. Triglyceride (TG)", Category = "Biochemistry", Price = 300m },
+            new { TestName = "S. HDL", Category = "Biochemistry", Price = 300m },
+            new { TestName = "S. LDL", Category = "Biochemistry", Price = 300m },
+            new { TestName = "Lipid Profile", Category = "Biochemistry", Price = 800m },
+            new { TestName = "Liver Function Test (LFTS)", Category = "Biochemistry", Price = 1400m },
+            new { TestName = "OGTT", Category = "Biochemistry", Price = 400m },
+            new { TestName = "Urine HCT", Category = "Biochemistry", Price = 300m },
+            new { TestName = "Serum Iron", Category = "Biochemistry", Price = 800m },
+            new { TestName = "Serum Ferritin", Category = "Biochemistry", Price = 1000m },
+            new { TestName = "Serum Electrolyte (Serum/Urine)", Category = "Biochemistry", Price = 1000m },
+            
+            // Serological
+            new { TestName = "ASO", Category = "Serological", Price = 400m },
+            new { TestName = "RA", Category = "Serological", Price = 500m },
+            new { TestName = "CRP", Category = "Serological", Price = 500m },
+            new { TestName = "Dengue IgG/IgM", Category = "Serological", Price = 500m },
+            new { TestName = "Dengue NS1", Category = "Serological", Price = 300m },
+            new { TestName = "WIDAL", Category = "Serological", Price = 400m },
+            new { TestName = "Triple Antigen", Category = "Serological", Price = 800m },
+            new { TestName = "MT (Montox Test)", Category = "Serological", Price = 300m },
+            new { TestName = "Tuberculosis (TB)", Category = "Serological", Price = 500m },
+            new { TestName = "HBSAG (ICT)", Category = "Serological", Price = 400m },
+            new { TestName = "Anti HCV (ICT)", Category = "Serological", Price = 800m },
+            new { TestName = "MP", Category = "Serological", Price = 400m },
+            new { TestName = "VDRL", Category = "Serological", Price = 400m },
+            new { TestName = "Anti HIV (1 & 2)", Category = "Serological", Price = 600m },
+            new { TestName = "Chikungunya (ICT)", Category = "Serological", Price = 1000m },
+            new { TestName = "PT (Prothrombin Time)", Category = "Serological", Price = 1000m },
+            new { TestName = "TPHA", Category = "Serological", Price = 400m },
+            new { TestName = "H. Pylori", Category = "Serological", Price = 600m },
+            new { TestName = "HBsAg (Level)", Category = "Serological", Price = 1200m },
+            new { TestName = "HBeAg", Category = "Serological", Price = 1000m },
+            
+            // Immunological
+            new { TestName = "S. TSH", Category = "Immunological", Price = 1000m },
+            new { TestName = "S. FT4", Category = "Immunological", Price = 1000m },
+            new { TestName = "S. FT3", Category = "Immunological", Price = 1000m },
+            new { TestName = "S. T4", Category = "Immunological", Price = 1000m },
+            new { TestName = "S. T3", Category = "Immunological", Price = 1000m },
+            new { TestName = "S. Prolactin", Category = "Immunological", Price = 1200m },
+            new { TestName = "S. Ferritin", Category = "Immunological", Price = 1200m },
+            new { TestName = "S. FSH", Category = "Immunological", Price = 1200m },
+            new { TestName = "S. LH", Category = "Immunological", Price = 1200m },
+            new { TestName = "S. Beta hCG/ b-hCG", Category = "Immunological", Price = 1200m },
+            new { TestName = "S. 25 OH Vitamin-D", Category = "Immunological", Price = 3000m },
+            new { TestName = "Anti CCP", Category = "Immunological", Price = 3500m },
+            new { TestName = "S. IgE (Level)", Category = "Immunological", Price = 1200m },
+            new { TestName = "S. Troponin I (Level)", Category = "Immunological", Price = 1200m },
+            new { TestName = "S. Testosterone", Category = "Immunological", Price = 1400m },
+            new { TestName = "S. HbA1C", Category = "Immunological", Price = 1000m },
+            new { TestName = "Troponin I (ICT)", Category = "Immunological", Price = 800m },
+            new { TestName = "CRP (Level)", Category = "Immunological", Price = 800m },
+            new { TestName = "AMH", Category = "Immunological", Price = 4500m },
+            new { TestName = "Semen Analysis", Category = "Immunological", Price = 1000m },
+            
+            // Urine & Stool
+            new { TestName = "Urine PT (HCG)", Category = "Urine & Stool", Price = 100m },
+            new { TestName = "Urine R/M/E", Category = "Urine & Stool", Price = 200m },
+            new { TestName = "Urine R/M/E (Analyzer)", Category = "Urine & Stool", Price = 400m },
+            new { TestName = "Urine Albumin/Protein", Category = "Urine & Stool", Price = 100m },
+            new { TestName = "CUS", Category = "Urine & Stool", Price = 100m },
+            new { TestName = "Urine PH", Category = "Urine & Stool", Price = 100m },
+            new { TestName = "Urine C/S", Category = "Urine & Stool", Price = 1200m },
+            new { TestName = "Stool RME", Category = "Urine & Stool", Price = 600m },
+            
+            // Ultrasonography
+            new { TestName = "USG of Pregnancy Profile (P/P)", Category = "Ultrasonography", Price = 800m },
+            new { TestName = "USG of Whole Abdomen (W/A)", Category = "Ultrasonography", Price = 800m },
+            new { TestName = "USG of Lower Abdomen (L/A)", Category = "Ultrasonography", Price = 800m },
+            new { TestName = "USG of Both Brest", Category = "Ultrasonography", Price = 1200m },
+            new { TestName = "USG of TVS", Category = "Ultrasonography", Price = 2000m },
+            new { TestName = "USG of KUB", Category = "Ultrasonography", Price = 800m },
+            new { TestName = "USG of HBS", Category = "Ultrasonography", Price = 800m },
+            new { TestName = "USG of Scrotum & Testis", Category = "Ultrasonography", Price = 1000m },
+            new { TestName = "USG of Thyroid", Category = "Ultrasonography", Price = 1600m },
+            
+            // Electrocardiography
+            new { TestName = "ECG (6 Channel)", Category = "Electrocardiography", Price = 300m },
+            new { TestName = "ECG (12 Channel)", Category = "Electrocardiography", Price = 400m },
+            new { TestName = "Echo", Category = "Electrocardiography", Price = 2500m },
+            
+            // Radiology & Imaging
+            new { TestName = "X-ray Chest (P/A, A/P) View", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray Lumber Spine (B/V)", Category = "Radiology & Imaging", Price = 600m },
+            new { TestName = "X-ray of KUB", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray of (Hand, Leg, Foot) B/V", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray of PNS OM View", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray of (C/S, D/L)", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray of Abdomen", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray of HIP Joint B/V", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray of Shoulder Joint B/V", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray of Knee Joint B/V", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray of ELBOW Joint B/V", Category = "Radiology & Imaging", Price = 500m },
+            new { TestName = "X-ray Online Report", Category = "Radiology & Imaging", Price = 100m }
+        };
+
+        foreach (var testData in diagnosticTestsData)
+        {
+            if (!await context.DiagnosticTests.AnyAsync(dt => dt.TestName == testData.TestName && dt.Category == testData.Category))
+            {
+                var diagnosticTest = new DiagnosticTest
+                {
+                    TestName = testData.TestName,
+                    Category = testData.Category,
+                    Price = testData.Price,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = "System",
+                    UpdatedBy = "System",
+                    UpdatedAt = DateTime.UtcNow,
+                };
+                await context.DiagnosticTests.AddAsync(diagnosticTest);
+            }
+        }
+
+        await context.SaveChangesAsync();
+        _logger.LogInformation("Diagnostic tests seeded successfully");
     }
 
     private async Task SeedSuperUserAsync(ApplicationDbContext context, IServiceProvider serviceProvider)

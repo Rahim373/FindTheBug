@@ -1,4 +1,5 @@
 using FindTheBug.Desktop.Reception.Data;
+using FindTheBug.Desktop.Reception.Models;
 using FindTheBug.Desktop.Reception.Utils;
 using FindTheBug.Domain.Contracts;
 using FindTheBug.Domain.Entities;
@@ -280,6 +281,11 @@ public static class DbAccess
         }
 
         return null;
+    }
+
+    internal static async Task SaveReceiptAsync(PatientInformation patientInfo, TestInformation testInfo)
+    {
+        // throw new NotImplementedException();
     }
 
     #endregion

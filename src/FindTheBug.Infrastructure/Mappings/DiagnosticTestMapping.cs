@@ -15,12 +15,6 @@ public class DiagnosticTestMapping : IMapping<DiagnosticTest>
         {
             entity.HasKey(e => e.Id);
 
-            entity.HasIndex(e => e.TestCode).IsUnique();
-
-            entity.Property(e => e.TestCode)
-                .IsRequired()
-                .HasColumnType("text");
-
             entity.Property(e => e.TestName)
                 .IsRequired()
                 .HasColumnType("text");
@@ -37,7 +31,7 @@ public class DiagnosticTestMapping : IMapping<DiagnosticTest>
                 .HasColumnType("numeric(18,2)");
 
             entity.Property(e => e.Duration)
-                .HasColumnType("integer");
+                .HasColumnType("text");
 
             entity.Property(e => e.RequiresFasting)
                 .HasColumnType("boolean")

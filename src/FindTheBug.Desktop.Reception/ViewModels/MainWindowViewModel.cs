@@ -40,7 +40,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         WeakReferenceMessenger.Default.Register<UserLoggedInMessage>(this, (r, m) =>
         {
-            HomeCommand(null);
+            Home(null);
             SetUserName(m.user);
             IsLoggedIn = true;
         });
@@ -52,8 +52,8 @@ public partial class MainWindowViewModel : ObservableObject
         _selectedMenuItem = string.Empty;
     }
 
-    [RelayCommand(CanExecute = nameof(CanExecuteMenuCommands))]
-    private void HomeCommand(object? parameter)
+    [RelayCommand]
+    private void Home(object? parameter)
     {
         if (SelectedMenuItem == MENU_HOME)
             return;
@@ -62,8 +62,8 @@ public partial class MainWindowViewModel : ObservableObject
         CurrentView = new Views.ReceiptView { DataContext = receiptViewModel };
     }
 
-    [RelayCommand(CanExecute = nameof(CanExecuteMenuCommands))]
-    private void ReceiptsCommand(object? parameter)
+    [RelayCommand]
+    private void Receipts(object? parameter)
     {
         if (SelectedMenuItem == MENU_RECEIPTS)
             return;
@@ -73,8 +73,8 @@ public partial class MainWindowViewModel : ObservableObject
         CurrentView = new Views.ReceiptsView { DataContext = receiptsViewModel };
     }
 
-    [RelayCommand(CanExecute = nameof(CanExecuteMenuCommands))]
-    private void DoctorsCommand(object? parameter)
+    [RelayCommand]
+    private void Doctors(object? parameter)
     {
         if (SelectedMenuItem == MENU_DOCTORS)
             return;
@@ -84,8 +84,8 @@ public partial class MainWindowViewModel : ObservableObject
         CurrentView = new Views.DoctorsView { DataContext = doctorsViewModel };
     }
 
-    [RelayCommand(CanExecute = nameof(CanExecuteMenuCommands))]
-    private void LogoutCommand(object? parameter)
+    [RelayCommand]
+    private void Logout(object? parameter)
     {
         IsLoggedIn = false;
         SelectedMenuItem = string.Empty;
@@ -99,6 +99,4 @@ public partial class MainWindowViewModel : ObservableObject
         if (user is not null)
             UserName = $"{user.FirstName} {user.LastName} ({user.Phone})".Trim();
     }
-
-    private bool CanExecuteMenuCommands() => IsLoggedIn;
 }

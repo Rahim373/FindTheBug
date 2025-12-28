@@ -95,7 +95,6 @@
                                 <StackPanel Grid.Column="3">
                                     <Label>Gender *</Label>
                                     <ComboBox SelectedItem="{Binding PatientInfo.Gender.Value}">
-                                        <ComboBoxItem Content="Select Gender"></ComboBoxItem>
                                         <ComboBoxItem Content="Male"></ComboBoxItem>
                                         <ComboBoxItem Content="Female"></ComboBoxItem>
                                     </ComboBox>
@@ -114,10 +113,8 @@
 
                                 <StackPanel Grid.Column="0" Grid.Row="1">
                                     <Label>Refered By *</Label>
-                                    <ComboBox SelectedItem="{Binding PatientInfo.ReferredBy.Value}">
-                                        <!-- TODO: Bind to doctor list -->
-                                        <ComboBoxItem Content="Dr. Smith"></ComboBoxItem>
-                                        <ComboBoxItem Content="Dr. Johnson"></ComboBoxItem>
+                                    <ComboBox ItemsSource="{Binding Doctors}" DisplayMemberPath="Name" 
+                                              SelectedItem="{Binding PatientInfo.ReferredBy.Value}">
                                     </ComboBox>
                                     <TextBlock Text="{Binding PatientInfo.ReferredBy.Error}" 
                                                Style="{DynamicResource ErrorMessage}"
@@ -275,6 +272,7 @@
                                     Grid.Column="4"/>
 
                             <Button Content="Print"
+                                    Command="{Binding PrintCommand}"
                                     IsEnabled="{Binding IsSaved}"
                                     Grid.Column="5" 
                                     Margin="0 0 5 0"/>

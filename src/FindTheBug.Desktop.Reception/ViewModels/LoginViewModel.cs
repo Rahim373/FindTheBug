@@ -21,7 +21,7 @@ namespace FindTheBug.Desktop.Reception.ViewModels
 
 
         [RelayCommand(AllowConcurrentExecutions = false)]
-        private async Task LoginAsync(object? parameter)
+        private async Task LoginAsync()
         {
             if (!CanExecuteLogin())
             {

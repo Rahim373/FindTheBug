@@ -73,8 +73,8 @@ namespace FindTheBug.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<int?>("Duration")
-                        .HasColumnType("integer");
+                    b.Property<string>("Duration")
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -90,10 +90,6 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("TestCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("TestName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -105,9 +101,6 @@ namespace FindTheBug.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TestCode")
-                        .IsUnique();
 
                     b.ToTable("DiagnosticTests", (string)null);
                 });

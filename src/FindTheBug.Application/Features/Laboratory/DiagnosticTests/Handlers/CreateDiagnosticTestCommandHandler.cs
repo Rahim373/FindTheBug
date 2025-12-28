@@ -16,7 +16,6 @@ public class CreateDiagnosticTestCommandHandler(IUnitOfWork unitOfWork)
         var test = new DiagnosticTest
         {
             TestName = request.TestName,
-            TestCode = request.TestCode,
             Price = request.Price,
             Description = request.Description
         };
@@ -28,7 +27,6 @@ public class CreateDiagnosticTestCommandHandler(IUnitOfWork unitOfWork)
         {
             Id = created.Id,
             TestName = created.TestName,
-            TestCode = created.TestCode,
             Price = created.Price,
             Description = created.Description,
             CreatedAt = created.CreatedAt

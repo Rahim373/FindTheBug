@@ -14,6 +14,7 @@ public class PatientInformation
     public ValidatableObject<string> Address { get; private set; }
     public ValidatableObject<string> ReferredBy { get; private set; }
     public ValidatableObject<DateTime> ReceiptDate { get; private set; }
+    public string? InvoiceNumber { get; internal set; }
 
     public PatientInformation()
     {
@@ -90,6 +91,8 @@ public class PatientInformation
 
     public void ClearAll()
     {
+        InvoiceNumber = string.Empty;
+
         PatientName.Value = string.Empty;
         PatientName.ClearErrors();
 
@@ -121,7 +124,7 @@ public class PatientInformation
         ReferredBy.ForceValidation();
     }
 
-    internal bool HasValue() => PatientName.IsDirty || PhoneNumber.IsDirty
+    internal bool HasValue() => !string.IsNullOrEmpty(InvoiceNumber) || PatientName.IsDirty || PhoneNumber.IsDirty
             || Age.IsDirty || Gender.IsDirty
             || Address.IsDirty || ReferredBy.IsDirty;
 }
