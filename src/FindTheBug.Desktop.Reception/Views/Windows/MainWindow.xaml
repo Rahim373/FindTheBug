@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FindTheBug.Desktop.Reception"
         mc:Ignorable="d"
-        Title="FindTheBug Reception" Height="600" Width="900"
-        WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow">
+        Title="FindTheBug Reception"
+        WindowState="Normal"
+        WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow">
 
     <Window.Resources>
         <Style TargetType="Menu">
@@ -89,6 +90,7 @@
             <MenuItem Header="Home" Command="{Binding HomeCommand}"/>
             <MenuItem Header="Receipts" Command="{Binding ReceiptsCommand}"/>
             <MenuItem Header="Doctors" Command="{Binding DoctorsCommand}"/>
+            <MenuItem Header="Reports" Command="{Binding ReportsCommand}"/>
             <MenuItem Header="Logout" Command="{Binding LogoutCommand}"/>
         </Menu>
 

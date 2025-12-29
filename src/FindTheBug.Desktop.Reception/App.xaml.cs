@@ -1,4 +1,5 @@
 using System.Windows;
+using FindTheBug.Common.Services;
 using FindTheBug.Desktop.Reception.Data;
 using FindTheBug.Desktop.Reception.Services.CloudSync;
 using FindTheBug.Desktop.Reception.ViewModels;
@@ -12,7 +13,7 @@ namespace FindTheBug.Desktop.Reception
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         public static IServiceProvider? ServiceProvider { get; private set; }
         private IHost? _host;
@@ -59,6 +60,7 @@ namespace FindTheBug.Desktop.Reception
             // Register cloud sync services
             services.AddScoped<CloudSyncService>();
             services.AddSingleton<SyncState>();
+            services.AddSingleton<ReportService>();
             services.AddHostedService<SyncTimerService>();
 
             // Register DbContext with SQLite connection string from appsettings.json

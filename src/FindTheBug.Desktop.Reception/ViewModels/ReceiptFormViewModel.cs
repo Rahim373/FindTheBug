@@ -1,17 +1,25 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using FindTheBug.Common.Services;
 using FindTheBug.Desktop.Reception.Commands;
 using FindTheBug.Desktop.Reception.DataAccess;
 using FindTheBug.Desktop.Reception.Dtos;
+using FindTheBug.Desktop.Reception.Messages;
 using FindTheBug.Desktop.Reception.Models;
+using FindTheBug.Desktop.Reception.Utils;
+using FindTheBug.Desktop.Reception.Windows;
+using FindTheBug.Domain.Entities;
 using System.Collections.ObjectModel;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
 
 namespace FindTheBug.Desktop.Reception.ViewModels;
 
 public partial class ReceiptFormViewModel : ObservableObject
 {
     const string CREATE_NEW_RECEIPT = "Create New Receipt";
+    private readonly ReportService _reportService;
 
     #region Fields
 
@@ -45,7 +53,6 @@ public partial class ReceiptFormViewModel : ObservableObject
     private decimal _due;
     [ObservableProperty]
     private decimal _balance;
-
 
     #endregion
 
@@ -102,7 +109,10 @@ public partial class ReceiptFormViewModel : ObservableObject
     [RelayCommand]
     private void Print()
     {
-        MessageBox.Show("Print");
+        var reportService = new ReportService();
+        var data = reportService.GetInvoiceData(null, null);
+        var reportPath = reportService.GetReportPath(ReportType.LabTestInvoice);
+        ReportHelper.OpenReport(reportPath, data.DataSources, data.ReportParameters, "Lab Invoice");
     }
 
     [RelayCommand]
@@ -184,6 +194,7 @@ public partial class ReceiptFormViewModel : ObservableObject
         PatientInfo.InvoiceNumber = "MARC2502-0000012";
         await DbAccess.SaveReceiptAsync(PatientInfo, TestInfo);
         PageTitle = $"Receipt : {PatientInfo.InvoiceNumber}";
+        OnPropertyChanged(nameof(IsSaved));
     }
 
     [RelayCommand]

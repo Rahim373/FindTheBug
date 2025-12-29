@@ -5,8 +5,6 @@ using FindTheBug.Desktop.Reception.Commands;
 using FindTheBug.Desktop.Reception.Messages;
 using FindTheBug.Desktop.Reception.Services.CloudSync;
 using FindTheBug.Domain.Entities;
-using System.Windows.Input;
-using System.Windows.Media;
 
 namespace FindTheBug.Desktop.Reception.ViewModels;
 
@@ -89,7 +87,7 @@ public partial class MainWindowViewModel : ObservableObject
     {
         IsLoggedIn = false;
         SelectedMenuItem = string.Empty;
-        
+
         var loginViewModel = new LoginViewModel();
         CurrentView = new Views.LoginView { DataContext = loginViewModel };
     }
