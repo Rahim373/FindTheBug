@@ -1,15 +1,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using FindTheBug.Common.Services;
 using FindTheBug.Desktop.Reception.Commands;
 using FindTheBug.Desktop.Reception.DataAccess;
 using FindTheBug.Desktop.Reception.Dtos;
-using FindTheBug.Desktop.Reception.Messages;
 using FindTheBug.Desktop.Reception.Models;
 using FindTheBug.Desktop.Reception.Utils;
-using FindTheBug.Desktop.Reception.Windows;
-using FindTheBug.Domain.Entities;
 using System.Collections.ObjectModel;
 using System.Windows;
 using MessageBox = System.Windows.MessageBox;
@@ -19,7 +15,6 @@ namespace FindTheBug.Desktop.Reception.ViewModels;
 public partial class ReceiptFormViewModel : ObservableObject
 {
     const string CREATE_NEW_RECEIPT = "Create New Receipt";
-    private readonly ReportService _reportService;
 
     #region Fields
 
@@ -37,22 +32,11 @@ public partial class ReceiptFormViewModel : ObservableObject
 
     public Task InitializationTask { get; private set; }
 
-    public bool IsSaved => !string.IsNullOrEmpty(PatientInfo.InvoiceNumber);
+    public bool IsSaved => !string.IsNullOrEmpty(ReceiptInfo.InvoiceNumber);
 
-    public PatientInformation PatientInfo { get; private set; }
+    public ReceiptInformation ReceiptInfo { get; private set; }
 
     public TestInformation TestInfo { get; private set; }
-
-    [ObservableProperty]
-    private decimal _subTotal;
-    [ObservableProperty]
-    private decimal _discount;
-    [ObservableProperty]
-    private decimal _total;
-    [ObservableProperty]
-    private decimal _due;
-    [ObservableProperty]
-    private decimal _balance;
 
     #endregion
 
@@ -69,7 +53,7 @@ public partial class ReceiptFormViewModel : ObservableObject
         SelectedTests.CollectionChanged += SelectedTests_CollectionChanged;
 
         // Initialize information models
-        PatientInfo = new PatientInformation();
+        ReceiptInfo = new ReceiptInformation();
         TestInfo = new TestInformation();
 
         InitializationTask = Task.WhenAll([
@@ -89,9 +73,9 @@ public partial class ReceiptFormViewModel : ObservableObject
             discount += test.Discount;
         }
 
-        SubTotal = Math.Round(subTotal, 0);
-        Discount = Math.Round(discount, 0);
-        Total = SubTotal - Discount;
+        ReceiptInfo.SubTotal.Value = Math.Round(subTotal, 0);
+        ReceiptInfo.Discount.Value = Math.Round(discount, 0);
+        ReceiptInfo.Total.Value = ReceiptInfo.SubTotal.Value - ReceiptInfo.Discount.Value;
     }
 
     private async Task LoadDoctorsAsync()
@@ -141,7 +125,7 @@ public partial class ReceiptFormViewModel : ObservableObject
     [RelayCommand]
     private void DueChanged()
     {
-        Balance = SubTotal - Due;
+        ReceiptInfo.Balance.Value = ReceiptInfo.Total.Value - ReceiptInfo.Due.Value;
     }
 
     [RelayCommand]
@@ -169,7 +153,7 @@ public partial class ReceiptFormViewModel : ObservableObject
 
         if (messageBoxResult == MessageBoxResult.Yes)
         {
-            PatientInfo.ClearAll();
+            ReceiptInfo.ClearAll();
             TestInfo.ClearAll();
             SelectedTests.Clear();
             OnPropertyChanged(nameof(Tests));
@@ -181,20 +165,54 @@ public partial class ReceiptFormViewModel : ObservableObject
     private async Task SaveAsync()
     {
         // Validate all patient information
-        if (!PatientInfo.ValidateAll())
+        if (!ReceiptInfo.ValidateAll())
         {
             return;
         }
-
 
         if (!SelectedTests.Any())
         {
+            MessageBox.Show("Please add at least one test to the receipt.", "No Tests Added", 
+                MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        PatientInfo.InvoiceNumber = "MARC2502-0000012";
-        await DbAccess.SaveReceiptAsync(PatientInfo, TestInfo);
-        PageTitle = $"Receipt : {PatientInfo.InvoiceNumber}";
-        OnPropertyChanged(nameof(IsSaved));
+
+        MessageBoxResult messageBoxResult = MessageBox.Show(
+            "Are you sure you want to save receipt? Once confirmed, nothing can modify.",
+            "Confirm Save",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (messageBoxResult == MessageBoxResult.Yes)
+        {
+            try
+            {
+                // Save the receipt to database
+                var receiptId = await DbAccess.SaveReceiptAsync(ReceiptInfo, SelectedTests.ToList());
+                
+                // Set the invoice number
+                var dbContext = App.ServiceProvider?.GetService(typeof(Data.ReceptionDbContext)) as Data.ReceptionDbContext;
+                if (dbContext != null)
+                {
+                    var savedReceipt = await dbContext.LabReceipts.FindAsync(receiptId);
+                    if (savedReceipt != null)
+                    {
+                        ReceiptInfo.InvoiceNumber = savedReceipt.InvoiceNumber;
+                    }
+                }
+
+                // Update page title with invoice number
+                PageTitle = $"Receipt {ReceiptInfo.InvoiceNumber}";
+
+                MessageBox.Show($"Receipt saved successfully!\nInvoice Number: {ReceiptInfo.InvoiceNumber}", 
+                    "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving receipt: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 
     [RelayCommand]
@@ -209,17 +227,17 @@ public partial class ReceiptFormViewModel : ObservableObject
     /// </summary>
     public void ForceValidateAll()
     {
-        PatientInfo.ForceValidateAll();
+        ReceiptInfo.ForceValidateAll();
         TestInfo.ForceValidateAll();
     }
 
     private bool CanReset()
     {
-        return SelectedTests.Any() || PatientInfo.HasValue();
+        return SelectedTests.Any() || ReceiptInfo.HasValue();
     }
 
     private bool CanSave()
     {
-        return SelectedTests.Any() && PatientInfo.ValidateAll();
+        return SelectedTests.Any() && ReceiptInfo.ValidateAll();
     }
 }

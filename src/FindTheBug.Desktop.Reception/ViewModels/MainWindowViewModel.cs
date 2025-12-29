@@ -85,6 +85,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void Logout(object? parameter)
     {
+        App.CurrentUser = null;
         IsLoggedIn = false;
         SelectedMenuItem = string.Empty;
 

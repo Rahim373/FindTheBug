@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FindTheBug.Desktop.Reception.Migrations
 {
     /// <inheritdoc />
-    public partial class AddInitialMigration : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -165,7 +165,7 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Patients",
+                name: "LabReceipt",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -193,9 +193,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Patients", x => x.Id);
+                    table.PrimaryKey("PK_LabReceipt", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Patients_Doctors_ReferredById",
+                        name: "FK_LabReceipt_Doctors_ReferredById",
                         column: x => x.ReferredById,
                         principalTable: "Doctors",
                         principalColumn: "Id");
@@ -337,15 +337,32 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 {
                     table.PrimaryKey("PK_Invoices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Invoices_Patients_PatientId",
+                        name: "FK_Invoices_LabReceipt_PatientId",
                         column: x => x.PatientId,
-                        principalTable: "Patients",
+                        principalTable: "LabReceipt",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReceiptTest",
+                name: "LabReceipts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LabReceipts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LabReceipts_LabReceipt_Id",
+                        column: x => x.Id,
+                        principalTable: "LabReceipt",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReceiptTests",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -362,17 +379,17 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReceiptTest", x => x.Id);
+                    table.PrimaryKey("PK_ReceiptTests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ReceiptTest_DiagnosticTests_DiagnosticTestId",
+                        name: "FK_ReceiptTests_DiagnosticTests_DiagnosticTestId",
                         column: x => x.DiagnosticTestId,
                         principalTable: "DiagnosticTests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ReceiptTest_Patients_LabReceiptId",
+                        name: "FK_ReceiptTests_LabReceipt_LabReceiptId",
                         column: x => x.LabReceiptId,
-                        principalTable: "Patients",
+                        principalTable: "LabReceipt",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -405,9 +422,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_InvoiceItems_ReceiptTest_TestEntryId",
+                        name: "FK_InvoiceItems_ReceiptTests_TestEntryId",
                         column: x => x.TestEntryId,
-                        principalTable: "ReceiptTest",
+                        principalTable: "ReceiptTests",
                         principalColumn: "Id");
                 });
 
@@ -433,9 +450,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 {
                     table.PrimaryKey("PK_TestResult", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TestResult_ReceiptTest_TestEntryId",
+                        name: "FK_TestResult_ReceiptTests_TestEntryId",
                         column: x => x.TestEntryId,
-                        principalTable: "ReceiptTest",
+                        principalTable: "ReceiptTests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -472,18 +489,18 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Patients_ReferredById",
-                table: "Patients",
+                name: "IX_LabReceipt_ReferredById",
+                table: "LabReceipt",
                 column: "ReferredById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReceiptTest_DiagnosticTestId",
-                table: "ReceiptTest",
+                name: "IX_ReceiptTests_DiagnosticTestId",
+                table: "ReceiptTests",
                 column: "DiagnosticTestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReceiptTest_LabReceiptId",
-                table: "ReceiptTest",
+                name: "IX_ReceiptTests_LabReceiptId",
+                table: "ReceiptTests",
                 column: "LabReceiptId");
 
             migrationBuilder.CreateIndex(
@@ -537,6 +554,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 name: "InvoiceItems");
 
             migrationBuilder.DropTable(
+                name: "LabReceipts");
+
+            migrationBuilder.DropTable(
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
@@ -558,7 +578,7 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 name: "Modules");
 
             migrationBuilder.DropTable(
-                name: "ReceiptTest");
+                name: "ReceiptTests");
 
             migrationBuilder.DropTable(
                 name: "TestParameter");
@@ -570,7 +590,7 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Patients");
+                name: "LabReceipt");
 
             migrationBuilder.DropTable(
                 name: "DiagnosticTests");

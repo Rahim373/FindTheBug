@@ -4,8 +4,6 @@ using FindTheBug.Application.Features.Laboratory.DiagnosticTests.DTOs;
 using FindTheBug.Application.Features.Laboratory.DiagnosticTests.Queries;
 using FindTheBug.Application.Features.UserManagement.Modules.DTOs;
 using FindTheBug.Application.Features.UserManagement.Users.Queries;
-using FindTheBug.Domain.Common;
-using FindTheBug.Domain.Contracts;
 using FindTheBug.Domain.Entities;
 using FindTheBug.WebAPI.Attributes;
 using MediatR;

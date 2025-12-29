@@ -352,7 +352,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.HasIndex("ReferredById");
 
-                    b.ToTable("Patients");
+                    b.ToTable("LabReceipt");
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.Module", b =>
@@ -433,7 +435,7 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.HasIndex("LabReceiptId");
 
-                    b.ToTable("ReceiptTest");
+                    b.ToTable("ReceiptTests");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.RefreshToken", b =>
@@ -743,6 +745,13 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.ToTable("UserRoles");
                 });
 
+            modelBuilder.Entity("FindTheBug.Desktop.Reception.CusomEntity.DesktopLabReceipt", b =>
+                {
+                    b.HasBaseType("FindTheBug.Domain.Entities.LabReceipt");
+
+                    b.ToTable("LabReceipts");
+                });
+
             modelBuilder.Entity("FindTheBug.Domain.Entities.DoctorSpecialityMap", b =>
                 {
                     b.HasOne("FindTheBug.Domain.Entities.Doctor", "Doctor")
@@ -895,6 +904,15 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FindTheBug.Desktop.Reception.CusomEntity.DesktopLabReceipt", b =>
+                {
+                    b.HasOne("FindTheBug.Domain.Entities.LabReceipt", null)
+                        .WithOne()
+                        .HasForeignKey("FindTheBug.Desktop.Reception.CusomEntity.DesktopLabReceipt", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.DiagnosticTest", b =>

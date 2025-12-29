@@ -3,6 +3,7 @@ using FindTheBug.Common.Services;
 using FindTheBug.Desktop.Reception.Data;
 using FindTheBug.Desktop.Reception.Services.CloudSync;
 using FindTheBug.Desktop.Reception.ViewModels;
+using FindTheBug.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ namespace FindTheBug.Desktop.Reception
     public partial class App : System.Windows.Application
     {
         public static IServiceProvider? ServiceProvider { get; private set; }
+        public static User? CurrentUser { get; set; }
         private IHost? _host;
 
         protected override void OnStartup(StartupEventArgs e)

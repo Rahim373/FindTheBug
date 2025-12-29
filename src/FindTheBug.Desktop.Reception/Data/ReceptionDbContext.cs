@@ -1,3 +1,4 @@
+using FindTheBug.Desktop.Reception.CusomEntity;
 using FindTheBug.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ public class ReceptionDbContext : DbContext
     }
 
     // Patient Management
-    public DbSet<LabReceipt> Patients => Set<LabReceipt>();
+    public DbSet<DesktopLabReceipt> LabReceipts => Set<DesktopLabReceipt>();
 
     // Doctors Management
     public DbSet<Doctor> Doctors => Set<Doctor>();
@@ -23,7 +24,7 @@ public class ReceptionDbContext : DbContext
 
     // Laboratory Management
     public DbSet<DiagnosticTest> DiagnosticTests => Set<DiagnosticTest>();
-
+    public DbSet<ReceiptTest> ReceiptTests => Set<ReceiptTest>();
 
     // RBAC (Role-Based Access Control) - Synced from Cloud
     public DbSet<User> Users => Set<User>();

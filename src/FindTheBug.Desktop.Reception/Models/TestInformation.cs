@@ -1,5 +1,4 @@
 using FindTheBug.Desktop.Reception.Validation;
-using System.ComponentModel.DataAnnotations;
 
 namespace FindTheBug.Desktop.Reception.Models;
 

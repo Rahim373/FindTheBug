@@ -5,18 +5,26 @@ namespace FindTheBug.Desktop.Reception.Models;
 /// <summary>
 /// Represents patient information with validation
 /// </summary>
-public class PatientInformation
+public class ReceiptInformation
 {
     public ValidatableObject<string> PatientName { get; private set; }
     public ValidatableObject<string> PhoneNumber { get; private set; }
-    public ValidatableObject<string> Age { get; private set; }
+    public ValidatableObject<int> Age { get; private set; }
+    public ValidatableObject<bool> IsAgeYear { get; private set; }
     public ValidatableObject<string> Gender { get; private set; }
     public ValidatableObject<string> Address { get; private set; }
     public ValidatableObject<string> ReferredBy { get; private set; }
     public ValidatableObject<DateTime> ReceiptDate { get; private set; }
     public string? InvoiceNumber { get; internal set; }
 
-    public PatientInformation()
+    // Financial properties
+    public ValidatableObject<decimal> SubTotal { get; private set; }
+    public ValidatableObject<decimal> Discount { get; private set; }
+    public ValidatableObject<decimal> Total { get; private set; }
+    public ValidatableObject<decimal> Due { get; private set; }
+    public ValidatableObject<decimal> Balance { get; private set; }
+
+    public ReceiptInformation()
     {
         InitializeFields();
     }
@@ -26,10 +34,17 @@ public class PatientInformation
         InitializePatientName();
         InitializePhoneNumber();
         InitializeAge();
+        InitializeIsAgeYear();
         InitializeGender();
         InitializeAddress();
         InitializeReferredBy();
         InitializeReceiptDate();
+        InitializeFinancialProperties();
+    }
+
+    private void InitializeIsAgeYear()
+    {
+        IsAgeYear = new ValidatableObject<bool>();
     }
 
     private void InitializePatientName()
@@ -49,8 +64,8 @@ public class PatientInformation
 
     private void InitializeAge()
     {
-        Age = new ValidatableObject<string>();
-        Age.AddValidationRule(Validators.IsNotEmpty("Age", "Please enter a valid age (20y)"));
+        Age = new ValidatableObject<int>();
+        Age.AddValidationRule(Validators.IsPositiveInteger("Age", "Please enter a valid age"));
     }
 
     private void InitializeGender()
@@ -77,6 +92,15 @@ public class PatientInformation
         ReceiptDate.Value = DateTime.UtcNow;
     }
 
+    private void InitializeFinancialProperties()
+    {
+        SubTotal = new ValidatableObject<decimal>();
+        Discount = new ValidatableObject<decimal>();
+        Total = new ValidatableObject<decimal>();
+        Due = new ValidatableObject<decimal>();
+        Balance = new ValidatableObject<decimal>();
+    }
+
     public bool ValidateAll()
     {
         bool isValid = true;
@@ -99,8 +123,10 @@ public class PatientInformation
         PhoneNumber.Value = string.Empty;
         PhoneNumber.ClearErrors();
 
-        Age.Value = string.Empty;
+        Age.Value = 0;
         Age.ClearErrors();
+
+        IsAgeYear.Value = true;
 
         Gender.Value = string.Empty;
         Gender.ClearErrors();
@@ -112,6 +138,13 @@ public class PatientInformation
         ReferredBy.ClearErrors();
 
         ReceiptDate.Value = DateTime.Today;
+
+        // Clear financial properties
+        SubTotal.Value = 0;
+        Discount.Value = 0;
+        Total.Value = 0;
+        Due.Value = 0;
+        Balance.Value = 0;
     }
 
     public void ForceValidateAll()

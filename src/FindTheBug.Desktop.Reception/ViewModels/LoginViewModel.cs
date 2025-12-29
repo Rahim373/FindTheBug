@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using FindTheBug.Desktop.Reception.Commands;
 using FindTheBug.Desktop.Reception.DataAccess;
 using FindTheBug.Desktop.Reception.Messages;
-using FindTheBug.Domain.Entities;
 
 namespace FindTheBug.Desktop.Reception.ViewModels
 {
@@ -36,6 +35,7 @@ namespace FindTheBug.Desktop.Reception.ViewModels
             }
 
             ErrorMessage = string.Empty;
+            App.CurrentUser = user;
             WeakReferenceMessenger.Default.Send(new UserLoggedInMessage(user));
         }
 

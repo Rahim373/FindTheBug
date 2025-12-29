@@ -70,61 +70,61 @@
 
                                 <StackPanel Grid.Column="0">
                                     <Label>Name *</Label>
-                                    <TextBox Text="{Binding PatientInfo.PatientName.Value, UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBox Text="{Binding ReceiptInfo.PatientName.Value, UpdateSourceTrigger=PropertyChanged}">
                                     </TextBox>
-                                    <TextBlock Text="{Binding PatientInfo.PatientName.Error}" 
+                                    <TextBlock Text="{Binding ReceiptInfo.PatientName.Error}" 
                                                Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding PatientInfo.PatientName.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                               Visibility="{Binding ReceiptInfo.PatientName.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1">
                                     <Label>Phone Number *</Label>
-                                    <TextBox Text="{Binding PatientInfo.PhoneNumber.Value, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                                    <TextBlock Text="{Binding PatientInfo.PhoneNumber.Error}" 
+                                    <TextBox Text="{Binding ReceiptInfo.PhoneNumber.Value, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                    <TextBlock Text="{Binding ReceiptInfo.PhoneNumber.Error}" 
                                                 Style="{DynamicResource ErrorMessage}" 
-                                               Visibility="{Binding PatientInfo.PhoneNumber.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                               Visibility="{Binding ReceiptInfo.PhoneNumber.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="2">
                                     <Label>Age *</Label>
-                                    <TextBox Text="{Binding PatientInfo.Age.Value, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                                    <TextBlock Text="{Binding PatientInfo.Age.Error}" 
+                                    <TextBox Text="{Binding ReceiptInfo.Age.Value, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                    <TextBlock Text="{Binding ReceiptInfo.Age.Error}" 
                                                Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding PatientInfo.Age.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                               Visibility="{Binding ReceiptInfo.Age.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="3">
                                     <Label>Gender *</Label>
-                                    <ComboBox SelectedItem="{Binding PatientInfo.Gender.Value}">
+                                    <ComboBox SelectedItem="{Binding ReceiptInfo.Gender.Value}">
                                         <ComboBoxItem Content="Male"></ComboBoxItem>
                                         <ComboBoxItem Content="Female"></ComboBoxItem>
                                     </ComboBox>
-                                    <TextBlock Text="{Binding PatientInfo.Gender.Error}" 
+                                    <TextBlock Text="{Binding ReceiptInfo.Gender.Error}" 
                                                Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding PatientInfo.Gender.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                               Visibility="{Binding ReceiptInfo.Gender.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="4" Grid.ColumnSpan="2">
                                     <Label>Address</Label>
-                                    <TextBox Text="{Binding PatientInfo.Address.Value, UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBox Text="{Binding ReceiptInfo.Address.Value, UpdateSourceTrigger=PropertyChanged}">
                                     </TextBox>
-                                    <TextBlock Text="{Binding PatientInfo.Address.Error}" 
+                                    <TextBlock Text="{Binding ReceiptInfo.Address.Error}" 
                                                Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding PatientInfo.Address.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                               Visibility="{Binding ReceiptInfo.Address.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="0" Grid.Row="1">
                                     <Label>Refered By *</Label>
                                     <ComboBox ItemsSource="{Binding Doctors}" DisplayMemberPath="Name" 
-                                              SelectedItem="{Binding PatientInfo.ReferredBy.Value}">
+                                              SelectedItem="{Binding ReceiptInfo.ReferredBy.Value}">
                                     </ComboBox>
-                                    <TextBlock Text="{Binding PatientInfo.ReferredBy.Error}" 
+                                    <TextBlock Text="{Binding ReceiptInfo.ReferredBy.Error}" 
                                                Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding PatientInfo.ReferredBy.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                               Visibility="{Binding ReceiptInfo.ReferredBy.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Grid.Row="1">
                                     <Label>Date</Label>
-                                    <DatePicker SelectedDate="{Binding PatientInfo.ReceiptDate.Value}"></DatePicker>
+                                    <DatePicker SelectedDate="{Binding ReceiptInfo.ReceiptDate.Value}"></DatePicker>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -237,34 +237,34 @@
                                         <Label Grid.Row="0" Grid.Column="0" Content="Sub-Total" 
                                                    HorizontalAlignment="Right" 
                                                    VerticalAlignment="Center"></Label>
-                                        <TextBox Text="{Binding SubTotal, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="0" Grid.Column="2"
+                                        <TextBox Text="{Binding ReceiptInfo.SubTotal.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="0" Grid.Column="2"
                                                  Margin="0" TextAlignment="Right" IsReadOnly="True"/>
 
                                         <Label Grid.Row="1" Grid.Column="0" Content="Discount"
                                                HorizontalAlignment="Right"
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Text="{Binding Discount, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="1" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding ReceiptInfo.Discount.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="1" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
 
                                         <Label Grid.Row="2" Grid.Column="0" Content="Total"
                                                HorizontalAlignment="Right" 
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Text="{Binding Total, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="2" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding ReceiptInfo.Total.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="2" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
 
                                         <Label Grid.Row="3" Grid.Column="0" Content="Due"
                                                HorizontalAlignment="Right" 
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Text="{Binding Due, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="3" Grid.Column="2"  Margin="0" TextAlignment="Right">
+                                        <TextBox Text="{Binding ReceiptInfo.Due.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="3" Grid.Column="2"  Margin="0" TextAlignment="Right">
                                             <i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="Window_KeyUp">
+                                                <i:EventTrigger EventName="LostFocus">
                                                     <i:InvokeCommandAction Command="{Binding DueChangedCommand}"/>
                                                 </i:EventTrigger>
                                             </i:Interaction.Triggers>
                                         </TextBox>
 
-                                        <Label Grid.Row="4" Grid.Column="0" Content="Balace" 
+                                        <Label Grid.Row="4" Grid.Column="0" Content="Balance" 
                                                HorizontalAlignment="Right" 
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Balance, Converter={StaticResource ZeroToEmptyStringConverter}}" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
+                                        <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding ReceiptInfo.Balance.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
                                     </Grid >
                                 </Grid>
                             </Grid>

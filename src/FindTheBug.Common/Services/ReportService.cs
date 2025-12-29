@@ -2,9 +2,6 @@
 using FindTheBug.Common.ReportModel;
 using FindTheBug.Domain.Entities;
 using Microsoft.Reporting.WinForms;
-using System;
-using System.IO.Packaging;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FindTheBug.Common.Services;
 
