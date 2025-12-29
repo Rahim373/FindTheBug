@@ -14,25 +14,25 @@ public class GetAllPatientsQueryHandler(IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<Result<List<PatientListItemDto>>>> Handle(GetAllPatientsQuery request, CancellationToken cancellationToken)
     {
-        var query = unitOfWork.Repository<Patient>().GetQueryable();
+        var query = unitOfWork.Repository<LabReceipt>().GetQueryable();
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
             var searchLower = request.Search.ToLower();
             query = query.Where(p =>
-                p.FirstName.ToLower().Contains(searchLower) ||
-                p.MobileNumber.Contains(request.Search));
+                p.FullName.ToLower().Contains(searchLower) ||
+                p.PhoneNumber.Contains(request.Search));
         }
 
         var patients = await query
-            .OrderBy(p => p.FirstName)
+            .OrderBy(p => p.FullName)
             .ToListAsync(cancellationToken);
 
         var patientDtos = patients.Select(p => new PatientListItemDto
         {
             Id = p.Id,
-            Name = p.FirstName,
-            MobileNumber = p.MobileNumber,
+            Name = p.FullName,
+            MobileNumber = p.PhoneNumber,
             Age = p.Age,
             Gender = p.Gender
         }).ToList();

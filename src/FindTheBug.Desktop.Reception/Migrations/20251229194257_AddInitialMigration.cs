@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FindTheBug.Desktop.Reception.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class AddInitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -91,35 +91,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Patients",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PatientCode = table.Column<string>(type: "TEXT", nullable: false),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Age = table.Column<int>(type: "INTEGER", nullable: true),
-                    Gender = table.Column<string>(type: "TEXT", nullable: true),
-                    MobileNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    Address = table.Column<string>(type: "TEXT", nullable: true),
-                    City = table.Column<string>(type: "TEXT", nullable: true),
-                    PostalCode = table.Column<string>(type: "TEXT", nullable: true),
-                    EmergencyContact = table.Column<string>(type: "TEXT", nullable: true),
-                    EmergencyContactNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Patients", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -194,6 +165,43 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Patients",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    InvoiceNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    FullName = table.Column<string>(type: "TEXT", nullable: false),
+                    Age = table.Column<int>(type: "INTEGER", nullable: true),
+                    IsAgeYear = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Gender = table.Column<string>(type: "TEXT", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    Address = table.Column<string>(type: "TEXT", nullable: true),
+                    ReferredByDoctorId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    SubTotal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Total = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Discount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Due = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Balace = table.Column<decimal>(type: "TEXT", nullable: false),
+                    ReportDeliveredOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LabReceiptStatus = table.Column<int>(type: "INTEGER", nullable: false),
+                    ReportDeliveryStatus = table.Column<int>(type: "INTEGER", nullable: false),
+                    ReferredById = table.Column<Guid>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Patients", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Patients_Doctors_ReferredById",
+                        column: x => x.ReferredById,
+                        principalTable: "Doctors",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DoctorSpecialityMappings",
                 columns: table => new
                 {
@@ -215,75 +223,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         name: "FK_DoctorSpecialityMappings_Doctors_DoctorId",
                         column: x => x.DoctorId,
                         principalTable: "Doctors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Invoices",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PatientId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    InvoiceNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    InvoiceDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    SubTotal = table.Column<decimal>(type: "TEXT", nullable: false),
-                    DiscountAmount = table.Column<decimal>(type: "TEXT", nullable: false),
-                    TaxAmount = table.Column<decimal>(type: "TEXT", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Status = table.Column<string>(type: "TEXT", nullable: false),
-                    PaymentMethod = table.Column<string>(type: "TEXT", nullable: true),
-                    PaymentDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Notes = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Invoices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Invoices_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TestEntry",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    PatientId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DiagnosticTestId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    EntryNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    EntryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    SampleCollectionDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Status = table.Column<string>(type: "TEXT", nullable: false),
-                    Priority = table.Column<string>(type: "TEXT", nullable: false),
-                    ReferredBy = table.Column<string>(type: "TEXT", nullable: true),
-                    Notes = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestEntry", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TestEntry_DiagnosticTests_DiagnosticTestId",
-                        column: x => x.DiagnosticTestId,
-                        principalTable: "DiagnosticTests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TestEntry_Patients_PatientId",
-                        column: x => x.PatientId,
-                        principalTable: "Patients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -373,6 +312,72 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Invoices",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PatientId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    InvoiceNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    InvoiceDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SubTotal = table.Column<decimal>(type: "TEXT", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TaxAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: false),
+                    PaymentMethod = table.Column<string>(type: "TEXT", nullable: true),
+                    PaymentDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Notes = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invoices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invoices_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReceiptTest",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    LabReceiptId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DiagnosticTestId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Amount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    DiscountPercentage = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Total = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReceiptTest", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReceiptTest_DiagnosticTests_DiagnosticTestId",
+                        column: x => x.DiagnosticTestId,
+                        principalTable: "DiagnosticTests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReceiptTest_Patients_LabReceiptId",
+                        column: x => x.LabReceiptId,
+                        principalTable: "Patients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InvoiceItems",
                 columns: table => new
                 {
@@ -400,9 +405,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_InvoiceItems_TestEntry_TestEntryId",
+                        name: "FK_InvoiceItems_ReceiptTest_TestEntryId",
                         column: x => x.TestEntryId,
-                        principalTable: "TestEntry",
+                        principalTable: "ReceiptTest",
                         principalColumn: "Id");
                 });
 
@@ -428,9 +433,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 {
                     table.PrimaryKey("PK_TestResult", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TestResult_TestEntry_TestEntryId",
+                        name: "FK_TestResult_ReceiptTest_TestEntryId",
                         column: x => x.TestEntryId,
-                        principalTable: "TestEntry",
+                        principalTable: "ReceiptTest",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -467,6 +472,21 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Patients_ReferredById",
+                table: "Patients",
+                column: "ReferredById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReceiptTest_DiagnosticTestId",
+                table: "ReceiptTest",
+                column: "DiagnosticTestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReceiptTest_LabReceiptId",
+                table: "ReceiptTest",
+                column: "LabReceiptId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RefreshToken_UserId",
                 table: "RefreshToken",
                 column: "UserId");
@@ -480,16 +500,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 name: "IX_RoleModulePermissions_RoleId",
                 table: "RoleModulePermissions",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestEntry_DiagnosticTestId",
-                table: "TestEntry",
-                column: "DiagnosticTestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestEntry_PatientId",
-                table: "TestEntry",
-                column: "PatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestParameter_DiagnosticTestId",
@@ -542,16 +552,13 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 name: "DoctorSpecialities");
 
             migrationBuilder.DropTable(
-                name: "Doctors");
-
-            migrationBuilder.DropTable(
                 name: "Invoices");
 
             migrationBuilder.DropTable(
                 name: "Modules");
 
             migrationBuilder.DropTable(
-                name: "TestEntry");
+                name: "ReceiptTest");
 
             migrationBuilder.DropTable(
                 name: "TestParameter");
@@ -567,6 +574,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
             migrationBuilder.DropTable(
                 name: "DiagnosticTests");
+
+            migrationBuilder.DropTable(
+                name: "Doctors");
         }
     }
 }

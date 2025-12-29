@@ -14,6 +14,6 @@ public class TestResult : BaseAuditableEntity
     public string? Notes { get; set; }
 
     // Navigation properties
-    public TestEntry TestEntry { get; set; } = null!;
+    public ReceiptTest TestEntry { get; set; } = null!;
     public TestParameter TestParameter { get; set; } = null!;
 }

@@ -14,5 +14,5 @@ public class DiagnosticTest : BaseAuditableEntity
 
     // Navigation properties
     public ICollection<TestParameter> Parameters { get; set; } = new List<TestParameter>();
-    public ICollection<TestEntry> TestEntries { get; set; } = new List<TestEntry>();
+    public ICollection<ReceiptTest> TestEntries { get; set; } = new List<ReceiptTest>();
 }

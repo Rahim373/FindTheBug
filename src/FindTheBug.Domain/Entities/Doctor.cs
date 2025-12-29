@@ -12,4 +12,5 @@ public class Doctor : BaseAuditableEntity
 
     // Navigation properties
     public ICollection<DoctorSpecialityMap> DoctorSpecialities { get; set; } = new List<DoctorSpecialityMap>();
+    public ICollection<LabReceipt> LabReceipts { get; set; } = new List<LabReceipt>();
 }

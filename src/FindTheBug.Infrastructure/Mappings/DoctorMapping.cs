@@ -53,6 +53,11 @@ public class DoctorMapping : IMapping<Doctor>
                 .HasForeignKey(dsm => dsm.DoctorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            entity.HasMany(e => e.LabReceipts)
+                .WithOne(dsm => dsm.ReferredBy)
+                .HasForeignKey(dsm => dsm.ReferredByDoctorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             entity.ToTable("Doctors");
         });
     }

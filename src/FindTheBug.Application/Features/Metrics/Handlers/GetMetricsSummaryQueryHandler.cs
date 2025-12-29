@@ -16,14 +16,14 @@ public class GetMetricsSummaryQueryHandler(IUnitOfWork unitOfWork)
         var today = DateTime.Today;
         var thisMonth = new DateTime(today.Year, today.Month, 1);
 
-        var totalPatients = await unitOfWork.Repository<Patient>().GetQueryable().CountAsync(cancellationToken);
-        var todayPatients = await unitOfWork.Repository<Patient>().GetQueryable()
+        var totalPatients = await unitOfWork.Repository<LabReceipt>().GetQueryable().CountAsync(cancellationToken);
+        var todayPatients = await unitOfWork.Repository<LabReceipt>().GetQueryable()
             .Where(p => p.CreatedAt.Date == today)
             .CountAsync(cancellationToken);
 
-        var totalTests = await unitOfWork.Repository<TestEntry>().GetQueryable().CountAsync(cancellationToken);
-        var pendingTests = await unitOfWork.Repository<TestEntry>().GetQueryable()
-            .Where(te => te.Status == "Pending")
+        var totalTests = await unitOfWork.Repository<ReceiptTest>().GetQueryable().CountAsync(cancellationToken);
+        var pendingTests = await unitOfWork.Repository<ReceiptTest>().GetQueryable()
+            .Where(te => te.Status == ReceiptTestStatus.Pending)
             .CountAsync(cancellationToken);
 
         var todayRevenue = await unitOfWork.Repository<Invoice>().GetQueryable()

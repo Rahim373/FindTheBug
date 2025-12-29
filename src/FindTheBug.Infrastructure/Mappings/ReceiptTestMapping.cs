@@ -7,41 +7,31 @@ namespace FindTheBug.Infrastructure.Mappings;
 /// <summary>
 /// Entity Framework configuration for TestEntry entity
 /// </summary>
-public class TestEntryMapping : IMapping<TestEntry>
+public class ReceiptTestMapping : IMapping<ReceiptTest>
 {
     public void Configure(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TestEntry>(entity =>
+        modelBuilder.Entity<ReceiptTest>(entity =>
         {
             entity.HasKey(e => e.Id);
 
-            entity.HasIndex(e => e.EntryNumber).IsUnique();
-            entity.HasIndex(e => e.PatientId);
+            entity.Property(e => e.Total)
+                .HasPrecision(18, 2)
+                .HasColumnType("numeric(18,2)");
+
+            entity.Property(e => e.DiscountPercentage)
+                .HasPrecision(5, 2)
+                .HasColumnType("numeric(5,2)");
+
+            entity.Property(e => e.Amount)
+                .HasPrecision(5, 2)
+                .HasColumnType("numeric(5,2)");
+
+            entity.HasIndex(e => e.LabReceiptId);
             entity.HasIndex(e => e.DiagnosticTestId);
-
-            entity.Property(e => e.EntryNumber)
-                .IsRequired()
-                .HasColumnType("text");
-
-            entity.Property(e => e.EntryDate)
-                .IsRequired()
-                .HasColumnType("timestamp with time zone");
-
-            entity.Property(e => e.SampleCollectionDate)
-                .HasColumnType("timestamp with time zone");
 
             entity.Property(e => e.Status)
                 .IsRequired()
-                .HasColumnType("text");
-
-            entity.Property(e => e.Priority)
-                .IsRequired()
-                .HasColumnType("text");
-
-            entity.Property(e => e.ReferredBy)
-                .HasColumnType("text");
-
-            entity.Property(e => e.Notes)
                 .HasColumnType("text");
 
             entity.Property(e => e.CreatedAt)
@@ -59,7 +49,7 @@ public class TestEntryMapping : IMapping<TestEntry>
             // Navigation properties configuration
             entity.HasOne(e => e.Patient)
                 .WithMany(p => p.TestEntries)
-                .HasForeignKey(e => e.PatientId)
+                .HasForeignKey(e => e.LabReceiptId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(e => e.DiagnosticTest)
@@ -77,7 +67,7 @@ public class TestEntryMapping : IMapping<TestEntry>
                 .HasForeignKey(ii => ii.TestEntryId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            entity.ToTable("TestEntries");
+            entity.ToTable("ReceiptTests");
         });
     }
 }

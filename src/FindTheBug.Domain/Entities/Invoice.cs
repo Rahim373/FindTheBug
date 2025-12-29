@@ -18,6 +18,6 @@ public class Invoice : BaseAuditableEntity
     public string? Notes { get; set; }
 
     // Navigation properties
-    public Patient Patient { get; set; } = null!;
+    public LabReceipt Patient { get; set; } = null!;
     public ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
 }

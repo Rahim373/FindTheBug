@@ -24,14 +24,14 @@ public class CreateInvoiceCommandHandler(IUnitOfWork unitOfWork)
         var created = await unitOfWork.Repository<Invoice>().AddAsync(invoice, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var patient = await unitOfWork.Repository<Patient>().GetByIdAsync(created.PatientId, cancellationToken);
+        var patient = await unitOfWork.Repository<LabReceipt>().GetByIdAsync(created.PatientId, cancellationToken);
 
         return Result<InvoiceResponseDto>.Success(new InvoiceResponseDto
         {
             Id = created.Id,
             InvoiceNumber = created.InvoiceNumber,
             PatientId = created.PatientId,
-            PatientName = patient?.FirstName ?? string.Empty,
+            PatientName = patient?.FullName ?? string.Empty,
             TotalAmount = created.TotalAmount,
             InvoiceDate = created.InvoiceDate,
             CreatedAt = created.CreatedAt

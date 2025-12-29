@@ -167,7 +167,7 @@ When you make changes to your entities or DbContext, create a new migration:
 
 ```bash
 # Add a new migration (replace AddNewFeature with descriptive name)
-dotnet ef migrations add AddNewFeature --project src\FindTheBug.Desktop.Reception --startup-project src\FindTheBug.Desktop.Reception
+dotnet ef migrations add AddInitialMigration --project src\FindTheBug.Desktop.Reception --startup-project src\FindTheBug.Desktop.Reception
 
 # Remove the last migration (if not applied)
 dotnet ef migrations remove --project src\FindTheBug.Desktop.Reception

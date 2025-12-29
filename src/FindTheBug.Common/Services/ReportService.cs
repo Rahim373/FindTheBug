@@ -55,8 +55,8 @@ public class ReportService
     }
 
     public (List<ReportParameter> ReportParameters, List<ReportDataSource> DataSources) GetInvoiceData(
-        Patient patient,
-        List<TestEntry> labTests)
+        LabReceipt patient,
+        List<ReceiptTest> labTests)
     {
         var parameters = new List<ReportParameter>
         {

@@ -16,8 +16,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     // Lab Management DbSets
     public DbSet<DiagnosticTest> DiagnosticTests => Set<DiagnosticTest>();
     public DbSet<TestParameter> TestParameters => Set<TestParameter>();
-    public DbSet<Patient> Patients => Set<Patient>();
-    public DbSet<TestEntry> TestEntries => Set<TestEntry>();
+    public DbSet<LabReceipt> Patients => Set<LabReceipt>();
+    public DbSet<ReceiptTest> TestEntries => Set<ReceiptTest>();
     public DbSet<TestResult> TestResults => Set<TestResult>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<InvoiceItem> InvoiceItems => Set<InvoiceItem>();

@@ -275,6 +275,86 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.ToTable("InvoiceItems");
                 });
 
+            modelBuilder.Entity("FindTheBug.Domain.Entities.LabReceipt", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Age")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Balace")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Due")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsAgeYear")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LabReceiptStatus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ReferredByDoctorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ReferredById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ReportDeliveredOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ReportDeliveryStatus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReferredById");
+
+                    b.ToTable("Patients");
+                });
+
             modelBuilder.Entity("FindTheBug.Domain.Entities.Module", b =>
                 {
                     b.Property<Guid>("Id")
@@ -311,19 +391,13 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.ToTable("Modules");
                 });
 
-            modelBuilder.Entity("FindTheBug.Domain.Entities.Patient", b =>
+            modelBuilder.Entity("FindTheBug.Domain.Entities.ReceiptTest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Address")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("Age")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("City")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -332,41 +406,19 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DateOfBirth")
+                    b.Property<Guid>("DiagnosticTestId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Email")
+                    b.Property<decimal>("DiscountPercentage")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("EmergencyContact")
+                    b.Property<Guid>("LabReceiptId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("EmergencyContactNumber")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Gender")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsActive")
+                    b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("MobileNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PatientCode")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PostalCode")
+                    b.Property<decimal>("Total")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -377,7 +429,11 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patients");
+                    b.HasIndex("DiagnosticTestId");
+
+                    b.HasIndex("LabReceiptId");
+
+                    b.ToTable("ReceiptTest");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.RefreshToken", b =>
@@ -495,63 +551,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("RoleModulePermissions");
-                });
-
-            modelBuilder.Entity("FindTheBug.Domain.Entities.TestEntry", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("DiagnosticTestId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("EntryDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EntryNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Priority")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ReferredBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("SampleCollectionDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DiagnosticTestId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("TestEntry");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.TestParameter", b =>
@@ -765,7 +764,7 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.Invoice", b =>
                 {
-                    b.HasOne("FindTheBug.Domain.Entities.Patient", "Patient")
+                    b.HasOne("FindTheBug.Domain.Entities.LabReceipt", "Patient")
                         .WithMany("Invoices")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -782,13 +781,41 @@ namespace FindTheBug.Desktop.Reception.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FindTheBug.Domain.Entities.TestEntry", "TestEntry")
+                    b.HasOne("FindTheBug.Domain.Entities.ReceiptTest", "TestEntry")
                         .WithMany("InvoiceItems")
                         .HasForeignKey("TestEntryId");
 
                     b.Navigation("Invoice");
 
                     b.Navigation("TestEntry");
+                });
+
+            modelBuilder.Entity("FindTheBug.Domain.Entities.LabReceipt", b =>
+                {
+                    b.HasOne("FindTheBug.Domain.Entities.Doctor", "ReferredBy")
+                        .WithMany("LabReceipts")
+                        .HasForeignKey("ReferredById");
+
+                    b.Navigation("ReferredBy");
+                });
+
+            modelBuilder.Entity("FindTheBug.Domain.Entities.ReceiptTest", b =>
+                {
+                    b.HasOne("FindTheBug.Domain.Entities.DiagnosticTest", "DiagnosticTest")
+                        .WithMany("TestEntries")
+                        .HasForeignKey("DiagnosticTestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FindTheBug.Domain.Entities.LabReceipt", "Patient")
+                        .WithMany("TestEntries")
+                        .HasForeignKey("LabReceiptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DiagnosticTest");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.RefreshToken", b =>
@@ -821,25 +848,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("FindTheBug.Domain.Entities.TestEntry", b =>
-                {
-                    b.HasOne("FindTheBug.Domain.Entities.DiagnosticTest", "DiagnosticTest")
-                        .WithMany("TestEntries")
-                        .HasForeignKey("DiagnosticTestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FindTheBug.Domain.Entities.Patient", "Patient")
-                        .WithMany("TestEntries")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DiagnosticTest");
-
-                    b.Navigation("Patient");
-                });
-
             modelBuilder.Entity("FindTheBug.Domain.Entities.TestParameter", b =>
                 {
                     b.HasOne("FindTheBug.Domain.Entities.DiagnosticTest", "DiagnosticTest")
@@ -853,7 +861,7 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.TestResult", b =>
                 {
-                    b.HasOne("FindTheBug.Domain.Entities.TestEntry", "TestEntry")
+                    b.HasOne("FindTheBug.Domain.Entities.ReceiptTest", "TestEntry")
                         .WithMany("TestResults")
                         .HasForeignKey("TestEntryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -899,6 +907,8 @@ namespace FindTheBug.Desktop.Reception.Migrations
             modelBuilder.Entity("FindTheBug.Domain.Entities.Doctor", b =>
                 {
                     b.Navigation("DoctorSpecialities");
+
+                    b.Navigation("LabReceipts");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.DoctorSpeciality", b =>
@@ -911,16 +921,23 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.Navigation("InvoiceItems");
                 });
 
+            modelBuilder.Entity("FindTheBug.Domain.Entities.LabReceipt", b =>
+                {
+                    b.Navigation("Invoices");
+
+                    b.Navigation("TestEntries");
+                });
+
             modelBuilder.Entity("FindTheBug.Domain.Entities.Module", b =>
                 {
                     b.Navigation("RoleModulePermissions");
                 });
 
-            modelBuilder.Entity("FindTheBug.Domain.Entities.Patient", b =>
+            modelBuilder.Entity("FindTheBug.Domain.Entities.ReceiptTest", b =>
                 {
-                    b.Navigation("Invoices");
+                    b.Navigation("InvoiceItems");
 
-                    b.Navigation("TestEntries");
+                    b.Navigation("TestResults");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.Role", b =>
@@ -928,13 +945,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.Navigation("RoleModulePermissions");
 
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("FindTheBug.Domain.Entities.TestEntry", b =>
-                {
-                    b.Navigation("InvoiceItems");
-
-                    b.Navigation("TestResults");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.TestParameter", b =>

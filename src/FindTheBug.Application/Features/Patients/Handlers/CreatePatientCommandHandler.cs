@@ -15,29 +15,29 @@ public class CreatePatientCommandHandler(IUnitOfWork unitOfWork)
     public async Task<ErrorOr<Result<PatientResponseDto>>> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
     {
         // Check if patient with mobile number exists
-        var existing = await unitOfWork.Repository<Patient>().GetQueryable()
-            .FirstOrDefaultAsync(p => p.MobileNumber == request.MobileNumber, cancellationToken);
+        var existing = await unitOfWork.Repository<LabReceipt>().GetQueryable()
+            .FirstOrDefaultAsync(p => p.PhoneNumber == request.MobileNumber, cancellationToken);
 
         if (existing != null)
             return Error.Conflict("Patient.MobileExists", "Patient with this mobile number already exists");
 
-        var patient = new Patient
+        var patient = new LabReceipt
         {
-            FirstName = request.Name,
-            MobileNumber = request.MobileNumber,
+            FullName = request.Name,
+            PhoneNumber = request.MobileNumber,
             Age = request.Age,
             Gender = request.Gender,
             Address = request.Address
         };
 
-        var created = await unitOfWork.Repository<Patient>().AddAsync(patient, cancellationToken);
+        var created = await unitOfWork.Repository<LabReceipt>().AddAsync(patient, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<PatientResponseDto>.Success(new PatientResponseDto
         {
             Id = created.Id,
-            Name = created.FirstName,
-            MobileNumber = created.MobileNumber,
+            Name = created.FullName,
+            MobileNumber = created.PhoneNumber,
             Age = created.Age,
             Gender = created.Gender,
             Address = created.Address,

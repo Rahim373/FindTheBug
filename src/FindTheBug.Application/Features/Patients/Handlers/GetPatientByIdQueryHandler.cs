@@ -13,7 +13,7 @@ public class GetPatientByIdQueryHandler(IUnitOfWork unitOfWork)
 {
     public async Task<ErrorOr<Result<PatientResponseDto>>> Handle(GetPatientByIdQuery request, CancellationToken cancellationToken)
     {
-        var patient = await unitOfWork.Repository<Patient>().GetByIdAsync(request.Id, cancellationToken);
+        var patient = await unitOfWork.Repository<LabReceipt>().GetByIdAsync(request.Id, cancellationToken);
 
         if (patient == null)
             return Error.NotFound("Patient.NotFound", "Patient not found");
@@ -21,8 +21,8 @@ public class GetPatientByIdQueryHandler(IUnitOfWork unitOfWork)
         return Result<PatientResponseDto>.Success(new PatientResponseDto
         {
             Id = patient.Id,
-            Name = patient.FirstName,
-            MobileNumber = patient.MobileNumber,
+            Name = patient.FullName,
+            MobileNumber = patient.PhoneNumber,
             Age = patient.Age,
             Gender = patient.Gender,
             Address = patient.Address,

@@ -10,7 +10,7 @@ public class ReceptionDbContext : DbContext
     }
 
     // Patient Management
-    public DbSet<Patient> Patients => Set<Patient>();
+    public DbSet<LabReceipt> Patients => Set<LabReceipt>();
 
     // Doctors Management
     public DbSet<Doctor> Doctors => Set<Doctor>();

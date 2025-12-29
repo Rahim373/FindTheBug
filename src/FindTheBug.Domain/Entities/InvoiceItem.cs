@@ -15,5 +15,5 @@ public class InvoiceItem : BaseAuditableEntity
 
     // Navigation properties
     public Invoice Invoice { get; set; } = null!;
-    public TestEntry? TestEntry { get; set; }
+    public ReceiptTest? TestEntry { get; set; }
 }
