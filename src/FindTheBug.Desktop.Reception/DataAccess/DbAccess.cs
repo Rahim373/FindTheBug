@@ -285,72 +285,84 @@ public static class DbAccess
         return null;
     }
 
-    internal static async Task<Guid> SaveReceiptAsync(ReceiptInformation receiptInfo, List<LabTestDto> selectedTests)
+    internal static async Task<DesktopLabReceipt> SaveReceiptAsync(
+    ReceiptInformation receiptInfo,
+    List<LabTestDto> selectedTests)
     {
         var dbContext = GetDbContext();
-        Guid? referredByDoctorId = null;
+        using var transaction = await dbContext.Database.BeginTransactionAsync();
 
-        // Parse doctor ID if provided
-        if (!string.IsNullOrEmpty(receiptInfo.ReferredBy.Value) && 
-            Guid.TryParse(receiptInfo.ReferredBy.Value, out var parsedDoctorId))
+        Guid? referredByDoctorId =
+            Guid.TryParse(receiptInfo.ReferredBy?.Value, out var doctorId)
+                ? doctorId
+                : null;
+
+        DesktopLabReceipt receipt = null;
+
+        // Try load existing receipt if InvoiceNumber is provided
+        if (!string.IsNullOrWhiteSpace(receiptInfo.InvoiceNumber))
         {
-            referredByDoctorId = parsedDoctorId;
+            receipt = await dbContext.LabReceipts
+                .OfType<DesktopLabReceipt>()
+                .FirstOrDefaultAsync(r => r.InvoiceNumber == receiptInfo.InvoiceNumber);
         }
 
-        // Create new lab receipt
-        var labReceipt = new DesktopLabReceipt
-        {
-            Address = receiptInfo.Address.Value,
-            Age = receiptInfo.Age.Value,
-            PhoneNumber = receiptInfo.PhoneNumber.Value,
-            Balace = receiptInfo.Balance.Value,
-            Discount = receiptInfo.Discount.Value,
-            Due = receiptInfo.Due.Value,
-            IsAgeYear = receiptInfo.IsAgeYear.Value,
-            CreatedAt = DateTime.UtcNow,
-            Gender = receiptInfo.Gender.Value,
-            FullName = receiptInfo.PatientName.Value,
-            SubTotal = receiptInfo.SubTotal.Value,
-            Total = receiptInfo.Total.Value,
-            ReferredByDoctorId = referredByDoctorId,
-            LabReceiptStatus = LabReceiptStatus.Paid,
-            InvoiceNumber = GenerateInvoiceNumber()
-        };
+        var isUpdate = receipt is not null;
 
-        // Set the user who created this receipt
-        if (App.CurrentUser != null)
+        if (!isUpdate)
         {
-            labReceipt.CreatedBy = $"{App.CurrentUser.FirstName} {App.CurrentUser.LastName} ({App.CurrentUser.Phone})".Trim();
-        }
-
-        await dbContext.LabReceipts.AddAsync(labReceipt);
-        await dbContext.SaveChangesAsync();
-
-        // Add test entries for the receipt
-        foreach (var testDto in selectedTests)
-        {
-            var testEntry = new ReceiptTest
+            receipt = new DesktopLabReceipt
             {
-                LabReceiptId = labReceipt.Id,
-                DiagnosticTestId = testDto.Id,
-                Amount = testDto.Amount,
-                DiscountPercentage = testDto.Discount,
-                Total = testDto.Total,
-                Status = ReceiptTestStatus.Pending,
                 CreatedAt = DateTime.UtcNow,
+                InvoiceNumber = GenerateInvoiceNumber(),
+                CreatedBy = $"{App.CurrentUser.FirstName} {App.CurrentUser.LastName}".Trim()
             };
 
-            await dbContext.ReceiptTests.AddAsync(testEntry);
+            await dbContext.LabReceipts.AddAsync(receipt);
         }
 
+        // Common receipt field mapping
+        receipt.UpdatedBy = $"{App.CurrentUser.FirstName} {App.CurrentUser.LastName}".Trim();
+        receipt.UpdatedAt = DateTime.UtcNow;
+        receipt.IsDirty = true;
+        receipt.Address = receiptInfo.Address.Value;
+        receipt.Age = receiptInfo.Age.Value;
+        receipt.PhoneNumber = receiptInfo.PhoneNumber.Value;
+        receipt.Balace = receiptInfo.Balance.Value;
+        receipt.Discount = receiptInfo.Discount.Value;
+        receipt.Due = receiptInfo.Due.Value;
+        receipt.IsAgeYear = receiptInfo.IsAgeYear.Value;
+        receipt.Gender = receiptInfo.Gender.Value;
+        receipt.FullName = receiptInfo.PatientName.Value;
+        receipt.SubTotal = receiptInfo.SubTotal.Value;
+        receipt.Total = receiptInfo.Total.Value;
+        receipt.ReferredByDoctorId = referredByDoctorId;
+        receipt.LabReceiptStatus = LabReceiptStatus.Paid;
+
         await dbContext.SaveChangesAsync();
 
-        // Mark as dirty for sync
-        ((IPushableEntity)labReceipt).IsDirty = true;
-        await dbContext.SaveChangesAsync();
+        if (!isUpdate)
+        {
+            var testEntries = selectedTests.Select(t => new ReceiptTest
+            {
+                LabReceiptId = receipt.Id,
+                DiagnosticTestId = t.Id.Value,
+                Amount = t.Amount,
+                DiscountPercentage = t.Discount,
+                Total = t.Total,
+                Status = ReceiptTestStatus.Pending,
+                CreatedAt = DateTime.UtcNow
+            });
 
-        return labReceipt.Id;
+            await dbContext.ReceiptTests.AddRangeAsync(testEntries);
+        }
+
+        // Add test entries
+        await dbContext.SaveChangesAsync();
+        await transaction.CommitAsync();
+        return receipt;
     }
+
 
     /// <summary>
     /// Generates a unique invoice number for the receipt
@@ -391,6 +403,13 @@ public static class DbAccess
         var dbContext = GetDbContext();
         return await dbContext.DiagnosticTests
             .FindAsync(value);
+    }
+
+    internal static IQueryable<DesktopLabReceipt> GetAllReceiptsQuery()
+    {
+        var dbContext = GetDbContext();
+
+        return dbContext.LabReceipts.AsQueryable();
     }
 
     #endregion

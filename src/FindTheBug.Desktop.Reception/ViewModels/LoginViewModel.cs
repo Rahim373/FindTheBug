@@ -10,10 +10,10 @@ namespace FindTheBug.Desktop.Reception.ViewModels
     public partial class LoginViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string _phoneNumber = string.Empty;
+        private string _phoneNumber = "01734014433";
 
         [ObservableProperty]
-        private string _password = string.Empty;
+        private string _password = "SuperSecretPassword123!";
 
         [ObservableProperty]
         private string _errorMessage = string.Empty;

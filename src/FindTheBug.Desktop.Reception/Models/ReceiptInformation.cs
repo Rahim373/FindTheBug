@@ -10,6 +10,7 @@ public class ReceiptInformation
     public ValidatableObject<string> PatientName { get; private set; }
     public ValidatableObject<string> PhoneNumber { get; private set; }
     public ValidatableObject<int> Age { get; private set; }
+    public ValidatableObject<bool> Blocked { get; private set; }
     public ValidatableObject<bool> IsAgeYear { get; private set; }
     public ValidatableObject<string> Gender { get; private set; }
     public ValidatableObject<string> Address { get; private set; }
@@ -44,7 +45,7 @@ public class ReceiptInformation
 
     private void InitializeIsAgeYear()
     {
-        IsAgeYear = new ValidatableObject<bool>();
+        IsAgeYear = new ValidatableObject<bool>(true);
     }
 
     private void InitializePatientName()

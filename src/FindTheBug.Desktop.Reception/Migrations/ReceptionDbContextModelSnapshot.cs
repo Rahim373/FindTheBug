@@ -299,6 +299,11 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.Property<decimal>("Discount")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Due")
                         .HasColumnType("TEXT");
 
@@ -354,7 +359,9 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
                     b.ToTable("LabReceipt");
 
-                    b.UseTptMappingStrategy();
+                    b.HasDiscriminator().HasValue("LabReceipt");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.Module", b =>
@@ -749,7 +756,10 @@ namespace FindTheBug.Desktop.Reception.Migrations
                 {
                     b.HasBaseType("FindTheBug.Domain.Entities.LabReceipt");
 
-                    b.ToTable("LabReceipts");
+                    b.Property<bool>("IsDirty")
+                        .HasColumnType("INTEGER");
+
+                    b.HasDiscriminator().HasValue("DesktopLabReceipt");
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.DoctorSpecialityMap", b =>
@@ -904,15 +914,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FindTheBug.Desktop.Reception.CusomEntity.DesktopLabReceipt", b =>
-                {
-                    b.HasOne("FindTheBug.Domain.Entities.LabReceipt", null)
-                        .WithOne()
-                        .HasForeignKey("FindTheBug.Desktop.Reception.CusomEntity.DesktopLabReceipt", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("FindTheBug.Domain.Entities.DiagnosticTest", b =>

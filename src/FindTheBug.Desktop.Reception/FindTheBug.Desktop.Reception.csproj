@@ -60,6 +60,18 @@
 
 	<ItemGroup>
 		<None Remove="reception.db" />
+		<None Remove="Resources\AlRazi Logo.png" />
+		<None Remove="Resources\trash.png" />
+		<None Remove="Views\Windows\AlRazi Logo.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\AlRazi Logo.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\trash.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -89,6 +101,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\FindTheBug.Common\FindTheBug.Common.csproj" />
 		<ProjectReference Include="..\FindTheBug.Domain\FindTheBug.Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Views\Windows\AlRazi Logo.png" />
 	</ItemGroup>
 
 </Project>

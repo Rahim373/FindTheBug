@@ -1,12 +1,10 @@
 <UserControl x:Class="FindTheBug.Desktop.Reception.Views.ReceiptView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:FindTheBug.Desktop.Reception.Views"
              xmlns:converters="clr-namespace:FindTheBug.Desktop.Reception.Converters"
-             xmlns:validation="clr-namespace:FindTheBug.Desktop.Reception.Validation"
              mc:Ignorable="d"
              d:DesignHeight="950" d:DesignWidth="1800">
     <UserControl.Resources>
@@ -22,43 +20,184 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto">
-        <Grid Background="#F5F5F5">
-            <Border Background="White" 
+    <Grid Background="#F5F5F5">
+        <Border Background="White" 
             CornerRadius="10" 
             Padding="20" 
             Margin="20">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" Opacity="0.2" BlurRadius="10" ShadowDepth="5"/>
-                </Border.Effect>
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Opacity="0.2" BlurRadius="10" ShadowDepth="5"/>
+            </Border.Effect>
 
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="{Binding PageTitle}" Style="{DynamicResource PageHeader}"/>
+                <TextBlock Grid.Row="0" Text="{Binding PageTitle}" Style="{DynamicResource PageHeader}"/>
 
-                    <Border 
-                Grid.Row="1"
-                Style="{DynamicResource BoxBorder}">
+                <Border 
+                        Grid.Row="1"
+                        Style="{DynamicResource BoxBorder}">
 
-                        <StackPanel>
-                            <TextBlock Text="Patient Information" FontSize="16" Margin="0 0 0 15" FontWeight="SemiBold" Foreground="#FF5B5B5B"></TextBlock>
+                    <StackPanel Margin="0 0 0 10">
+                        <TextBlock Text="Patient Information" FontSize="16" Margin="0 0 0 15" FontWeight="SemiBold" Foreground="#FF5B5B5B"></TextBlock>
 
-                            <Grid>
-                                <Grid.Resources>
-                                    <Style TargetType="{x:Type StackPanel}">
-                                        <Setter Property="Margin" Value="2 0" />
-                                    </Style>
-                                </Grid.Resources>
+                        <Grid>
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type StackPanel}">
+                                    <Setter Property="Margin" Value="2 0" />
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <Label>Name *</Label>
+                                <TextBox Text="{Binding ReceiptInfo.PatientName.Value, UpdateSourceTrigger=PropertyChanged}">
+                                </TextBox>
+                                <TextBlock Text="{Binding ReceiptInfo.PatientName.Error}" 
+                                               Style="{DynamicResource ErrorMessage}"
+                                               Visibility="{Binding ReceiptInfo.PatientName.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <Label>Phone Number *</Label>
+                                <TextBox Text="{Binding ReceiptInfo.PhoneNumber.Value, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                <TextBlock Text="{Binding ReceiptInfo.PhoneNumber.Error}" 
+                                                Style="{DynamicResource ErrorMessage}" 
+                                               Visibility="{Binding ReceiptInfo.PhoneNumber.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </StackPanel>
+
+                            <Grid Grid.Column="2">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Column="0" Grid.Row="0">
+                                    <Label>Age *</Label>
+                                    <TextBox Text="{Binding ReceiptInfo.Age.Value, Converter={StaticResource ZeroToEmptyStringConverter}, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                </StackPanel>
+                                <StackPanel  Grid.Column="1" Grid.Row="0" VerticalAlignment="Stretch">
+                                    <Label>Age Type</Label>
+                                    <StackPanel Orientation="Horizontal" Height="30">
+                                        <RadioButton Content="Year"
+                                             IsChecked="{Binding ReceiptInfo.IsAgeYear.Value, Mode=TwoWay}" 
+                                                          VerticalContentAlignment="Center" />
+
+                                        <RadioButton Content="Month" 
+                                             IsChecked="{Binding ReceiptInfo.IsAgeYear.Value, Mode=TwoWay,
+                                                         Converter={StaticResource InverseBooleanConverter}}"
+                                                          VerticalContentAlignment="Center" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                                               Text="{Binding ReceiptInfo.Age.Error}" 
+                                               Style="{DynamicResource ErrorMessage}"
+                                               Visibility="{Binding ReceiptInfo.Age.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </Grid>
+
+                            <StackPanel Grid.Column="3">
+                                <Label>Gender *</Label>
+                                <ComboBox SelectedItem="{Binding ReceiptInfo.Gender.Value}">
+                                    <ComboBoxItem Content="Male"></ComboBoxItem>
+                                    <ComboBoxItem Content="Female"></ComboBoxItem>
+                                </ComboBox>
+                                <TextBlock Text="{Binding ReceiptInfo.Gender.Error}" 
+                                               Style="{DynamicResource ErrorMessage}"
+                                               Visibility="{Binding ReceiptInfo.Gender.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Grid.ColumnSpan="2">
+                                <Label>Address</Label>
+                                <TextBox Text="{Binding ReceiptInfo.Address.Value, UpdateSourceTrigger=PropertyChanged}">
+                                </TextBox>
+                                <TextBlock Text="{Binding ReceiptInfo.Address.Error}" 
+                                               Style="{DynamicResource ErrorMessage}"
+                                               Visibility="{Binding ReceiptInfo.Address.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="6" >
+                                <Label>Refered By *</Label>
+                                <ComboBox ItemsSource="{Binding Doctors}" DisplayMemberPath="Name" 
+                                              SelectedItem="{Binding ReceiptInfo.ReferredBy.Value}">
+                                </ComboBox>
+                                <TextBlock Text="{Binding ReceiptInfo.ReferredBy.Error}" 
+                                               Style="{DynamicResource ErrorMessage}"
+                                               Visibility="{Binding ReceiptInfo.ReferredBy.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="7">
+                                <Label>Date</Label>
+                                <DatePicker SelectedDate="{Binding ReceiptInfo.ReceiptDate.Value}"></DatePicker>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border 
+                        Grid.Row="2"
+                        Style="{DynamicResource BoxBorder}">
+
+                    <StackPanel>
+                        <TextBlock Text="Test Details" FontSize="16" Margin="0 0 0 15" FontWeight="SemiBold" Foreground="#FF5B5B5B"></TextBlock>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"></ColumnDefinition>
+                                <ColumnDefinition Width="16"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+
+                            <DataGrid Grid.Column="0" ItemsSource="{Binding SelectedTests}" CanUserSortColumns="False" 
+                                      CanUserResizeColumns="False" CanUserReorderColumns="False" 
+                                      VerticalScrollBarVisibility="Auto" MaxHeight="520">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Test Name" Width="*" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="100"/>
+                                    <DataGridTemplateColumn Header="Discount" Width="100">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Discount, Converter={StaticResource NumberToPercentageStringConverter}}"></TextBlock>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="100"/>
+                                    <DataGridTemplateColumn Header="Delete">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Background="Transparent" BorderBrush="Transparent" Width="Auto"
+                                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.DeleteCommand}"
+                                                    CommandParameter="{Binding}">
+                                                    <Image Source="/Resources/trash.png" Margin="3"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <Grid Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -68,248 +207,138 @@
                                     <RowDefinition Height="Auto"></RowDefinition>
                                 </Grid.RowDefinitions>
 
-                                <StackPanel Grid.Column="0">
-                                    <Label>Name *</Label>
-                                    <TextBox Text="{Binding ReceiptInfo.PatientName.Value, UpdateSourceTrigger=PropertyChanged}">
-                                    </TextBox>
-                                    <TextBlock Text="{Binding ReceiptInfo.PatientName.Error}" 
-                                               Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding ReceiptInfo.PatientName.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="1">
-                                    <Label>Phone Number *</Label>
-                                    <TextBox Text="{Binding ReceiptInfo.PhoneNumber.Value, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                                    <TextBlock Text="{Binding ReceiptInfo.PhoneNumber.Error}" 
-                                                Style="{DynamicResource ErrorMessage}" 
-                                               Visibility="{Binding ReceiptInfo.PhoneNumber.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="2">
-                                    <Label>Age *</Label>
-                                    <TextBox Text="{Binding ReceiptInfo.Age.Value, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                                    <TextBlock Text="{Binding ReceiptInfo.Age.Error}" 
-                                               Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding ReceiptInfo.Age.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="3">
-                                    <Label>Gender *</Label>
-                                    <ComboBox SelectedItem="{Binding ReceiptInfo.Gender.Value}">
-                                        <ComboBoxItem Content="Male"></ComboBoxItem>
-                                        <ComboBoxItem Content="Female"></ComboBoxItem>
-                                    </ComboBox>
-                                    <TextBlock Text="{Binding ReceiptInfo.Gender.Error}" 
-                                               Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding ReceiptInfo.Gender.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="4" Grid.ColumnSpan="2">
-                                    <Label>Address</Label>
-                                    <TextBox Text="{Binding ReceiptInfo.Address.Value, UpdateSourceTrigger=PropertyChanged}">
-                                    </TextBox>
-                                    <TextBlock Text="{Binding ReceiptInfo.Address.Error}" 
-                                               Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding ReceiptInfo.Address.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="0" Grid.Row="1">
-                                    <Label>Refered By *</Label>
-                                    <ComboBox ItemsSource="{Binding Doctors}" DisplayMemberPath="Name" 
-                                              SelectedItem="{Binding ReceiptInfo.ReferredBy.Value}">
-                                    </ComboBox>
-                                    <TextBlock Text="{Binding ReceiptInfo.ReferredBy.Error}" 
-                                               Style="{DynamicResource ErrorMessage}"
-                                               Visibility="{Binding ReceiptInfo.ReferredBy.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="1" Grid.Row="1">
-                                    <Label>Date</Label>
-                                    <DatePicker SelectedDate="{Binding ReceiptInfo.ReceiptDate.Value}"></DatePicker>
-                                </StackPanel>
-                            </Grid>
-                        </StackPanel>
-                    </Border>
-
-                    <Border 
-                        Grid.Row="2"
-                        Style="{DynamicResource BoxBorder}">
-
-                        <StackPanel>
-                            <TextBlock Text="Test Details" FontSize="16" Margin="0 0 0 15" FontWeight="SemiBold" Foreground="#FF5B5B5B"></TextBlock>
-
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                                    <ColumnDefinition Width="16"></ColumnDefinition>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-
-                                <DataGrid Height="400" Grid.Column="0" ItemsSource="{Binding SelectedTests}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Test Name" Width="600" Binding="{Binding Name}"/>
-                                        <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="100"/>
-                                        <DataGridTemplateColumn Header="Delete" Width="100">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Discount, Converter={StaticResource NumberToPercentageStringConverter}}"></TextBlock>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="100"/>
-                                        <DataGridTemplateColumn Header="Delete" Width="100">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button>Delete</Button>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-
-                                <Grid Grid.Column="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                    </Grid.RowDefinitions>
-
-                                    <StackPanel Margin="2 0" Grid.Column="0">
-                                        <Label Content="Test Name"></Label>
-                                        <ComboBox SelectedValue="{Binding TestInfo.Id.Value}" ItemsSource="{Binding Tests}"
+                                <StackPanel Margin="2 0" Grid.Column="0">
+                                    <Label Content="Test Name"></Label>
+                                    <ComboBox SelectedValue="{Binding TestInfo.Id.Value}" ItemsSource="{Binding Tests}"
                                                   DisplayMemberPath="Name" SelectedValuePath="Id"
                                                   IsTextSearchEnabled="True" >
-                                            <i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="SelectionChanged">
-                                                    <i:InvokeCommandAction Command="{Binding TestSelectionChangedCommand}"/>
-                                                </i:EventTrigger>
-                                            </i:Interaction.Triggers>
-                                        </ComboBox>
-                                        <TextBlock Text="{Binding TestInfo.Id.Error}" 
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction Command="{Binding TestSelectionChangedCommand}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </ComboBox>
+                                    <TextBlock Text="{Binding TestInfo.Id.Error}" 
                                                    Style="{DynamicResource ErrorMessage}"
                                                    Visibility="{Binding TestInfo.Id.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
-                                    </StackPanel>
-                                    <StackPanel Margin="2 0" Grid.Column="1">
-                                        <Label Content="Amount (BDT &#x09F3;)"></Label>
-                                        <TextBox Text="{Binding TestInfo.TestAmount.Value,
+                                </StackPanel>
+                                <StackPanel Margin="2 0" Grid.Column="1">
+                                    <Label Content="Amount (BDT &#x09F3;)"></Label>
+                                    <TextBox Text="{Binding TestInfo.TestAmount.Value,
                                             Converter={StaticResource ZeroToEmptyStringConverter}, 
                                             UpdateSourceTrigger=PropertyChanged,
                                             Mode=TwoWay}" TextAlignment="Center" IsReadOnly="True">
-                                        </TextBox>
-                                        <TextBlock Text="{Binding TestInfo.TestAmount.Error}" 
+                                    </TextBox>
+                                    <TextBlock Text="{Binding TestInfo.TestAmount.Error}" 
                                                    Style="{DynamicResource ErrorMessage}"
                                                    Visibility="{Binding TestInfo.TestAmount.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
-                                    </StackPanel>
-                                    <StackPanel Margin="2 0" Grid.Column="2">
-                                        <Label Content="Discount % (Optional)"></Label>
-                                        <TextBox Text="{Binding TestInfo.TestDiscount.Value,
+                                </StackPanel>
+                                <StackPanel Margin="2 0" Grid.Column="2">
+                                    <Label Content="Discount % (Optional)"></Label>
+                                    <TextBox Text="{Binding TestInfo.TestDiscount.Value,
                                             Converter={StaticResource ZeroToEmptyStringConverter}, 
                                             UpdateSourceTrigger=PropertyChanged,
                                             Mode=TwoWay}" TextAlignment="Center">
-                                        </TextBox>
-                                        <TextBlock Text="{Binding TestInfo.TestDiscount.Error}" 
+                                    </TextBox>
+                                    <TextBlock Text="{Binding TestInfo.TestDiscount.Error}" 
                                                    Style="{DynamicResource ErrorMessage}"
                                                    Visibility="{Binding TestInfo.TestDiscount.Error, Converter={StaticResource StringToVisibilityConverter}}"/>
-                                    </StackPanel>
-                                    <StackPanel Margin="2 0" Grid.Column="3">
-                                        <Label Content=""></Label>
-                                        <Button Content="Add Test" Command="{Binding AddTestCommand}"></Button>
-                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Margin="2 0" Grid.Column="3">
+                                    <Label Content=""></Label>
+                                    <Button Content="Add Test" Command="{Binding AddTestCommand}"></Button>
+                                </StackPanel>
 
-                                    <Grid Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition Width="10"/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
+                                <Grid Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
 
-                                        <Label Grid.Row="0" Grid.Column="0" Content="Sub-Total" 
+                                    <Label Grid.Row="0" Grid.Column="0" Content="Sub-Total" 
                                                    HorizontalAlignment="Right" 
                                                    VerticalAlignment="Center"></Label>
-                                        <TextBox Text="{Binding ReceiptInfo.SubTotal.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="0" Grid.Column="2"
+                                    <TextBox Text="{Binding ReceiptInfo.SubTotal.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="0" Grid.Column="2"
                                                  Margin="0" TextAlignment="Right" IsReadOnly="True"/>
 
-                                        <Label Grid.Row="1" Grid.Column="0" Content="Discount"
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Discount"
                                                HorizontalAlignment="Right"
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Text="{Binding ReceiptInfo.Discount.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="1" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
+                                    <TextBox Text="{Binding ReceiptInfo.Discount.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="1" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
 
-                                        <Label Grid.Row="2" Grid.Column="0" Content="Total"
+                                    <Label Grid.Row="2" Grid.Column="0" Content="Total"
                                                HorizontalAlignment="Right" 
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Text="{Binding ReceiptInfo.Total.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="2" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
+                                    <TextBox Text="{Binding ReceiptInfo.Total.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="2" Grid.Column="2" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
 
-                                        <Label Grid.Row="3" Grid.Column="0" Content="Due"
+                                    <Label Grid.Row="3" Grid.Column="0" Content="Due"
                                                HorizontalAlignment="Right" 
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Text="{Binding ReceiptInfo.Due.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="3" Grid.Column="2"  Margin="0" TextAlignment="Right">
-                                            <i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="LostFocus">
-                                                    <i:InvokeCommandAction Command="{Binding DueChangedCommand}"/>
-                                                </i:EventTrigger>
-                                            </i:Interaction.Triggers>
-                                        </TextBox>
+                                    <TextBox Text="{Binding ReceiptInfo.Due.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Grid.Row="3" Grid.Column="2"  Margin="0" TextAlignment="Right">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="LostFocus">
+                                                <i:InvokeCommandAction Command="{Binding DueChangedCommand}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
 
-                                        <Label Grid.Row="4" Grid.Column="0" Content="Balance" 
+                                    <Label Grid.Row="4" Grid.Column="0" Content="Balance" 
                                                HorizontalAlignment="Right" 
                                                VerticalAlignment="Center"></Label>
-                                        <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding ReceiptInfo.Balance.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
-                                    </Grid >
-                                </Grid>
+                                    <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding ReceiptInfo.Balance.Value, Converter={StaticResource ZeroToEmptyStringConverter}}" Margin="0" TextAlignment="Right" IsReadOnly="True"/>
+                                </Grid >
                             </Grid>
-                        </StackPanel>
-                    </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
 
-                    <Border Grid.Row="3" VerticalAlignment="Bottom">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
+                <Border Grid.Row="3" VerticalAlignment="Bottom">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
 
-                            <Button Content="Reset" 
+                        <Button Content="Reset" 
                                     Command="{Binding ResetCommand}" 
-                                    IsEnabled="{Binding IsSaved, Converter={StaticResource NegationConverter}}"
+                                    IsEnabled="{Binding IsSaved, Converter={StaticResource InverseBooleanConverter}}"
                                     Background="OrangeRed" 
                                     Margin="0 0 5 0" 
                                     Grid.Column="3"/>
 
-                            <Button Content="Confirm Save" 
-                                    Command="{Binding SaveCommand}" 
+                        <Button Content="Confirm Save" 
+                                    Command="{Binding SaveCommand}"
+                                    IsEnabled="{Binding IsSaved, Converter={StaticResource InverseBooleanConverter}}"
                                     Background="ForestGreen" 
                                     Margin="0 0 5 0" 
                                     Grid.Column="4"/>
 
-                            <Button Content="Print"
+                        <Button Content="Print"
                                     Command="{Binding PrintCommand}"
                                     IsEnabled="{Binding IsSaved}"
                                     Grid.Column="5" 
                                     Margin="0 0 5 0"/>
 
-                            <Button Content="Create New"
+                        <Button Content="Create New"
                                     Command="{Binding CreateNewCommand}"
                                     IsEnabled="{Binding IsSaved}"
                                     Grid.Column="6"/>
-                        </Grid>
-                    </Border>
-                </Grid>
-            </Border>
-        </Grid>
-    </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
 </UserControl>

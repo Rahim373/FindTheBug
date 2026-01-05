@@ -186,6 +186,8 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     LabReceiptStatus = table.Column<int>(type: "INTEGER", nullable: false),
                     ReportDeliveryStatus = table.Column<int>(type: "INTEGER", nullable: false),
                     ReferredById = table.Column<Guid>(type: "TEXT", nullable: true),
+                    Discriminator = table.Column<string>(type: "TEXT", maxLength: 21, nullable: false),
+                    IsDirty = table.Column<bool>(type: "INTEGER", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -339,23 +341,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
                     table.ForeignKey(
                         name: "FK_Invoices_LabReceipt_PatientId",
                         column: x => x.PatientId,
-                        principalTable: "LabReceipt",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LabReceipts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LabReceipts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LabReceipts_LabReceipt_Id",
-                        column: x => x.Id,
                         principalTable: "LabReceipt",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -552,9 +537,6 @@ namespace FindTheBug.Desktop.Reception.Migrations
 
             migrationBuilder.DropTable(
                 name: "InvoiceItems");
-
-            migrationBuilder.DropTable(
-                name: "LabReceipts");
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");

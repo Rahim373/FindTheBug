@@ -47,15 +47,16 @@
             </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-
-            <StackPanel Grid.Column="0" >
+            <Image Grid.Column="0" Source="/Resources/AlRazi Logo.png" Height="64" Width="Auto" Margin="15 0"/>
+            <StackPanel Grid.Column="1" >
                 <TextBlock FontSize="20" Padding="10 20 0 0" Foreground="White" FontWeight="Bold">Mathbaria Al-Razi Diagnostics and Consultation Center</TextBlock>
                 <TextBlock FontSize="25" Padding="10 0 0 20" Foreground="White">Reception App</TextBlock>
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>

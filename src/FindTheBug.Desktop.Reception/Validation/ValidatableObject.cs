@@ -23,6 +23,12 @@ public class ValidatableObject<T> : INotifyPropertyChanged
         Errors = new ObservableCollection<string>();
     }
 
+    public ValidatableObject(T defaultValue)
+    {
+        Errors = new ObservableCollection<string>();
+        _value = defaultValue;
+    }
+
     public List<ValidationRule<T>> ValidationRules => _validationRules;
 
     public T? Value

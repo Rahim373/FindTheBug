@@ -22,6 +22,10 @@ public static class CloudSyncConstants
     /// </summary>
     public const string DiagnosticTestsEndpoint = $"{ApiBasePath}/diagnostic-tests?pageSize=200";
     /// <summary>
+    /// Endpoint for pushing lab receipts
+    /// </summary>
+    public const string LabReceiptsEndpoint = $"{ApiBasePath}/lab-receipts";
+    /// <summary>
     /// Endpoint for health check
     /// </summary>
     public const string HealthCheckEndpoint = $"/health";

@@ -9,12 +9,13 @@
         <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:SyncStatusColorConverter x:Key="SyncStatusColorConverter"/>
-        <converters:NegationConverter x:Key="NegationConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:ZeroToEmptyStringConverter x:Key="ZeroToEmptyStringConverter"/>
         <converters:NumberToPercentageStringConverter x:Key="NumberToPercentageStringConverter"/>
+        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter"/>
 
         <Style TargetType="{x:Type Label}">
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="#FF5B5B5B"/>
@@ -22,7 +23,7 @@
         </Style>
         
         <Style TargetType="{x:Type TextBlock}" x:Key="PageHeader">
-            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Margin" Value="0,0,0,15"/>
         </Style>
@@ -34,58 +35,38 @@
         </Style>
 
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Padding" Value="7"/>
             <Setter Property="BorderBrush" Value="#BDC3C7"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Margin" Value="0,0,0,5"/>
         </Style>
-        
+
         <Style TargetType="{x:Type ComboBox}">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Padding" Value="7"/>
             <Setter Property="BorderBrush" Value="#BDC3C7"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Margin" Value="0,0,0,5"/>
         </Style>
-        
+
         <Style TargetType="{x:Type DatePicker}">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="9"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="BorderBrush" Value="#BDC3C7"/>
             <Setter Property="Background" Value="white"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,0,0,20"/>
         </Style>
-        
+        <Style TargetType="DatePickerTextBox">
+            <Setter Property="Padding" Value="5 0"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
         <Style TargetType="{x:Type Button}">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12 11"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Height" Value="30"/>
+            
             <Setter Property="BorderBrush" Value="#3498DB"/>
             <Setter Property="Background" Value="#3498DB"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                    CornerRadius="3" 
-                    Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="#95A5A6"/>
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#2980B9"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
 
         <Style TargetType="{x:Type DataGrid}">
@@ -98,10 +79,10 @@
             <Setter Property="HorizontalGridLinesBrush" Value="LightGray"></Setter>
             <Setter Property="HeadersVisibility" Value="Column"></Setter>
             <Setter Property="Background" Value="Transparent"></Setter>
-            <Setter Property="RowHeight" Value="35"></Setter>
+            <Setter Property="RowHeight" Value="30"></Setter>
             <Setter Property="BorderBrush" Value="LightGray"></Setter>
-            <Setter Property="FontSize" Value="14"></Setter>
-            <Setter Property="ColumnHeaderHeight" Value="35"></Setter>
+            <Setter Property="FontSize" Value="13"></Setter>
+            <Setter Property="ColumnHeaderHeight" Value="30"></Setter>
             <Setter Property="AlternatingRowBackground" Value="#F9F9F9"></Setter>
             <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
             <Setter Property="VerticalScrollBarVisibility" Value="Auto"></Setter>

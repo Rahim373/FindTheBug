@@ -1,4 +1,4 @@
-﻿using FindTheBug.Application.Common.Models;
+using FindTheBug.Application.Common.Models;
 using FindTheBug.Application.Features.Doctors.Queries;
 using FindTheBug.Application.Features.Laboratory.DiagnosticTests.DTOs;
 using FindTheBug.Application.Features.Laboratory.DiagnosticTests.Queries;
@@ -8,6 +8,8 @@ using FindTheBug.Domain.Entities;
 using FindTheBug.WebAPI.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using FindTheBug.Application.Features.Laboratory.LabReceipts.DTOs;
+using FindTheBug.Application.Features.Laboratory.LabReceipts.Commands;
 
 namespace FindTheBug.WebAPI.Controllers;
 
@@ -90,6 +92,29 @@ public class DataSyncController(ISender mediator) : BaseApiController
 
         return result.Match(
             tests => Ok(tests),
+            Problem);
+    }
+
+    /// <summary>
+    /// Sync LabReceipt with LabTests from Desktop application
+    /// </summary>
+    /// <param name="request">LabReceipt sync data with test entries</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Success response indicating the sync operation completed</returns>
+    /// <response code="200">LabReceipt synced successfully</response>
+    /// <response code="400">If request is invalid</response>
+    [HttpPost("lab-receipts")]
+    [ProducesResponseType(typeof(Result<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SyncLabReceipt(
+        [FromBody] LabReceiptSyncDto request,
+        CancellationToken cancellationToken)
+    {
+        var command = new SyncLabReceiptCommand(request);
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            data => Ok(data),
             Problem);
     }
 

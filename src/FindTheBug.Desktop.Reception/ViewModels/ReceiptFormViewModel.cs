@@ -65,17 +65,17 @@ public partial class ReceiptFormViewModel : ObservableObject
     private void SelectedTests_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         var subTotal = 0m;
-        var discount = 0m;
+        var total = 0m;
 
         foreach (var test in SelectedTests)
         {
-            subTotal += test.Total;
-            discount += test.Discount;
+            subTotal += test.Amount;
+            total += test.Total;
         }
 
         ReceiptInfo.SubTotal.Value = Math.Round(subTotal, 0);
-        ReceiptInfo.Discount.Value = Math.Round(discount, 0);
-        ReceiptInfo.Total.Value = ReceiptInfo.SubTotal.Value - ReceiptInfo.Discount.Value;
+        ReceiptInfo.Total.Value = total;
+        ReceiptInfo.Discount.Value = Math.Round(subTotal - total, 0);
     }
 
     private async Task LoadDoctorsAsync()
@@ -153,11 +153,7 @@ public partial class ReceiptFormViewModel : ObservableObject
 
         if (messageBoxResult == MessageBoxResult.Yes)
         {
-            ReceiptInfo.ClearAll();
-            TestInfo.ClearAll();
-            SelectedTests.Clear();
-            OnPropertyChanged(nameof(Tests));
-            PageTitle = CREATE_NEW_RECEIPT;
+            CreateNew();
         }
     }
 
@@ -188,24 +184,17 @@ public partial class ReceiptFormViewModel : ObservableObject
             try
             {
                 // Save the receipt to database
-                var receiptId = await DbAccess.SaveReceiptAsync(ReceiptInfo, SelectedTests.ToList());
+                var receipt = await DbAccess.SaveReceiptAsync(ReceiptInfo, SelectedTests.ToList());
                 
-                // Set the invoice number
-                var dbContext = App.ServiceProvider?.GetService(typeof(Data.ReceptionDbContext)) as Data.ReceptionDbContext;
-                if (dbContext != null)
-                {
-                    var savedReceipt = await dbContext.LabReceipts.FindAsync(receiptId);
-                    if (savedReceipt != null)
-                    {
-                        ReceiptInfo.InvoiceNumber = savedReceipt.InvoiceNumber;
-                    }
-                }
+                ReceiptInfo.InvoiceNumber = receipt.InvoiceNumber;
 
                 // Update page title with invoice number
-                PageTitle = $"Receipt {ReceiptInfo.InvoiceNumber}";
+                PageTitle = $"Receipt: {ReceiptInfo.InvoiceNumber}";
 
                 MessageBox.Show($"Receipt saved successfully!\nInvoice Number: {ReceiptInfo.InvoiceNumber}", 
                     "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                OnPropertyChanged(nameof(IsSaved));
             }
             catch (Exception ex)
             {
@@ -218,17 +207,17 @@ public partial class ReceiptFormViewModel : ObservableObject
     [RelayCommand]
     private void CreateNew()
     {
-        Reset();
+        ReceiptInfo.ClearAll();
+        TestInfo.ClearAll();
+        SelectedTests.Clear();
+        OnPropertyChanged(nameof(IsSaved));
         PageTitle = CREATE_NEW_RECEIPT;
     }
 
-    /// <summary>
-    /// Forces validation on all fields
-    /// </summary>
-    public void ForceValidateAll()
+    [RelayCommand]
+    private void Delete(LabTestDto test)
     {
-        ReceiptInfo.ForceValidateAll();
-        TestInfo.ForceValidateAll();
+        SelectedTests.Remove(test);
     }
 
     private bool CanReset()

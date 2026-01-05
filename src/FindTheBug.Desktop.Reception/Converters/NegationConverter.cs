@@ -3,7 +3,7 @@ using System.Windows.Data;
 
 namespace FindTheBug.Desktop.Reception.Converters;
 
-internal class NegationConverter : IValueConverter
+internal class InverseBooleanConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {

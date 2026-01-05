@@ -1,4 +1,5 @@
 using FindTheBug.Domain.Common;
+using System.ComponentModel;
 
 namespace FindTheBug.Domain.Entities;
 
@@ -12,6 +13,7 @@ public enum LabReceiptStatus
 
 public enum ReportDeliveryStatus
 {
+    [Description]
     NotDelivered = 0,
     Delivered = 1
 }

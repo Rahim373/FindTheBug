@@ -2,6 +2,7 @@ using FindTheBug.Desktop.Reception.Data;
 using FindTheBug.Desktop.Reception.Dtos;
 using FindTheBug.Desktop.Reception.Services.CloudSync.Mappers;
 using FindTheBug.Domain.Entities;
+using FindTheBug.Desktop.Reception.CusomEntity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -90,9 +91,13 @@ public class CloudSyncService
 
         try
         {
+            // Pull data from API
             await SyncEntityAsync<User, User>(CloudSyncConstants.UsersEndpoint, SaveUsersToLocal);
             await SyncEntityAsync<Doctor, Doctor>(CloudSyncConstants.DoctorsEndpoint, SaveDoctorsToLocal);
             await SyncEntityAsync<DiagnosticTestDto, DiagnosticTest>(CloudSyncConstants.DiagnosticTestsEndpoint, SaveDiagnosticTestsToLocal);
+
+            // Push unpushed data to API
+            await PushLabReceiptsToApiAsync();
 
             _state.CompleteSync();
             _logger.LogInformation("Completed Syncing");
@@ -366,6 +371,105 @@ public class CloudSyncService
             case DiagnosticTestDto testDto when entity is DiagnosticTest test:
                 testDto.UpdateEntity(test);
                 break;
+        }
+    }
+
+    /// <summary>
+    /// Pushes unpushed LabReceipts to the API
+    /// </summary>
+    private async Task PushLabReceiptsToApiAsync()
+    {
+        _logger.LogInformation("Pushing LabReceipts to API...");
+
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ReceptionDbContext>();
+
+            // Get all unpushed LabReceipts (IsDirty = true)
+            var unpushedReceipts = await dbContext.LabReceipts
+                .Where(lr => lr.IsDirty)
+                .Include(lr => lr.TestEntries)
+                .ToListAsync();
+
+            if (!unpushedReceipts.Any())
+            {
+                _logger.LogInformation("No unpushed LabReceipts found");
+                return;
+            }
+
+            _logger.LogInformation("Found {Count} unpushed LabReceipts", unpushedReceipts.Count);
+
+            foreach (var receipt in unpushedReceipts)
+            {
+                try
+                {
+                    // Map LabReceipt to DTO
+                    var receiptDto = new LabReceiptSyncDto
+                    {
+                        Id = receipt.Id,
+                        InvoiceNumber = receipt.InvoiceNumber,
+                        FullName = receipt.FullName,
+                        Age = receipt.Age,
+                        IsAgeYear = receipt.IsAgeYear,
+                        Gender = receipt.Gender,
+                        PhoneNumber = receipt.PhoneNumber,
+                        Address = receipt.Address,
+                        ReferredByDoctorId = receipt.ReferredByDoctorId,
+                        SubTotal = receipt.SubTotal,
+                        Total = receipt.Total,
+                        Discount = receipt.Discount,
+                        Due = receipt.Due,
+                        Balance = receipt.Balace,
+                        ReportDeliveredOn = receipt.ReportDeliveredOn,
+                        LabReceiptStatus = (int)receipt.LabReceiptStatus,
+                        ReportDeliveryStatus = (int)receipt.ReportDeliveryStatus,
+                        CreatedAt = receipt.CreatedAt,
+                        UpdatedAt = receipt.UpdatedAt,
+                        CreatedBy = receipt.CreatedBy,
+                        UpdatedBy = receipt.UpdatedBy,
+                        TestEntries = receipt.TestEntries.Select(te => new ReceiptTestSyncDto
+                        {
+                            Id = te.Id,
+                            LabReceiptId = te.LabReceiptId,
+                            DiagnosticTestId = te.DiagnosticTestId,
+                            Amount = te.Amount,
+                            DiscountPercentage = te.DiscountPercentage,
+                            Total = te.Total,
+                            Status = (int)te.Status,
+                            CreatedAt = te.CreatedAt,
+                            UpdatedAt = te.UpdatedAt,
+                            CreatedBy = te.CreatedBy,
+                            UpdatedBy = te.UpdatedBy
+                        }).ToList()
+                    };
+
+                    // Send to API
+                    var response = await _retryPolicy.ExecuteAsync(async () =>
+                        await _httpClient.PostAsJsonAsync(CloudSyncConstants.LabReceiptsEndpoint, receiptDto, _jsonOptions));
+
+                    response.EnsureSuccessStatusCode();
+
+                    // Mark as not dirty after successful sync
+                    receipt.IsDirty = false;
+                    dbContext.LabReceipts.Update(receipt);
+
+                    _logger.LogInformation("Successfully pushed LabReceipt with InvoiceNumber: {InvoiceNumber}", receipt.InvoiceNumber);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to push LabReceipt with InvoiceNumber: {InvoiceNumber}", receipt.InvoiceNumber);
+                    // Continue with next receipt even if this one fails
+                }
+            }
+
+            await dbContext.SaveChangesAsync();
+            _logger.LogInformation("Completed pushing LabReceipts to API");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error pushing LabReceipts to API");
+            throw;
         }
     }
 }
