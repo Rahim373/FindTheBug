@@ -3,7 +3,7 @@
 public static class ModuleConstants
 {
     public const string Laboratory = "Laboratory";
-    public const string Doctors = "Doctors";
+    public const string DoctorManagement = "DoctorManagement";
     public const string Dispensary = "Dispensary";
     public const string Reception = "Reception";
     public const string UserManagement = "UserManagement";
@@ -14,7 +14,7 @@ public static class ModuleConstants
     [
         Accounts,
         Reception,
-        Doctors, 
+        DoctorManagement, 
         Dispensary, 
         Laboratory, 
         UserManagement

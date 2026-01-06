@@ -6,6 +6,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { PermissionService, PermissionType } from '../../../../core/services/permission.service';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
     selector: 'app-sidebar',
@@ -15,24 +16,27 @@ import { PermissionService, PermissionType } from '../../../../core/services/per
         RouterLink,
         NzMenuModule,
         NzIconModule,
-        NzLayoutModule
+        NzLayoutModule,
+        NgOptimizedImage,
     ],
     template: `
     <nz-sider 
         [nzCollapsed]="isCollapsed" 
         [nzWidth]="200" 
         [nzCollapsedWidth]="80"
+        nzTheme="light"
         class="sidebar">
         <div class="logo">
             <ng-container *ngIf="!isCollapsed">
-                <span class="logo-text">FindTheBug</span>
+                <img ngSrc="/images/Logo.svg" height="50" width="89" />
+                <!-- <span class="logo-text">FindTheBug</span> -->
             </ng-container>
             <ng-container *ngIf="isCollapsed">
                 <span class="logo-icon">FTB</span>
             </ng-container>
         </div>
         
-        <ul nz-menu nzTheme="dark" [nzMode]="isCollapsed ? 'vertical' : 'inline'" [nzInlineCollapsed]="isCollapsed">
+        <ul nz-menu [nzMode]="isCollapsed ? 'vertical' : 'inline'" [nzInlineCollapsed]="isCollapsed">
             <li nz-menu-item nzMatchRouter>
                 <a routerLink="/admin/dashboard">
                     <span nz-icon nzType="dashboard"></span>
@@ -56,9 +60,9 @@ import { PermissionService, PermissionType } from '../../../../core/services/per
                 </ul>
             </li>
             <li nz-submenu nzTitle="Medical Management" nzIcon="fa:stethoscope" [nzOpen]="isMedicalManagementOpen"
-                *ngIf="permissionService.hasAnyPermissionSync('Doctors') || permissionService.hasAnyPermissionSync('Patients')">
+                *ngIf="permissionService.hasAnyPermissionSync('DoctorManagement') || permissionService.hasAnyPermissionSync('Patients')">
                 <ul>
-                    <li nz-menu-item nzMatchRouter *ngIf="permissionService.hasPermissionSync('Doctors', PermissionType.View)">
+                    <li nz-menu-item nzMatchRouter *ngIf="permissionService.hasPermissionSync('DoctorManagement', PermissionType.View)">
                         <a routerLink="/admin/doctors">
                             <span nz-icon nzType="fa:user-doctor"></span>
                             <span>Doctors</span>
@@ -95,6 +99,17 @@ import { PermissionService, PermissionType } from '../../../../core/services/per
                     </li>
                 </ul>
             </li>
+            <li nz-submenu nzTitle="Reception" nzIcon="fa:users-line" [nzOpen]="isReceptionOpen"
+                *ngIf="permissionService.hasAnyPermissionSync('Reception')">
+                <ul>
+                    <li nzType="fa:file-invoice" nz-menu-item nzMatchRouter *ngIf="permissionService.hasPermissionSync('Reception', PermissionType.View)">
+                        <a routerLink="/admin/receipts">
+                            <span nz-icon nzType="fa:file-invoice"></span>
+                            <span>Receipts</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li nz-submenu nzTitle="Transactions" nzIcon="transaction" [nzOpen]="isTransactionsOpen"
                 *ngIf="permissionService.hasAnyPermissionSync('Accounts')">
                 <ul>
@@ -122,6 +137,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     isUserManagementOpen = false;
     isMedicalManagementOpen = false;
     isDispensaryOpen = false;
+    isReceptionOpen = false;
     isTransactionsOpen = false;
     isSettingsOpen = false;
 
@@ -149,6 +165,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.isUserManagementOpen = this.isRouteInSubmenu(url, ['/admin/users', '/admin/roles']);
         this.isMedicalManagementOpen = this.isRouteInSubmenu(url, ['/admin/doctors', '/admin/patients']);
         this.isDispensaryOpen = this.isRouteInSubmenu(url, ['/admin/dispensary/drugs', '/admin/dispensary/products', '/admin/dispensary/expenses']);
+        this.isReceptionOpen = this.isRouteInSubmenu(url, ['/admin/receipts']);
         this.isTransactionsOpen = this.isRouteInSubmenu(url, ['/admin/transactions/expenses']);
         this.isSettingsOpen = this.isRouteInSubmenu(url, ['/admin/settings/profile', '/admin/settings/system']);
     }

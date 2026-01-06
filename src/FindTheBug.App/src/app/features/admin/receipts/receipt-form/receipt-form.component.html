@@ -1,0 +1,268 @@
+<div class="form-container">
+  <nz-card [nzTitle]="isEditMode ? 'Edit Receipt' : 'Create New Receipt'" [nzLoading]="loading">
+    <form nz-form [formGroup]="receiptForm" (ngSubmit)="onSubmit()" nzLayout="vertical">
+      <!-- Patient Information -->
+      <nz-divider nzText="Patient Information"></nz-divider>
+      
+      <div class="form-row">
+        <nz-form-item class="form-item-quarter">
+          <nz-form-label nzRequired>Invoice Number</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter invoice number">
+            <input nz-input formControlName="invoiceNumber"/>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="form-item-quarter">
+          <nz-form-label nzRequired>Full Name</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter patient name">
+            <input nz-input formControlName="fullName" placeholder="Enter patient full name" />
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item class="form-item-quarter">
+            <nz-form-label>Age</nz-form-label>
+            <nz-input-wrapper>
+              <nz-form-control>
+                <nz-input-number formControlName="age" [nzMin]="0" [nzMax]="150" [nzStep]="1" style="width: 100%;"></nz-input-number>
+              </nz-form-control>
+              <nz-form-control>
+                <nz-radio-group formControlName="isAgeYear">
+                  <label nz-radio [nzValue]="true">Years</label>
+                  <label nz-radio [nzValue]="false">Months</label>
+                </nz-radio-group>
+              </nz-form-control>
+            </nz-input-wrapper>
+          </nz-form-item>
+
+        <nz-form-item class="form-item-quarter" >
+          <nz-form-label nzRequired>Gender</nz-form-label>
+          <nz-form-control nzErrorTip="Please select gender">
+            <nz-select formControlName="gender" nzPlaceHolder="Select gender">
+              <nz-option nzValue="Male" nzLabel="Male"></nz-option>
+              <nz-option nzValue="Female" nzLabel="Female"></nz-option>
+              <nz-option nzValue="Other" nzLabel="Other"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-row">
+        <nz-form-item class="form-item-quarter">
+          <nz-form-label nzRequired>Phone Number</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter phone number">
+            <input nz-input formControlName="phoneNumber" placeholder="Enter phone number" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="form-item-quarter">
+          <nz-form-label>Referred By</nz-form-label>
+          <nz-form-control>
+            <nz-select
+              formControlName="referredByDoctorId"
+              nzPlaceHolder="Select referring doctor"
+              [nzLoading]="loadingDoctors"
+              nzShowSearch
+              nzAllowClear
+              [nzFilterOption]="filterOption"
+            >
+              <nz-option
+                *ngFor="let doctor of doctors"
+                [nzValue]="doctor.id"
+                [nzLabel]="doctor.name"
+              ></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <nz-form-item>
+        <nz-form-label>Address</nz-form-label>
+        <nz-form-control>
+          <textarea nz-input formControlName="address" rows="3" placeholder="Enter address (optional)"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- Test Entries -->
+      <nz-divider nzText="Test Entries" nzOrientation="left"></nz-divider>
+      
+      <div class="test-entries-container">
+        <nz-table nz-table [nzBordered]="true" [nzSize]="'middle'" class="test-entries-table">
+          <thead>
+            <tr>
+              <th style="width: 40%;">Diagnostic Test</th>
+              <th style="width: 20%;">Rate</th>
+              <th style="width: 15%;">Discount</th>
+              <th style="width: 20%;">Total</th>
+              <th style="width: 5%;">Actions</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="testEntries">
+            <tr *ngFor="let testGroup of testEntries.controls; let i = index">
+              <td>
+                <nz-form-item style="margin-bottom: 0;">
+                  <nz-form-control [formGroupName]="i" nzErrorTip="Please select a test" style="margin-bottom: 0;">
+                    <nz-select
+                      formControlName="diagnosticTestId"
+                      nzPlaceHolder="Select test"
+                      nzShowSearch
+                      [nzLoading]="loadingDiagnosticTests"
+                      [nzFilterOption]="filterOption"
+                      style="width: 100%;"
+                      (ngModelChange)="onDiagnosticTestChange(i, $event)"
+                    >
+                      <nz-option nzValue="" nzLabel="Select a test"></nz-option>
+                      <nz-option
+                        *ngFor="let test of diagnosticTests"
+                        [nzValue]="test.id"
+                        [nzLabel]="test.name"
+                      ></nz-option>
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </td>
+              <td>
+                <nz-form-item style="margin-bottom: 0;">
+                  <nz-input-number 
+                    [formControlName]="i + '.rate'" 
+                    [nzMin]="0" 
+                    [nzStep]="0.01" 
+                    [nzPrecision]="2" 
+                    style="width: 100%;"
+                  ></nz-input-number>
+                </nz-form-item>
+              </td>
+              <td>
+                <nz-form-item style="margin-bottom: 0;">
+                  <nz-input-number 
+                    [formControlName]="i + '.discount'" 
+                    [nzMin]="0" 
+                    [nzMax]="testGroup.get('rate')?.value || 0"
+                    [nzStep]="0.01" 
+                    [nzPrecision]="2" 
+                    style="width: 100%;"
+                  ></nz-input-number>
+                </nz-form-item>
+              </td>
+              <td>
+                <nz-form-item style="margin-bottom: 0;">
+                  <nz-input-number 
+                    [formControlName]="i + '.total'" 
+                    [nzMin]="0" 
+                    [nzStep]="0.01" 
+                    [nzPrecision]="2" 
+                    style="width: 100%;"
+                  ></nz-input-number>
+                </nz-form-item>
+              </td>
+              <td class="action-cell">
+                <button 
+                  nz-button 
+                  nzType="link" 
+                  nzDanger 
+                  nzSize="small"
+                  (click)="removeTestEntry(i)" 
+                  [disabled]="testEntries.length === 1"
+                  title="Remove"
+                >
+                  <span nz-icon nzType="delete"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+        
+        <button nz-button nzType="dashed" (click)="addTestEntry()" style="width: 100%;">
+          <span nz-icon nzType="plus"></span>
+          Add Test Entry
+        </button>
+      </div>
+
+      <!-- Financial Information -->
+      <nz-divider nzText="Financial Information" nzOrientation="left"></nz-divider>
+      
+      <div class="form-row">
+        <nz-form-item class="form-item-quarter">
+          <nz-form-label nzRequired>Sub Total</nz-form-label>
+          <nz-form-control>
+            <nz-input-number formControlName="subTotal" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" style="width: 100%;"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="form-item-quarter">
+          <nz-form-label nzRequired>Discount</nz-form-label>
+          <nz-form-control>
+            <nz-input-number formControlName="discount" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" style="width: 100%;"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="form-item-quarter">
+          <nz-form-label nzRequired>Due</nz-form-label>
+          <nz-form-control>
+            <nz-input-number formControlName="due" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" style="width: 100%;"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="form-item-quarter">
+          <nz-form-label nzRequired>Total</nz-form-label>
+          <nz-form-control>
+            <nz-input-number formControlName="total" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" style="width: 100%;"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-row">
+        <nz-form-item class="form-item-half">
+          <nz-form-label nzRequired>Balance</nz-form-label>
+          <nz-form-control>
+            <nz-input-number formControlName="balance" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2" style="width: 100%;"></nz-input-number>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <!-- Status Information -->
+      <nz-divider nzText="Status Information" nzOrientation="left"></nz-divider>
+      
+      <div class="form-row">
+        <nz-form-item class="form-item-half">
+          <nz-form-label nzRequired>Receipt Status</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="labReceiptStatus" nzPlaceHolder="Select status">
+              <nz-option [nzValue]="LabReceiptStatus.Pending" nzLabel="Pending"></nz-option>
+              <nz-option [nzValue]="LabReceiptStatus.Paid" nzLabel="Paid"></nz-option>
+              <nz-option [nzValue]="LabReceiptStatus.Due" nzLabel="Due"></nz-option>
+              <nz-option [nzValue]="LabReceiptStatus.Void" nzLabel="Void"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="form-item-half">
+          <nz-form-label nzRequired>Report Delivery Status</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="reportDeliveryStatus" nzPlaceHolder="Select delivery status">
+              <nz-option [nzValue]="ReportDeliveryStatus.NotDelivered" nzLabel="Not Delivered"></nz-option>
+              <nz-option [nzValue]="ReportDeliveryStatus.Delivered" nzLabel="Delivered"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-row" *ngIf="isEditMode">
+        <nz-form-item class="form-item-half">
+          <nz-form-label>Report Delivered On</nz-form-label>
+          <nz-form-control>
+            <nz-date-picker formControlName="reportDeliveredOn" style="width: 100%;"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div class="form-actions">
+        <button nz-button nzType="default" (click)="cancel()" [disabled]="submitting">
+          Cancel
+        </button>
+        <button nz-button nzType="primary" type="submit" [nzLoading]="submitting">
+          {{ isEditMode ? 'Update Receipt' : 'Create Receipt' }}
+        </button>
+      </div>
+    </form>
+  </nz-card>
+</div>

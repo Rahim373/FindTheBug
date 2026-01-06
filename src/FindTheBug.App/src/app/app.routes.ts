@@ -115,6 +115,22 @@ export const routes: Routes = [
                 path: 'transactions/expenses/:id/edit',
                 loadComponent: () => import('./features/admin/dispensary/expenses/expense-form/expense-form.component').then(c => c.ExpenseFormComponent)
             },
+            {
+                path: 'receipts',
+                loadComponent: () => import('./features/admin/receipts/receipts-list/receipts-list.component').then(c => c.ReceiptsListComponent)
+            },
+            {
+                path: 'receipts/create',
+                loadComponent: () => import('./features/admin/receipts/receipt-form/receipt-form.component').then(c => c.ReceiptFormComponent)
+            },
+            {
+                path: 'receipts/:id',
+                loadComponent: () => import('./features/admin/receipts/receipt-form/receipt-form.component').then(c => c.ReceiptFormComponent)
+            },
+            {
+                path: 'receipts/:id/edit',
+                loadComponent: () => import('./features/admin/receipts/receipt-form/receipt-form.component').then(c => c.ReceiptFormComponent)
+            },
             // Future routes can be added here
             // { path: 'patients', loadComponent: () => import('./features/admin/patients/patients.component').then(c => c.PatientsComponent) },
             // { path: 'tests', loadComponent: () => import('./features/admin/tests/tests.component').then(c => c.TestsComponent) },

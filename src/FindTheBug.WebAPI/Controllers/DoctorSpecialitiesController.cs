@@ -24,7 +24,7 @@ public class DoctorSpecialitiesController(ISender sender) : BaseApiController
     /// <response code="400">If the request is invalid</response>
     /// <response code="403">If user doesn't have permission</response>
     [HttpGet]
-    [RequireModulePermission(ModuleConstants.Doctors, ModulePermission.View)]
+    [RequireModulePermission(ModuleConstants.DoctorManagement, ModulePermission.View)]
     [ProducesResponseType(typeof(List<DoctorSpecialityDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]

@@ -59,10 +59,12 @@ public class DbInitializer
         // Seed Modules
         var moduleDefinitions = new[]
         {
+            new { Name = ModuleConstants.DoctorManagement, DisplayName = "Doctor Management", Description = "Manage doctors" },
             new { Name = ModuleConstants.UserManagement, DisplayName = "User Management", Description = "Manage system users and their access" },
             new { Name = ModuleConstants.Dispensary, DisplayName = "Dispensary Management", Description = "Manage dispensary, product and sales" },
             new { Name = ModuleConstants.Accounts, DisplayName = "Accounts Management", Description = "Manage expensed, money flow" },
             new { Name = ModuleConstants.Reception, DisplayName = "Receiption Management", Description = "Manage receipts, ticketing, serials" },
+            new { Name = ModuleConstants.Laboratory, DisplayName = "Laboratory Management", Description = "Manage Tests, Prices, Update test reports etc." },
         };
 
         foreach (var moduleDef in moduleDefinitions)

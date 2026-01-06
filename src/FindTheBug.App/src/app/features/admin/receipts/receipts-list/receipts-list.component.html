@@ -1,0 +1,64 @@
+<div class="receipts-container">
+  <div class="page-header">
+    <h2>Receipts Management</h2>
+    <button nz-button nzType="primary" (click)="createReceipt()">
+      <span nz-icon nzType="plus"></span>
+      Add Receipt
+    </button>
+  </div>
+
+  <div class="search-bar">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input type="text" nz-input placeholder="Search by invoice number, name, phone, or address..." [(ngModel)]="searchText"
+        (keyup.enter)="onSearch()" />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search" (click)="onSearch()" class="cursor-pointer"></span>
+    </ng-template>
+  </div>
+
+  <nz-table #receiptsTable [nzData]="receipts" [nzLoading]="loading"
+    [nzFrontPagination]="false" [nzTotal]="totalCount"
+    [nzPageSize]="pageSize" [nzPageIndex]="pageNumber" (nzPageIndexChange)="onPageChange($event)"
+    (nzPageSizeChange)="onPageSizeChange($event)" [nzShowSizeChanger]="true"
+    [nzPageSizeOptions]="[10, 20, 50, 100]">
+    <thead>
+      <tr>
+        <th>Invoice Number</th>
+        <th>Patient Name</th>
+        <th>Phone Number</th>
+        <th>Total</th>
+        <th>Due</th>
+        <th>Status</th>
+        <th>Created Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let receipt of receipts">
+        <td><strong>{{ receipt.invoiceNumber }}</strong></td>
+        <td>{{ receipt.fullName }}</td>
+        <td>{{ receipt.phoneNumber }}</td>
+        <td>{{ receipt.total | currency }}</td>
+        <td>{{ receipt.due | currency }}</td>
+        <td>
+          <nz-tag [nzColor]="getStatusColor(receipt.statusDisplay)">
+            {{ receipt.statusDisplay }}
+          </nz-tag>
+        </td>
+        <td>{{ receipt.createdAt | date:'medium' }}</td>
+        <td>
+          <button nz-button nzType="link" nzSize="small" (click)="viewReceipt(receipt.id)" title="View Details">
+            <span nz-icon nzType="eye"></span>
+          </button>
+          <button nz-button nzType="link" nzSize="small" (click)="editReceipt(receipt.id)" title="Edit">
+            <span nz-icon nzType="edit"></span>
+          </button>
+          <button nz-button nzType="link" nzSize="small" nzDanger (click)="deleteReceipt(receipt)" title="Delete">
+            <span nz-icon nzType="delete"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

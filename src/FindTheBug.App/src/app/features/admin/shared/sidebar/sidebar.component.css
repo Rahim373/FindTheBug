@@ -39,7 +39,6 @@
 }
 
 :host ::ng-deep .ant-menu-item a {
-  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
 }
 

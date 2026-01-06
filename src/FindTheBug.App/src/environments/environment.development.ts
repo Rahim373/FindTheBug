@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://findthebug-api-latest.onrender.com/api',
+  apiUrl: 'http://localhost:5231/api',
   jwt: {
     tokenExpirationHours: 3,
     tokenBufferMinutes: 5
