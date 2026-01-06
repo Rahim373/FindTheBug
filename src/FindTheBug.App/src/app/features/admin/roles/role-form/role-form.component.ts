@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -19,18 +19,17 @@ import { Role, CreateRoleRequest, UpdateRoleRequest, ModulePermission } from '..
     selector: 'app-role-form',
     standalone: true,
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FormsModule,
-        NzFormModule,
-        NzInputModule,
-        NzButtonModule,
-        NzSwitchModule,
-        NzCheckboxModule,
-        NzTableModule,
-        NzCardModule,
-        NzSpinModule
-    ],
+    ReactiveFormsModule,
+    FormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzSwitchModule,
+    NzCheckboxModule,
+    NzTableModule,
+    NzCardModule,
+    NzSpinModule
+],
     templateUrl: './role-form.component.html',
     styleUrl: './role-form.component.css'
 })

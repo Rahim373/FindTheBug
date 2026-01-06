@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -19,17 +19,16 @@ import { PagedResult } from '../../../../core/models/common.models';
     selector: 'app-roles-list',
     standalone: true,
     imports: [
-        CommonModule,
-        FormsModule,
-        NzTableModule,
-        NzButtonModule,
-        NzInputModule,
-        NzIconModule,
-        NzModalModule,
-        NzTagModule,
-        NzSpaceModule,
-        NzCardModule
-    ],
+    FormsModule,
+    NzTableModule,
+    NzButtonModule,
+    NzInputModule,
+    NzIconModule,
+    NzModalModule,
+    NzTagModule,
+    NzSpaceModule,
+    NzCardModule
+],
     templateUrl: './roles-list.component.html',
     styleUrl: './roles-list.component.css'
 })

@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -16,16 +16,15 @@ import { Product, CreateProductRequest, UpdateProductRequest } from '../../../..
     selector: 'app-product-form',
     standalone: true,
     imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        NzFormModule,
-        NzInputModule,
-        NzButtonModule,
-        NzInputNumberModule,
-        NzSwitchModule,
-        NzCardModule
-    ],
+    FormsModule,
+    ReactiveFormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzInputNumberModule,
+    NzSwitchModule,
+    NzCardModule
+],
     templateUrl: './product-form.component.html',
     styleUrls: ['./product-form.component.css']
 })

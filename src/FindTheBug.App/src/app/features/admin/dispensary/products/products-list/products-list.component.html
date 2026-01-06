@@ -31,25 +31,27 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let product of products">
-        <td><strong>{{ product.name }}</strong></td>
-        <td>${{ product.price | number:'1.2-2' }}</td>
-        <td>{{ product.quantity }}</td>
-        <td>{{ product.description || '-' }}</td>
-        <td>
-          <nz-tag [nzColor]="product.isActive ? 'success' : 'default'">
-            {{ product.isActive ? 'Active' : 'Inactive' }}
-          </nz-tag>
-        </td>
-        <td>
-          <button nz-button nzType="link" (click)="editProduct(product.id)">
-            <span nz-icon nzType="edit"></span>
-          </button>
-          <button nz-button nzType="link" nzDanger (click)="deleteProduct(product)">
-            <span nz-icon nzType="delete"></span>
-          </button>
-        </td>
-      </tr>
+      @for (product of products; track product) {
+        <tr>
+          <td><strong>{{ product.name }}</strong></td>
+          <td>${{ product.price | number:'1.2-2' }}</td>
+          <td>{{ product.quantity }}</td>
+          <td>{{ product.description || '-' }}</td>
+          <td>
+            <nz-tag [nzColor]="product.isActive ? 'success' : 'default'">
+              {{ product.isActive ? 'Active' : 'Inactive' }}
+            </nz-tag>
+          </td>
+          <td>
+            <button nz-button nzType="link" (click)="editProduct(product.id)">
+              <span nz-icon nzType="edit"></span>
+            </button>
+            <button nz-button nzType="link" nzDanger (click)="deleteProduct(product)">
+              <span nz-icon nzType="delete"></span>
+            </button>
+          </td>
+        </tr>
+      }
     </tbody>
   </nz-table>
 </div>

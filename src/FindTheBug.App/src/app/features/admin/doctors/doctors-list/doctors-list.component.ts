@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -16,7 +16,6 @@ import { DoctorListItem } from '../../../../core/models/doctor.models';
   selector: 'app-doctors-list',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     NzTableModule,
     NzButtonModule,
@@ -24,7 +23,7 @@ import { DoctorListItem } from '../../../../core/models/doctor.models';
     NzIconModule,
     NzModalModule,
     NzTagModule
-  ],
+],
   templateUrl: './doctors-list.component.html',
   styleUrls: ['./doctors-list.component.css']
 })

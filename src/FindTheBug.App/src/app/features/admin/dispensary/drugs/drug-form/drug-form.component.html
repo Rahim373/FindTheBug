@@ -1,83 +1,91 @@
 <div class="form-container">
-    <div class="form-header">
-        <h2>{{ isEditMode ? 'Edit Drug' : 'Add New Drug' }}</h2>
-    </div>
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Edit Drug' : 'Add New Drug' }}</h2>
+  </div>
 
-    <form nz-form [formGroup]="drugForm" (ngSubmit)="onSubmit()" nzLayout="vertical">
-        <nz-form-item>
-            <nz-form-label nzRequired>Drug Name</nz-form-label>
-            <nz-form-control nzErrorTip="Please enter drug name">
-                <input nz-input formControlName="name" placeholder="Enter drug name" />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label nzRequired>Strength</nz-form-label>
-            <nz-form-control nzErrorTip="Please enter strength">
-                <input nz-input formControlName="strength" placeholder="Enter strength" />
-            </nz-form-control>
-        </nz-form-item>
+  <form nz-form [formGroup]="drugForm" (ngSubmit)="onSubmit()" nzLayout="vertical">
+    <nz-form-item>
+      <nz-form-label nzRequired>Drug Name</nz-form-label>
+      <nz-form-control nzErrorTip="Please enter drug name">
+        <input nz-input formControlName="name" placeholder="Enter drug name" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Strength</nz-form-label>
+      <nz-form-control nzErrorTip="Please enter strength">
+        <input nz-input formControlName="strength" placeholder="Enter strength" />
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label nzRequired>Generic Name</nz-form-label>
-            <nz-form-control nzErrorTip="Please select generic name">
-                <nz-select formControlName="genericNameId" nzShowSearch nzServerSearch
-                    nzPlaceHolder="Search and select generic name" (nzOnSearch)="onGenericNameSearch($event)">
-                    <nz-option *ngFor="let gn of genericNames" [nzValue]="gn.id" [nzLabel]="gn.name"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Generic Name</nz-form-label>
+      <nz-form-control nzErrorTip="Please select generic name">
+        <nz-select formControlName="genericNameId" nzShowSearch nzServerSearch
+          nzPlaceHolder="Search and select generic name" (nzOnSearch)="onGenericNameSearch($event)">
+          @for (gn of genericNames; track gn) {
+            <nz-option [nzValue]="gn.id" [nzLabel]="gn.name"></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label nzRequired>Brand</nz-form-label>
-            <nz-form-control nzErrorTip="Please select brand">
-                <nz-select formControlName="brandId" nzPlaceHolder="Select brand">
-                    <nz-option *ngFor="let brand of brands" [nzValue]="brand.id" [nzLabel]="brand.name"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Brand</nz-form-label>
+      <nz-form-control nzErrorTip="Please select brand">
+        <nz-select formControlName="brandId" nzPlaceHolder="Select brand">
+          @for (brand of brands; track brand) {
+            <nz-option [nzValue]="brand.id" [nzLabel]="brand.name"></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label nzRequired>Drug Type</nz-form-label>
-            <nz-form-control nzErrorTip="Please select drug type">
-                <nz-select formControlName="type" nzPlaceHolder="Select drug type">
-                    <nz-option *ngFor="let type of drugTypes" [nzValue]="type" [nzLabel]="type"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Drug Type</nz-form-label>
+      <nz-form-control nzErrorTip="Please select drug type">
+        <nz-select formControlName="type" nzPlaceHolder="Select drug type">
+          @for (type of drugTypes; track type) {
+            <nz-option [nzValue]="type" [nzLabel]="type"></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label nzRequired>Unit Price</nz-form-label>
-            <nz-form-control nzErrorTip="Please enter unit price">
-                <nz-input-number formControlName="unitPrice" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2"
-                    nzPlaceHolder="Enter unit price" class="width-100"></nz-input-number>
-            </nz-form-control>
-        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Unit Price</nz-form-label>
+      <nz-form-control nzErrorTip="Please enter unit price">
+        <nz-input-number formControlName="unitPrice" [nzMin]="0" [nzStep]="0.01" [nzPrecision]="2"
+        nzPlaceHolder="Enter unit price" class="width-100"></nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label>Photo Path</nz-form-label>
-            <nz-form-control>
-                <input nz-input formControlName="photoPath" placeholder="Enter photo path (optional)" />
-            </nz-form-control>
-        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Photo Path</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="photoPath" placeholder="Enter photo path (optional)" />
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item *ngIf="isEditMode">
-            <nz-form-label>Active Status</nz-form-label>
-            <nz-form-control>
-                <nz-switch formControlName="isActive"></nz-switch>
-            </nz-form-control>
-        </nz-form-item>
+    @if (isEditMode) {
+      <nz-form-item>
+        <nz-form-label>Active Status</nz-form-label>
+        <nz-form-control>
+          <nz-switch formControlName="isActive"></nz-switch>
+        </nz-form-control>
+      </nz-form-item>
+    }
 
-        <nz-form-item>
-            <nz-form-control>
-                <div class="form-actions">
-                    <button nz-button nzType="default" type="button" (click)="cancel()">
-                        Cancel
-                    </button>
-                    <button nz-button nzType="primary" type="submit" [nzLoading]="loading">
-                        {{ isEditMode ? 'Update' : 'Create' }}
-                    </button>
-                </div>
-            </nz-form-control>
-        </nz-form-item>
-    </form>
+    <nz-form-item>
+      <nz-form-control>
+        <div class="form-actions">
+          <button nz-button nzType="default" type="button" (click)="cancel()">
+            Cancel
+          </button>
+          <button nz-button nzType="primary" type="submit" [nzLoading]="loading">
+            {{ isEditMode ? 'Update' : 'Create' }}
+          </button>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
 </div>

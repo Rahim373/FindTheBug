@@ -44,23 +44,26 @@
               [nzLoading]="loadingSpecialities"
               nzShowSearch
               [nzFilterOption]="filterOption"
-            >
-              <nz-option
-                *ngFor="let speciality of availableSpecialities"
-                [nzValue]="speciality.id"
-                [nzLabel]="speciality.name"
-              ></nz-option>
+              >
+              @for (speciality of availableSpecialities; track speciality) {
+                <nz-option
+                  [nzValue]="speciality.id"
+                  [nzLabel]="speciality.name"
+                ></nz-option>
+              }
             </nz-select>
           </nz-form-control>
         </nz-form-item>
 
-        <nz-form-item class="form-item-half" *ngIf="isEditMode">
-          <nz-form-label>Status</nz-form-label>
-          <nz-form-control>
-            <nz-switch formControlName="isActive"></nz-switch>
-            <span class="status-label">{{ doctorForm.get('isActive')?.value ? 'Active' : 'Inactive' }}</span>
-          </nz-form-control>
-        </nz-form-item>
+        @if (isEditMode) {
+          <nz-form-item class="form-item-half">
+            <nz-form-label>Status</nz-form-label>
+            <nz-form-control>
+              <nz-switch formControlName="isActive"></nz-switch>
+              <span class="status-label">{{ doctorForm.get('isActive')?.value ? 'Active' : 'Inactive' }}</span>
+            </nz-form-control>
+          </nz-form-item>
+        }
       </div>
 
       <div class="form-actions">

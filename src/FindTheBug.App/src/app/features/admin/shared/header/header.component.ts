@@ -1,5 +1,5 @@
 import { Component, inject, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -12,14 +12,13 @@ import { AuthService } from '../../../../core/services/auth.service';
     selector: 'app-header',
     standalone: true,
     imports: [
-        CommonModule,
-        NzLayoutModule,
-        NzButtonModule,
-        NzIconModule,
-        NzDropDownModule,
-        NzAvatarModule,
-        NzMenuModule
-    ],
+    NzLayoutModule,
+    NzButtonModule,
+    NzIconModule,
+    NzDropDownModule,
+    NzAvatarModule,
+    NzMenuModule
+],
     template: `
     <nz-header class="header">
         <div class="header-left">

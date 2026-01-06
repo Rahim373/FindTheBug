@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -31,7 +31,6 @@ import { NzTableModule } from 'ng-zorro-antd/table';
   selector: 'app-receipt-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     NzFormModule,
     NzInputModule,
@@ -45,8 +44,8 @@ import { NzTableModule } from 'ng-zorro-antd/table';
     NzDividerModule,
     NzIconModule,
     NzTableModule,
-    NzInputModule,
-  ],
+    NzInputModule
+],
   templateUrl: './receipt-form.component.html',
   styleUrls: ['./receipt-form.component.css']
 })

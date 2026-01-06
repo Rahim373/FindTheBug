@@ -31,25 +31,27 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let expense of expenses">
-        <td>{{ formatDate(expense.date) }}</td>
-        <td>{{ expense.note }}</td>
-        <td>{{ expense.amount | currency }}</td>
-        <td>
-          <nz-tag [nzColor]="getPaymentMethodColor(expense.paymentMethod)">
-            {{ expense.paymentMethod }}
-          </nz-tag>
-        </td>
-        <td>{{ expense.referenceNo || '-' }}</td>
-        <td>
-          <button nz-button nzType="link" (click)="editExpense(expense.id)">
-            <span nz-icon nzType="edit"></span>
-          </button>
-          <button nz-button nzType="link" nzDanger (click)="deleteExpense(expense)">
-            <span nz-icon nzType="delete"></span>
-          </button>
-        </td>
-      </tr>
+      @for (expense of expenses; track expense) {
+        <tr>
+          <td>{{ formatDate(expense.date) }}</td>
+          <td>{{ expense.note }}</td>
+          <td>{{ expense.amount | currency }}</td>
+          <td>
+            <nz-tag [nzColor]="getPaymentMethodColor(expense.paymentMethod)">
+              {{ expense.paymentMethod }}
+            </nz-tag>
+          </td>
+          <td>{{ expense.referenceNo || '-' }}</td>
+          <td>
+            <button nz-button nzType="link" (click)="editExpense(expense.id)">
+              <span nz-icon nzType="edit"></span>
+            </button>
+            <button nz-button nzType="link" nzDanger (click)="deleteExpense(expense)">
+              <span nz-icon nzType="delete"></span>
+            </button>
+          </td>
+        </tr>
+      }
     </tbody>
   </nz-table>
 </div>

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -14,30 +14,28 @@ import { AuthService } from '../../../core/services/auth.service';
     selector: 'app-forgot-password',
     standalone: true,
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterLink,
-        NzFormModule,
-        NzInputModule,
-        NzButtonModule,
-        NzIconModule,
-        NzAlertModule,
-        NzResultModule
-    ],
+    ReactiveFormsModule,
+    RouterLink,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzIconModule,
+    NzAlertModule,
+    NzResultModule
+],
     template: `
     <div class="forgot-password-container">
-      <ng-container *ngIf="!isSuccess; else successTemplate">
+      @if (!isSuccess) {
         <h2 class="form-title">Reset Password</h2>
         <p class="form-subtitle">Enter your email address and we'll send you a link to reset your password.</p>
-        
-        <nz-alert
-          *ngIf="errorMessage"
-          nzType="error"
-          [nzMessage]="errorMessage"
-          nzShowIcon
-          class="error-alert"
-        ></nz-alert>
-
+        @if (errorMessage) {
+          <nz-alert
+            nzType="error"
+            [nzMessage]="errorMessage"
+            nzShowIcon
+            class="error-alert"
+          ></nz-alert>
+        }
         <form nz-form [formGroup]="resetForm" class="login-form" (ngSubmit)="submitForm()">
           <nz-form-item>
             <nz-form-control nzErrorTip="Please input a valid email address!">
@@ -46,40 +44,37 @@ import { AuthService } from '../../../core/services/auth.service';
               </nz-input-group>
             </nz-form-control>
           </nz-form-item>
-
           <button
             nz-button
             class="submit-button"
             [nzType]="'primary'"
             [nzLoading]="isLoading"
             [disabled]="resetForm.invalid"
-          >
+            >
             Send Reset Link
           </button>
-
           <div class="back-link">
             <a routerLink="/login">
               <span nz-icon nzType="arrow-left"></span> Back to Login
             </a>
           </div>
         </form>
-      </ng-container>
-
-      <ng-template #successTemplate>
+      } @else {
         <nz-result
           nzStatus="success"
           nzTitle="Check your email"
           nzSubTitle="We have sent a password reset link to your email address."
-        >
+          >
           <div nz-result-extra>
             <a routerLink="/login">
               <button nz-button nzType="primary">Back to Login</button>
             </a>
           </div>
         </nz-result>
-      </ng-template>
+      }
+    
     </div>
-  `,
+    `,
   styleUrl: './forgot-password.component.css'
 })
 export class ForgotPasswordComponent {

@@ -3,7 +3,7 @@
     <form nz-form [formGroup]="receiptForm" (ngSubmit)="onSubmit()" nzLayout="vertical">
       <!-- Patient Information -->
       <nz-divider nzText="Patient Information"></nz-divider>
-      
+
       <div class="form-row">
         <nz-form-item class="form-item-quarter">
           <nz-form-label nzRequired>Invoice Number</nz-form-label>
@@ -18,21 +18,21 @@
             <input nz-input formControlName="fullName" placeholder="Enter patient full name" />
           </nz-form-control>
         </nz-form-item>
-        
+
         <nz-form-item class="form-item-quarter">
-            <nz-form-label>Age</nz-form-label>
-            <nz-input-wrapper>
-              <nz-form-control>
-                <nz-input-number formControlName="age" [nzMin]="0" [nzMax]="150" [nzStep]="1" style="width: 100%;"></nz-input-number>
-              </nz-form-control>
-              <nz-form-control>
-                <nz-radio-group formControlName="isAgeYear">
-                  <label nz-radio [nzValue]="true">Years</label>
-                  <label nz-radio [nzValue]="false">Months</label>
-                </nz-radio-group>
-              </nz-form-control>
-            </nz-input-wrapper>
-          </nz-form-item>
+          <nz-form-label>Age</nz-form-label>
+          <nz-input-wrapper>
+            <nz-form-control>
+              <nz-input-number formControlName="age" [nzMin]="0" [nzMax]="150" [nzStep]="1" style="width: 100%;"></nz-input-number>
+            </nz-form-control>
+            <nz-form-control>
+              <nz-radio-group formControlName="isAgeYear">
+                <label nz-radio [nzValue]="true">Years</label>
+                <label nz-radio [nzValue]="false">Months</label>
+              </nz-radio-group>
+            </nz-form-control>
+          </nz-input-wrapper>
+        </nz-form-item>
 
         <nz-form-item class="form-item-quarter" >
           <nz-form-label nzRequired>Gender</nz-form-label>
@@ -64,12 +64,13 @@
               nzShowSearch
               nzAllowClear
               [nzFilterOption]="filterOption"
-            >
-              <nz-option
-                *ngFor="let doctor of doctors"
-                [nzValue]="doctor.id"
-                [nzLabel]="doctor.name"
-              ></nz-option>
+              >
+              @for (doctor of doctors; track doctor) {
+                <nz-option
+                  [nzValue]="doctor.id"
+                  [nzLabel]="doctor.name"
+                ></nz-option>
+              }
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -84,7 +85,7 @@
 
       <!-- Test Entries -->
       <nz-divider nzText="Test Entries" nzOrientation="left"></nz-divider>
-      
+
       <div class="test-entries-container">
         <nz-table nz-table [nzBordered]="true" [nzSize]="'middle'" class="test-entries-table">
           <thead>
@@ -97,80 +98,83 @@
             </tr>
           </thead>
           <tbody formArrayName="testEntries">
-            <tr *ngFor="let testGroup of testEntries.controls; let i = index">
-              <td>
-                <nz-form-item style="margin-bottom: 0;">
-                  <nz-form-control [formGroupName]="i" nzErrorTip="Please select a test" style="margin-bottom: 0;">
-                    <nz-select
-                      formControlName="diagnosticTestId"
-                      nzPlaceHolder="Select test"
-                      nzShowSearch
-                      [nzLoading]="loadingDiagnosticTests"
-                      [nzFilterOption]="filterOption"
+            @for (testGroup of testEntries.controls; track testGroup; let i = $index) {
+              <tr>
+                <td>
+                  <nz-form-item style="margin-bottom: 0;">
+                    <nz-form-control [formGroupName]="i" nzErrorTip="Please select a test" style="margin-bottom: 0;">
+                      <nz-select
+                        formControlName="diagnosticTestId"
+                        nzPlaceHolder="Select test"
+                        nzShowSearch
+                        [nzLoading]="loadingDiagnosticTests"
+                        [nzFilterOption]="filterOption"
+                        style="width: 100%;"
+                        (ngModelChange)="onDiagnosticTestChange(i, $event)"
+                        >
+                        <nz-option nzValue="" nzLabel="Select a test"></nz-option>
+                        @for (test of diagnosticTests; track test) {
+                          <nz-option
+                            [nzValue]="test.id"
+                            [nzLabel]="test.name"
+                          ></nz-option>
+                        }
+                      </nz-select>
+                    </nz-form-control>
+                  </nz-form-item>
+                </td>
+                <td>
+                  <nz-form-item style="margin-bottom: 0;">
+                    <nz-input-number
+                      [formControlName]="i + '.rate'"
+                      [nzMin]="0"
+                      [nzStep]="0.01"
+                      [nzPrecision]="2"
                       style="width: 100%;"
-                      (ngModelChange)="onDiagnosticTestChange(i, $event)"
+                    ></nz-input-number>
+                  </nz-form-item>
+                </td>
+                <td>
+                  <nz-form-item style="margin-bottom: 0;">
+                    <nz-input-number
+                      [formControlName]="i + '.discount'"
+                      [nzMin]="0"
+                      [nzMax]="testGroup.get('rate')?.value || 0"
+                      [nzStep]="0.01"
+                      [nzPrecision]="2"
+                      style="width: 100%;"
+                    ></nz-input-number>
+                  </nz-form-item>
+                </td>
+                <td>
+                  <nz-form-item style="margin-bottom: 0;">
+                    <nz-input-number
+                      [formControlName]="i + '.total'"
+                      [nzMin]="0"
+                      [nzStep]="0.01"
+                      [nzPrecision]="2"
+                      style="width: 100%;"
+                    ></nz-input-number>
+                  </nz-form-item>
+                </td>
+                <td class="action-cell">
+                  <button
+                    nz-button
+                    nzType="link"
+                    nzDanger
+                    nzSize="small"
+                    (click)="removeTestEntry(i)"
+                    [disabled]="testEntries.length === 1"
+                    title="Remove"
                     >
-                      <nz-option nzValue="" nzLabel="Select a test"></nz-option>
-                      <nz-option
-                        *ngFor="let test of diagnosticTests"
-                        [nzValue]="test.id"
-                        [nzLabel]="test.name"
-                      ></nz-option>
-                    </nz-select>
-                  </nz-form-control>
-                </nz-form-item>
-              </td>
-              <td>
-                <nz-form-item style="margin-bottom: 0;">
-                  <nz-input-number 
-                    [formControlName]="i + '.rate'" 
-                    [nzMin]="0" 
-                    [nzStep]="0.01" 
-                    [nzPrecision]="2" 
-                    style="width: 100%;"
-                  ></nz-input-number>
-                </nz-form-item>
-              </td>
-              <td>
-                <nz-form-item style="margin-bottom: 0;">
-                  <nz-input-number 
-                    [formControlName]="i + '.discount'" 
-                    [nzMin]="0" 
-                    [nzMax]="testGroup.get('rate')?.value || 0"
-                    [nzStep]="0.01" 
-                    [nzPrecision]="2" 
-                    style="width: 100%;"
-                  ></nz-input-number>
-                </nz-form-item>
-              </td>
-              <td>
-                <nz-form-item style="margin-bottom: 0;">
-                  <nz-input-number 
-                    [formControlName]="i + '.total'" 
-                    [nzMin]="0" 
-                    [nzStep]="0.01" 
-                    [nzPrecision]="2" 
-                    style="width: 100%;"
-                  ></nz-input-number>
-                </nz-form-item>
-              </td>
-              <td class="action-cell">
-                <button 
-                  nz-button 
-                  nzType="link" 
-                  nzDanger 
-                  nzSize="small"
-                  (click)="removeTestEntry(i)" 
-                  [disabled]="testEntries.length === 1"
-                  title="Remove"
-                >
-                  <span nz-icon nzType="delete"></span>
-                </button>
-              </td>
-            </tr>
+                    <span nz-icon nzType="delete"></span>
+                  </button>
+                </td>
+              </tr>
+            }
           </tbody>
         </nz-table>
-        
+
         <button nz-button nzType="dashed" (click)="addTestEntry()" style="width: 100%;">
           <span nz-icon nzType="plus"></span>
           Add Test Entry
@@ -179,7 +183,7 @@
 
       <!-- Financial Information -->
       <nz-divider nzText="Financial Information" nzOrientation="left"></nz-divider>
-      
+
       <div class="form-row">
         <nz-form-item class="form-item-quarter">
           <nz-form-label nzRequired>Sub Total</nz-form-label>
@@ -221,7 +225,7 @@
 
       <!-- Status Information -->
       <nz-divider nzText="Status Information" nzOrientation="left"></nz-divider>
-      
+
       <div class="form-row">
         <nz-form-item class="form-item-half">
           <nz-form-label nzRequired>Receipt Status</nz-form-label>
@@ -246,14 +250,16 @@
         </nz-form-item>
       </div>
 
-      <div class="form-row" *ngIf="isEditMode">
-        <nz-form-item class="form-item-half">
-          <nz-form-label>Report Delivered On</nz-form-label>
-          <nz-form-control>
-            <nz-date-picker formControlName="reportDeliveredOn" style="width: 100%;"></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
+      @if (isEditMode) {
+        <div class="form-row">
+          <nz-form-item class="form-item-half">
+            <nz-form-label>Report Delivered On</nz-form-label>
+            <nz-form-control>
+              <nz-date-picker formControlName="reportDeliveredOn" style="width: 100%;"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      }
 
       <div class="form-actions">
         <button nz-button nzType="default" (click)="cancel()" [disabled]="submitting">

@@ -1,110 +1,112 @@
 <div class="page-header">
-    <h1>{{ isEditMode ? 'Edit Product' : 'Create Product' }}</h1>
-    <button nz-button (click)="cancel()">
-        <span nz-icon nzType="arrow-left"></span>
-        Back to Products
-    </button>
+  <h1>{{ isEditMode ? 'Edit Product' : 'Create Product' }}</h1>
+  <button nz-button (click)="cancel()">
+    <span nz-icon nzType="arrow-left"></span>
+    Back to Products
+  </button>
 </div>
 
 <nz-card [nzLoading]="loading">
-    <form nz-form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-        <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzRequired>Product Name</nz-form-label>
-            <nz-form-control [nzSpan]="16" [nzErrorTip]="'Product name is required'">
-                <input nz-input formControlName="name" placeholder="Enter product name" />
-            </nz-form-control>
-        </nz-form-item>
+  <form nz-form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Product Name</nz-form-label>
+      <nz-form-control [nzSpan]="16" [nzErrorTip]="'Product name is required'">
+        <input nz-input formControlName="name" placeholder="Enter product name" />
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzRequired>Price</nz-form-label>
-            <nz-form-control [nzSpan]="16" [nzErrorTip]="priceErrorTip">
-                <nz-input-number 
-                    formControlName="price"
-                    [nzMin]="0"
-                    [nzStep]="0.01"
-                    [nzPrecision]="2"
-                    [nzMin]="0"
-                    placeholder="0.00"
-                    class="width-100">
-                </nz-input-number>
-            </nz-form-control>
-        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Price</nz-form-label>
+      <nz-form-control [nzSpan]="16" [nzErrorTip]="priceErrorTip">
+        <nz-input-number
+          formControlName="price"
+          [nzMin]="0"
+          [nzStep]="0.01"
+          [nzPrecision]="2"
+          [nzMin]="0"
+          placeholder="0.00"
+          class="width-100">
+        </nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzRequired>Quantity</nz-form-label>
-            <nz-form-control [nzSpan]="16" [nzErrorTip]="quantityErrorTip">
-                <nz-input-number 
-                    formControlName="quantity"
-                    [nzMin]="0"
-                    [nzStep]="1"
-                    placeholder="1"
-                    class="width-100">
-                </nz-input-number>
-            </nz-form-control>
-        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>Quantity</nz-form-label>
+      <nz-form-control [nzSpan]="16" [nzErrorTip]="quantityErrorTip">
+        <nz-input-number
+          formControlName="quantity"
+          [nzMin]="0"
+          [nzStep]="1"
+          placeholder="1"
+          class="width-100">
+        </nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label [nzSpan]="6">Description</nz-form-label>
-            <nz-form-control [nzSpan]="16">
-                <textarea 
-                    nz-input 
-                    formControlName="description"
-                    placeholder="Enter product description (optional)">
-                </textarea>
-            </nz-form-control>
-        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Description</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <textarea
+          nz-input
+          formControlName="description"
+          placeholder="Enter product description (optional)">
+        </textarea>
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label [nzSpan]="6">Photo URL</nz-form-label>
-            <nz-form-control [nzSpan]="16">
-                <input 
-                    nz-input 
-                    formControlName="photoPath"
-                    placeholder="Enter photo URL (optional)" />
-            </nz-form-control>
-        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Photo URL</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input
+          nz-input
+          formControlName="photoPath"
+          placeholder="Enter photo URL (optional)" />
+        </nz-form-control>
+      </nz-form-item>
 
-        <nz-form-item *ngIf="isEditMode">
-            <nz-form-label [nzSpan]="6">Status</nz-form-label>
-            <nz-form-control [nzSpan]="16">
-                <label nz-switch formControlName="isActive">
-                    <span>{{ productForm.get('isActive')?.value ? 'Active' : 'Inactive' }}</span>
-                </label>
-            </nz-form-control>
-        </nz-form-item>
-
+      @if (isEditMode) {
         <nz-form-item>
-            <nz-form-control [nzOffset]="6" [nzSpan]="16">
-                <button 
-                    nz-button 
-                    nzType="primary" 
-                    [nzLoading]="loading"
-                    type="submit">
-                    {{ isEditMode ? 'Update Product' : 'Create Product' }}
-                </button>
-                <button nz-button (click)="cancel()" class="margin-left-8">
-                    Cancel
-                </button>
-            </nz-form-control>
+          <nz-form-label [nzSpan]="6">Status</nz-form-label>
+          <nz-form-control [nzSpan]="16">
+            <label nz-switch formControlName="isActive">
+              <span>{{ productForm.get('isActive')?.value ? 'Active' : 'Inactive' }}</span>
+            </label>
+          </nz-form-control>
         </nz-form-item>
+      }
+
+      <nz-form-item>
+        <nz-form-control [nzOffset]="6" [nzSpan]="16">
+          <button
+            nz-button
+            nzType="primary"
+            [nzLoading]="loading"
+            type="submit">
+            {{ isEditMode ? 'Update Product' : 'Create Product' }}
+          </button>
+          <button nz-button (click)="cancel()" class="margin-left-8">
+            Cancel
+          </button>
+        </nz-form-control>
+      </nz-form-item>
     </form>
-</nz-card>
+  </nz-card>
 
-<!-- Helper template for error tips -->
-<ng-template #priceErrorTip let-control>
-    <ng-container *ngIf="control?.errors?.['required']">
-        Price is required
-    </ng-container>
-    <ng-container *ngIf="control?.errors?.['min']">
-        Price must be greater than or equal to 0
-    </ng-container>
-</ng-template>
+  <!-- Helper template for error tips -->
+  <ng-template #priceErrorTip let-control>
+    @if (control?.errors?.['required']) {
+      Price is required
+    }
+    @if (control?.errors?.['min']) {
+      Price must be greater than or equal to 0
+    }
+  </ng-template>
 
-<ng-template #quantityErrorTip let-control>
-    <ng-container *ngIf="control?.errors?.['required']">
-        Quantity is required
-    </ng-container>
-    <ng-container *ngIf="control?.errors?.['min']">
-        Quantity must be greater than or equal to 0
-    </ng-container>
-</ng-template>
+  <ng-template #quantityErrorTip let-control>
+    @if (control?.errors?.['required']) {
+      Quantity is required
+    }
+    @if (control?.errors?.['min']) {
+      Quantity must be greater than or equal to 0
+    }
+  </ng-template>

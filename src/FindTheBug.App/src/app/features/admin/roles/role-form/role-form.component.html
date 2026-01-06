@@ -1,108 +1,110 @@
 <div class="role-form-container">
-    <nz-card [nzLoading]="loading">
-        <h2>{{ isEditMode ? 'Edit Role' : 'Create Role' }}</h2>
+  <nz-card [nzLoading]="loading">
+    <h2>{{ isEditMode ? 'Edit Role' : 'Create Role' }}</h2>
 
-        <form nz-form [formGroup]="roleForm" (ngSubmit)="submitForm()" *ngIf="!loading">
-            <!-- Basic Information -->
-            <nz-form-item>
-                <nz-form-label [nzSpan]="6" nzRequired nzFor="name">Name</nz-form-label>
-                <nz-form-control [nzSpan]="14" nzErrorTip="Please enter a role name (max 100 characters)">
-                    <input nz-input formControlName="name" id="name" placeholder="Role Name" />
-                </nz-form-control>
-            </nz-form-item>
-
-            <nz-form-item>
-                <nz-form-label [nzSpan]="6" nzFor="description">Description</nz-form-label>
-                <nz-form-control [nzSpan]="14" nzErrorTip="Description is too long (max 500 characters)">
-                    <textarea nz-input formControlName="description" id="description" placeholder="Role Description"
-                        rows="4"></textarea>
-                </nz-form-control>
-            </nz-form-item>
-
-            <nz-form-item>
-                <nz-form-label [nzSpan]="6" nzFor="isActive">Active</nz-form-label>
-                <nz-form-control [nzSpan]="14">
-                    <label nz-switch formControlName="isActive"></label>
-                    <span class="switch-description">Enable or disable this role</span>
-                </nz-form-control>
-            </nz-form-item>
-
-            <!-- Module Permissions -->
-            <nz-form-item>
-                <nz-form-label [nzSpan]="6">Module Permissions</nz-form-label>
-                <nz-form-control [nzSpan]="18">
-                    <nz-table #moduleTable [nzData]="modules" [nzFrontPagination]="false" [nzShowPagination]="false"
-                        [nzSize]="'middle'">
-                        <thead>
-                            <tr>
-                                <th nzWidth="25%">Module</th>
-                                <th nzWidth="17%" style="text-align: center;">All</th>
-                                <th nzWidth="17%" style="text-align: center;">View</th>
-                                <th nzWidth="17%" style="text-align: center;">Create</th>
-                                <th nzWidth="17%" style="text-align: center;">Edit</th>
-                                <th nzWidth="17%" style="text-align: center;">Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let module of moduleTable.data">
-                                <td>
-                                    <strong>{{ module.displayName || module.name }}</strong>
-                                    <div *ngIf="module.description" class="module-description">
-                                        {{ module.description }}
-                                    </div>
-                                </td>
-                                <td style="text-align: center;">
-                                    <label nz-checkbox 
-                                           [ngModel]="isAllPermissionsEnabled(module.id)"
-                                           (ngModelChange)="toggleAllPermissionsForModule(module.id)"
-                                           [ngModelOptions]="{standalone: true}">
-                                    </label>
-                                </td>
-                                <td style="text-align: center;">
-                                    <label nz-checkbox 
-                                           [ngModel]="isPermissionEnabled(module.id, 'view')"
-                                           (ngModelChange)="togglePermission(module.id, 'view')"
-                                           [ngModelOptions]="{standalone: true}">
-                                    </label>
-                                </td>
-                                <td style="text-align: center;">
-                                    <label nz-checkbox 
-                                           [ngModel]="isPermissionEnabled(module.id, 'create')"
-                                           (ngModelChange)="togglePermission(module.id, 'create')"
-                                           [ngModelOptions]="{standalone: true}">
-                                    </label>
-                                </td>
-                                <td style="text-align: center;">
-                                    <label nz-checkbox 
-                                           [ngModel]="isPermissionEnabled(module.id, 'edit')"
-                                           (ngModelChange)="togglePermission(module.id, 'edit')"
-                                           [ngModelOptions]="{standalone: true}">
-                                    </label>
-                                </td>
-                                <td style="text-align: center;">
-                                    <label nz-checkbox 
-                                           [ngModel]="isPermissionEnabled(module.id, 'delete')"
-                                           (ngModelChange)="togglePermission(module.id, 'delete')"
-                                           [ngModelOptions]="{standalone: true}">
-                                    </label>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </nz-table>
-                </nz-form-control>
-            </nz-form-item>
-
-            <!-- Action Buttons -->
-            <nz-form-item>
-                <nz-form-control [nzSpan]="14" [nzOffset]="6">
-                    <button nz-button nzType="primary" [nzLoading]="submitting" type="submit">
-                        {{ isEditMode ? 'Update' : 'Create' }} Role
-                    </button>
-                    <button nz-button (click)="cancel()" type="button" class="margin-left-8">
-                        Cancel
-                    </button>
-                </nz-form-control>
-            </nz-form-item>
-        </form>
-    </nz-card>
+    @if (!loading) {
+      <form nz-form [formGroup]="roleForm" (ngSubmit)="submitForm()">
+        <!-- Basic Information -->
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzRequired nzFor="name">Name</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="Please enter a role name (max 100 characters)">
+            <input nz-input formControlName="name" id="name" placeholder="Role Name" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzFor="description">Description</nz-form-label>
+          <nz-form-control [nzSpan]="14" nzErrorTip="Description is too long (max 500 characters)">
+            <textarea nz-input formControlName="description" id="description" placeholder="Role Description"
+            rows="4"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzFor="isActive">Active</nz-form-label>
+          <nz-form-control [nzSpan]="14">
+            <label nz-switch formControlName="isActive"></label>
+            <span class="switch-description">Enable or disable this role</span>
+          </nz-form-control>
+        </nz-form-item>
+        <!-- Module Permissions -->
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6">Module Permissions</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <nz-table #moduleTable [nzData]="modules" [nzFrontPagination]="false" [nzShowPagination]="false"
+              [nzSize]="'middle'">
+              <thead>
+                <tr>
+                  <th nzWidth="25%">Module</th>
+                  <th nzWidth="17%" style="text-align: center;">All</th>
+                  <th nzWidth="17%" style="text-align: center;">View</th>
+                  <th nzWidth="17%" style="text-align: center;">Create</th>
+                  <th nzWidth="17%" style="text-align: center;">Edit</th>
+                  <th nzWidth="17%" style="text-align: center;">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (module of moduleTable.data; track module) {
+                  <tr>
+                    <td>
+                      <strong>{{ module.displayName || module.name }}</strong>
+                      @if (module.description) {
+                        <div class="module-description">
+                          {{ module.description }}
+                        </div>
+                      }
+                    </td>
+                    <td style="text-align: center;">
+                      <label nz-checkbox
+                        [ngModel]="isAllPermissionsEnabled(module.id)"
+                        (ngModelChange)="toggleAllPermissionsForModule(module.id)"
+                        [ngModelOptions]="{standalone: true}">
+                      </label>
+                    </td>
+                    <td style="text-align: center;">
+                      <label nz-checkbox
+                        [ngModel]="isPermissionEnabled(module.id, 'view')"
+                        (ngModelChange)="togglePermission(module.id, 'view')"
+                        [ngModelOptions]="{standalone: true}">
+                      </label>
+                    </td>
+                    <td style="text-align: center;">
+                      <label nz-checkbox
+                        [ngModel]="isPermissionEnabled(module.id, 'create')"
+                        (ngModelChange)="togglePermission(module.id, 'create')"
+                        [ngModelOptions]="{standalone: true}">
+                      </label>
+                    </td>
+                    <td style="text-align: center;">
+                      <label nz-checkbox
+                        [ngModel]="isPermissionEnabled(module.id, 'edit')"
+                        (ngModelChange)="togglePermission(module.id, 'edit')"
+                        [ngModelOptions]="{standalone: true}">
+                      </label>
+                    </td>
+                    <td style="text-align: center;">
+                      <label nz-checkbox
+                        [ngModel]="isPermissionEnabled(module.id, 'delete')"
+                        (ngModelChange)="togglePermission(module.id, 'delete')"
+                        [ngModelOptions]="{standalone: true}">
+                      </label>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </nz-table>
+          </nz-form-control>
+        </nz-form-item>
+        <!-- Action Buttons -->
+        <nz-form-item>
+          <nz-form-control [nzSpan]="14" [nzOffset]="6">
+            <button nz-button nzType="primary" [nzLoading]="submitting" type="submit">
+              {{ isEditMode ? 'Update' : 'Create' }} Role
+            </button>
+            <button nz-button (click)="cancel()" type="button" class="margin-left-8">
+              Cancel
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    }
+  </nz-card>
 </div>

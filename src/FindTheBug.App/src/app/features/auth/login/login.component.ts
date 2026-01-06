@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -14,7 +14,6 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-login',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     RouterLink,
     NzFormModule,
@@ -23,19 +22,20 @@ import { AuthService } from '../../../core/services/auth.service';
     NzCheckboxModule,
     NzIconModule,
     NzAlertModule
-  ],
+],
   template: `
     <div class="login-container">
       <h2 class="form-title">Sign In</h2>
-      
-      <nz-alert
-        *ngIf="errorMessage"
-        nzType="error"
-        [nzMessage]="errorMessage"
-        nzShowIcon
-        class="error-alert"
-      ></nz-alert>
-
+    
+      @if (errorMessage) {
+        <nz-alert
+          nzType="error"
+          [nzMessage]="errorMessage"
+          nzShowIcon
+          class="error-alert"
+        ></nz-alert>
+      }
+    
       <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="submitForm()">
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input your email!">
@@ -44,7 +44,7 @@ import { AuthService } from '../../../core/services/auth.service';
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>
-
+    
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input your password!">
             <nz-input-group nzPrefixIcon="lock" [nzSuffix]="passwordTemplate">
@@ -53,39 +53,39 @@ import { AuthService } from '../../../core/services/auth.service';
                 nz-input
                 formControlName="password"
                 placeholder="Password"
-              />
-            </nz-input-group>
-            <ng-template #passwordTemplate>
-              <span
-                nz-icon
-                [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-                (click)="passwordVisible = !passwordVisible"
-              ></span>
-            </ng-template>
-          </nz-form-control>
-        </nz-form-item>
-
-        <div nz-row class="login-form-margin">
-          <div nz-col [nzSpan]="12">
-            <label nz-checkbox formControlName="remember">Remember me</label>
+                />
+              </nz-input-group>
+              <ng-template #passwordTemplate>
+                <span
+                  nz-icon
+                  [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                  (click)="passwordVisible = !passwordVisible"
+                ></span>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+    
+          <div nz-row class="login-form-margin">
+            <div nz-col [nzSpan]="12">
+              <label nz-checkbox formControlName="remember">Remember me</label>
+            </div>
+            <div nz-col [nzSpan]="12" class="login-form-forgot">
+              <a routerLink="/forgot-password">Forgot password?</a>
+            </div>
           </div>
-          <div nz-col [nzSpan]="12" class="login-form-forgot">
-            <a routerLink="/forgot-password">Forgot password?</a>
-          </div>
-        </div>
-
-        <button
-          nz-button
-          class="login-form-button"
-          [nzType]="'primary'"
-          [nzLoading]="isLoading"
-          [disabled]="loginForm.invalid"
-        >
-          Log in
-        </button>
-      </form>
-    </div>
-  `,
+    
+          <button
+            nz-button
+            class="login-form-button"
+            [nzType]="'primary'"
+            [nzLoading]="isLoading"
+            [disabled]="loginForm.invalid"
+            >
+            Log in
+          </button>
+        </form>
+      </div>
+    `,
   styleUrl: './login.component.css'
 })
 export class LoginComponent {

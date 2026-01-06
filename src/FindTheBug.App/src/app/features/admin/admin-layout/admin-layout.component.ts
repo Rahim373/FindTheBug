@@ -1,5 +1,5 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, AfterViewInit, viewChild } from '@angular/core';
+
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
@@ -9,12 +9,11 @@ import { HeaderComponent } from '../shared/header/header.component';
     selector: 'app-admin-layout',
     standalone: true,
     imports: [
-        CommonModule,
-        NzLayoutModule,
-        RouterOutlet,
-        SidebarComponent,
-        HeaderComponent
-    ],
+    NzLayoutModule,
+    RouterOutlet,
+    SidebarComponent,
+    HeaderComponent
+],
     template: `
     <nz-layout class="admin-layout">
         <app-sidebar></app-sidebar>
@@ -29,16 +28,17 @@ import { HeaderComponent } from '../shared/header/header.component';
   styleUrl: './admin-layout.component.css'
 })
 export class AdminLayoutComponent implements AfterViewInit {
-    @ViewChild(SidebarComponent) sidebarComponent!: SidebarComponent;
-    @ViewChild(HeaderComponent) headerComponent!: HeaderComponent;
+    readonly sidebarComponent = viewChild(SidebarComponent);
+    readonly headerComponent = viewChild(HeaderComponent);
 
     ngAfterViewInit(): void {
         this.updateLayoutClasses();
     }
 
     onToggleSidebar(): void {
-        if (this.sidebarComponent) {
-            this.sidebarComponent.toggleCollapse();
+        const sidebar = this.sidebarComponent();
+        if (sidebar) {
+            sidebar.toggleCollapse();
             this.updateLayoutClasses();
         }
     }
@@ -46,8 +46,9 @@ export class AdminLayoutComponent implements AfterViewInit {
     private updateLayoutClasses(): void {
         const mainLayout = document.querySelector('.main-layout');
         const header = document.querySelector('.header');
+        const sidebar = this.sidebarComponent();
         
-        if (this.sidebarComponent?.isCollapsed) {
+        if (sidebar?.isCollapsed) {
             mainLayout?.classList.add('collapsed');
             header?.classList.add('collapsed');
         } else {

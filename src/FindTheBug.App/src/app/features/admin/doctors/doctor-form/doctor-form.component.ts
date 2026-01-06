@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -21,7 +21,6 @@ import {
   selector: 'app-doctor-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     NzFormModule,
     NzInputModule,
@@ -29,7 +28,7 @@ import {
     NzSwitchModule,
     NzSelectModule,
     NzCardModule
-  ],
+],
   templateUrl: './doctor-form.component.html',
   styleUrls: ['./doctor-form.component.css']
 })

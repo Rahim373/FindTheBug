@@ -11,62 +11,70 @@
     <nz-input-group [nzSuffix]="suffixIconSearch">
       <input type="text" nz-input placeholder="Search by name, phone, degree, office, or speciality..." [(ngModel)]="searchText"
         (keyup.enter)="onSearch()" />
-    </nz-input-group>
-    <ng-template #suffixIconSearch>
-      <span nz-icon nzType="search" (click)="onSearch()" class="cursor-pointer"></span>
-    </ng-template>
-  </div>
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search" (click)="onSearch()" class="cursor-pointer"></span>
+      </ng-template>
+    </div>
 
-  <nz-table #doctorsTable [nzData]="doctors" [nzLoading]="loading"
-    [nzFrontPagination]="false" [nzTotal]="totalCount"
-    [nzPageSize]="pageSize" [nzPageIndex]="pageNumber" (nzPageIndexChange)="onPageChange($event)"
-    (nzPageSizeChange)="onPageSizeChange($event)" [nzShowSizeChanger]="true"
-    [nzPageSizeOptions]="[10, 20, 50, 100]">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Degree</th>
-        <th>Phone Number</th>
-        <th>Specialities</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let doctor of doctors">
-        <td><strong>{{ doctor.name }}</strong></td>
-        <td>{{ doctor.degree || "-" }}</td>
-        <td>{{ doctor.phoneNumber }}</td>
-        <td>
-          <nz-tag nzColor="blue" *ngFor="let speciality of doctor.specialityNames; let last = last">
-            {{ speciality }}<span *ngIf="!last">, </span>
-          </nz-tag>
-          <span *ngIf="!doctor.specialityNames || doctor.specialityNames.length === 0">-</span>
-        </td>
-        <td>
-          <nz-tag [nzColor]="doctor.isActive ? 'green' : 'default'">
-            {{ doctor.isActive ? 'Active' : 'Inactive' }}
-          </nz-tag>
-        </td>
-        <td>
-          <button nz-button nzType="link" nzSize="small" (click)="viewDoctor(doctor.id)" title="View Details">
-            <span nz-icon nzType="eye"></span>
-          </button>
-          <button nz-button nzType="link" nzSize="small" (click)="editDoctor(doctor.id)" title="Edit">
-            <span nz-icon nzType="edit"></span>
-          </button>
-          <button nz-button nzType="link" nzSize="small" 
-            [nzDanger]="doctor.isActive" 
-            [nzType]="doctor.isActive ? 'default' : 'default'"
-            (click)="toggleDoctorStatus(doctor)" 
-            [title]="doctor.isActive ? 'Deactivate' : 'Activate'">
-            <span nz-icon [nzType]="doctor.isActive ? 'pause-circle' : 'play-circle'"></span>
-          </button>
-          <button nz-button nzType="link" nzSize="small" nzDanger (click)="deleteDoctor(doctor)" title="Delete">
-            <span nz-icon nzType="delete"></span>
-          </button>
-        </td>
-      </tr>
+    <nz-table #doctorsTable [nzData]="doctors" [nzLoading]="loading"
+      [nzFrontPagination]="false" [nzTotal]="totalCount"
+      [nzPageSize]="pageSize" [nzPageIndex]="pageNumber" (nzPageIndexChange)="onPageChange($event)"
+      (nzPageSizeChange)="onPageSizeChange($event)" [nzShowSizeChanger]="true"
+      [nzPageSizeOptions]="[10, 20, 50, 100]">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Degree</th>
+          <th>Phone Number</th>
+          <th>Specialities</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (doctor of doctors; track doctor) {
+          <tr>
+            <td><strong>{{ doctor.name }}</strong></td>
+            <td>{{ doctor.degree || "-" }}</td>
+            <td>{{ doctor.phoneNumber }}</td>
+            <td>
+              @for (speciality of doctor.specialityNames; track speciality; let last = $last) {
+                <nz-tag nzColor="blue">
+                  {{ speciality }}@if (!last) {
+                  <span>, </span>
+                }
+              </nz-tag>
+            }
+            @if (!doctor.specialityNames || doctor.specialityNames.length === 0) {
+              <span>-</span>
+            }
+          </td>
+          <td>
+            <nz-tag [nzColor]="doctor.isActive ? 'green' : 'default'">
+              {{ doctor.isActive ? 'Active' : 'Inactive' }}
+            </nz-tag>
+          </td>
+          <td>
+            <button nz-button nzType="link" nzSize="small" (click)="viewDoctor(doctor.id)" title="View Details">
+              <span nz-icon nzType="eye"></span>
+            </button>
+            <button nz-button nzType="link" nzSize="small" (click)="editDoctor(doctor.id)" title="Edit">
+              <span nz-icon nzType="edit"></span>
+            </button>
+            <button nz-button nzType="link" nzSize="small"
+              [nzDanger]="doctor.isActive"
+              [nzType]="doctor.isActive ? 'default' : 'default'"
+              (click)="toggleDoctorStatus(doctor)"
+              [title]="doctor.isActive ? 'Deactivate' : 'Activate'">
+              <span nz-icon [nzType]="doctor.isActive ? 'pause-circle' : 'play-circle'"></span>
+            </button>
+            <button nz-button nzType="link" nzSize="small" nzDanger (click)="deleteDoctor(doctor)" title="Delete">
+              <span nz-icon nzType="delete"></span>
+            </button>
+          </td>
+        </tr>
+      }
     </tbody>
   </nz-table>
 </div>

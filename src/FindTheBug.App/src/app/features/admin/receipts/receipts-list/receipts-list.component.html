@@ -35,30 +35,32 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let receipt of receipts">
-        <td><strong>{{ receipt.invoiceNumber }}</strong></td>
-        <td>{{ receipt.fullName }}</td>
-        <td>{{ receipt.phoneNumber }}</td>
-        <td>{{ receipt.total | currency }}</td>
-        <td>{{ receipt.due | currency }}</td>
-        <td>
-          <nz-tag [nzColor]="getStatusColor(receipt.statusDisplay)">
-            {{ receipt.statusDisplay }}
-          </nz-tag>
-        </td>
-        <td>{{ receipt.createdAt | date:'medium' }}</td>
-        <td>
-          <button nz-button nzType="link" nzSize="small" (click)="viewReceipt(receipt.id)" title="View Details">
-            <span nz-icon nzType="eye"></span>
-          </button>
-          <button nz-button nzType="link" nzSize="small" (click)="editReceipt(receipt.id)" title="Edit">
-            <span nz-icon nzType="edit"></span>
-          </button>
-          <button nz-button nzType="link" nzSize="small" nzDanger (click)="deleteReceipt(receipt)" title="Delete">
-            <span nz-icon nzType="delete"></span>
-          </button>
-        </td>
-      </tr>
+      @for (receipt of receipts; track receipt) {
+        <tr>
+          <td><strong>{{ receipt.invoiceNumber }}</strong></td>
+          <td>{{ receipt.fullName }}</td>
+          <td>{{ receipt.phoneNumber }}</td>
+          <td>{{ receipt.total | currency }}</td>
+          <td>{{ receipt.due | currency }}</td>
+          <td>
+            <nz-tag [nzColor]="getStatusColor(receipt.statusDisplay)">
+              {{ receipt.statusDisplay }}
+            </nz-tag>
+          </td>
+          <td>{{ receipt.createdAt | date:'medium' }}</td>
+          <td>
+            <button nz-button nzType="link" nzSize="small" (click)="viewReceipt(receipt.id)" title="View Details">
+              <span nz-icon nzType="eye"></span>
+            </button>
+            <button nz-button nzType="link" nzSize="small" (click)="editReceipt(receipt.id)" title="Edit">
+              <span nz-icon nzType="edit"></span>
+            </button>
+            <button nz-button nzType="link" nzSize="small" nzDanger (click)="deleteReceipt(receipt)" title="Delete">
+              <span nz-icon nzType="delete"></span>
+            </button>
+          </td>
+        </tr>
+      }
     </tbody>
   </nz-table>
 </div>

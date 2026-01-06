@@ -33,27 +33,29 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let drug of drugs">
-        <td>{{ drug.name }}</td>
-        <td>{{ drug.strength }}</td>
-        <td>{{ drug.genericName }}</td>
-        <td>{{ drug.brandName }}</td>
-        <td>{{ drug.type }}</td>
-        <td>{{ drug.unitPrice | currency }}</td>
-        <td>
-          <nz-tag [nzColor]="drug.isActive ? 'success' : 'default'">
-            {{ drug.isActive ? 'Active' : 'Inactive' }}
-          </nz-tag>
-        </td>
-        <td>
-          <button nz-button nzType="link" (click)="editDrug(drug.id)">
-            <span nz-icon nzType="edit"></span>
-          </button>
-          <button nz-button nzType="link" nzDanger (click)="deleteDrug(drug)">
-            <span nz-icon nzType="delete"></span>
-          </button>
-        </td>
-      </tr>
+      @for (drug of drugs; track drug) {
+        <tr>
+          <td>{{ drug.name }}</td>
+          <td>{{ drug.strength }}</td>
+          <td>{{ drug.genericName }}</td>
+          <td>{{ drug.brandName }}</td>
+          <td>{{ drug.type }}</td>
+          <td>{{ drug.unitPrice | currency }}</td>
+          <td>
+            <nz-tag [nzColor]="drug.isActive ? 'success' : 'default'">
+              {{ drug.isActive ? 'Active' : 'Inactive' }}
+            </nz-tag>
+          </td>
+          <td>
+            <button nz-button nzType="link" (click)="editDrug(drug.id)">
+              <span nz-icon nzType="edit"></span>
+            </button>
+            <button nz-button nzType="link" nzDanger (click)="deleteDrug(drug)">
+              <span nz-icon nzType="delete"></span>
+            </button>
+          </td>
+        </tr>
+      }
     </tbody>
   </nz-table>
 </div>

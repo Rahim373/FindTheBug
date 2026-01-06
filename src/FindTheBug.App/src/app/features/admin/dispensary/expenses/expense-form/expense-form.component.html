@@ -1,112 +1,113 @@
 <div class="page-container">
-    <nz-page-header [nzTitle]="isEditMode ? 'Edit Expense' : 'New Expense'">
-        <nz-page-header-extra>
-            <button nz-button nzType="default" (click)="cancel()">Cancel</button>
-        </nz-page-header-extra>
-    </nz-page-header>
+  <nz-page-header [nzTitle]="isEditMode ? 'Edit Expense' : 'New Expense'">
+    <nz-page-header-extra>
+      <button nz-button nzType="default" (click)="cancel()">Cancel</button>
+    </nz-page-header-extra>
+  </nz-page-header>
 
-    <nz-card [nzLoading]="loading" class="form-card">
-        <form nz-form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
-            <!-- Department Display (Read-only) -->
-            <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="department">Department</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <input 
-                        nz-input 
-                        id="department" 
-                        [value]="department" 
-                        disabled />
-                </nz-form-control>
-            </nz-form-item>
+  <nz-card [nzLoading]="loading" class="form-card">
+    <form nz-form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
+      <!-- Department Display (Read-only) -->
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="department">Department</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <input
+            nz-input
+            id="department"
+            [value]="department"
+            disabled />
+        </nz-form-control>
+      </nz-form-item>
 
-            <!-- Date -->
-            <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="date">Date</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select date">
-                    <nz-date-picker
-                        id="date"
-                        formControlName="date"
-                        nzFormat="yyyy-MM-dd"
-                        nzPlaceholder="Select date"
-                        style="width: 100%;"></nz-date-picker>
-                </nz-form-control>
-            </nz-form-item>
+      <!-- Date -->
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="date">Date</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select date">
+          <nz-date-picker
+            id="date"
+            formControlName="date"
+            nzFormat="yyyy-MM-dd"
+            nzPlaceholder="Select date"
+          style="width: 100%;"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
 
-            <!-- Note -->
-            <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="note">Note</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please enter note">
-                    <textarea 
-                        nz-input 
-                        id="note" 
-                        formControlName="note"
-                        placeholder="Enter expense description"
-                        [nzAutosize]="{ minRows: 3, maxRows: 5 }"></textarea>
-                </nz-form-control>
-            </nz-form-item>
+      <!-- Note -->
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="note">Note</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please enter note">
+          <textarea
+            nz-input
+            id="note"
+            formControlName="note"
+            placeholder="Enter expense description"
+          [nzAutosize]="{ minRows: 3, maxRows: 5 }"></textarea>
+        </nz-form-control>
+      </nz-form-item>
 
-            <!-- Amount -->
-            <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="amount">Amount</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please enter amount">
-                    <nz-input-number
-                        id="amount"
-                        formControlName="amount"
-                        [nzMin]="0"
-                        [nzPrecision]="2"
-                        [nzStep]="0.01"
-                        style="width: 100%;"
-                        placeholder="0.00"></nz-input-number>
-                </nz-form-control>
-            </nz-form-item>
+      <!-- Amount -->
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="amount">Amount</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please enter amount">
+          <nz-input-number
+            id="amount"
+            formControlName="amount"
+            [nzMin]="0"
+            [nzPrecision]="2"
+            [nzStep]="0.01"
+            style="width: 100%;"
+          placeholder="0.00"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
 
-            <!-- Payment Method -->
-            <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="paymentMethod">Payment Method</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select payment method">
-                    <nz-select 
-                        id="paymentMethod" 
-                        formControlName="paymentMethod"
-                        nzPlaceHolder="Select payment method">
-                        <nz-option 
-                            *ngFor="let method of paymentMethods"
-                            [nzValue]="method" 
-                            [nzLabel]="method"></nz-option>
-                    </nz-select>
-                </nz-form-control>
-            </nz-form-item>
+      <!-- Payment Method -->
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="paymentMethod">Payment Method</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select payment method">
+          <nz-select
+            id="paymentMethod"
+            formControlName="paymentMethod"
+            nzPlaceHolder="Select payment method">
+            @for (method of paymentMethods; track method) {
+              <nz-option
+                [nzValue]="method"
+              [nzLabel]="method"></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
 
-            <!-- Reference No (Optional) -->
-            <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="referenceNo">Reference No</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <input 
-                        nz-input 
-                        id="referenceNo" 
-                        formControlName="referenceNo"
-                        placeholder="Enter reference number (optional)" />
-                </nz-form-control>
-            </nz-form-item>
+      <!-- Reference No (Optional) -->
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="referenceNo">Reference No</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <input
+            nz-input
+            id="referenceNo"
+            formControlName="referenceNo"
+            placeholder="Enter reference number (optional)" />
+        </nz-form-control>
+      </nz-form-item>
 
-            <!-- Attachment (Optional) -->
-            <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="attachment">Attachment</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <input 
-                        nz-input 
-                        id="attachment" 
-                        formControlName="attachment"
-                        placeholder="Enter attachment path (optional)" />
-                </nz-form-control>
-            </nz-form-item>
+      <!-- Attachment (Optional) -->
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="attachment">Attachment</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <input
+            nz-input
+            id="attachment"
+            formControlName="attachment"
+            placeholder="Enter attachment path (optional)" />
+        </nz-form-control>
+      </nz-form-item>
 
-            <!-- Form Actions -->
-            <nz-form-item>
-                <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
-                    <button nz-button nzType="primary" [nzLoading]="loading">Save</button>
-                    <button nz-button nzType="default" (click)="cancel()" style="margin-left: 8px;">Cancel</button>
-                </nz-form-control>
-            </nz-form-item>
-        </form>
-    </nz-card>
+      <!-- Form Actions -->
+      <nz-form-item>
+        <nz-form-control [nzOffset]="6" [nzSm]="14" [nzXs]="24">
+          <button nz-button nzType="primary" [nzLoading]="loading">Save</button>
+          <button nz-button nzType="default" (click)="cancel()" style="margin-left: 8px;">Cancel</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </nz-card>
 </div>

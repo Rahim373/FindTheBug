@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -18,15 +18,14 @@ import { Role } from '../../../../core/models/role.models';
     selector: 'app-user-form',
     standalone: true,
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        NzFormModule,
-        NzInputModule,
-        NzButtonModule,
-        NzSwitchModule,
-        NzSelectModule,
-        NzCardModule
-    ],
+    ReactiveFormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzSwitchModule,
+    NzSelectModule,
+    NzCardModule
+],
     templateUrl: './user-form.component.html',
     styleUrls: ['./user-form.component.css']
 })

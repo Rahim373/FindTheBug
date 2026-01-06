@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -18,17 +18,16 @@ import { Expense, PaymentMethod } from '../../../../../core/models/expense.model
     selector: 'app-expense-form',
     standalone: true,
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        NzFormModule,
-        NzInputModule,
-        NzButtonModule,
-        NzSelectModule,
-        NzDatePickerModule,
-        NzInputNumberModule,
-        NzCardModule,
-        NzPageHeaderModule
-    ],
+    ReactiveFormsModule,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzSelectModule,
+    NzDatePickerModule,
+    NzInputNumberModule,
+    NzCardModule,
+    NzPageHeaderModule
+],
     templateUrl: './expense-form.component.html',
     styleUrls: ['./expense-form.component.css']
 })

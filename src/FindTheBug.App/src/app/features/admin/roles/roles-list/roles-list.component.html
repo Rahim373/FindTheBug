@@ -15,75 +15,85 @@
           placeholder="Search roles..."
           [(ngModel)]="searchText"
           (keyup.enter)="onSearch()"
-        />
-      </nz-input-group>
-      <ng-template #suffixIconSearch>
-        <span nz-icon nzType="search" (click)="onSearch()" class="cursor-pointer"></span>
-      </ng-template>
-    </div>
+          />
+        </nz-input-group>
+        <ng-template #suffixIconSearch>
+          <span nz-icon nzType="search" (click)="onSearch()" class="cursor-pointer"></span>
+        </ng-template>
+      </div>
 
-    <nz-table
-      #rolesTable
-      [nzData]="roles"
-      [nzLoading]="loading"
-      [nzTotal]="total"
-      [nzPageSize]="pageSize"
-      [nzPageIndex]="pageIndex"
-      [nzFrontPagination]="false"
-      (nzPageIndexChange)="onPageChange($event)"
-      (nzPageSizeChange)="onPageSizeChange($event)"
-      [nzShowSizeChanger]="true"
-      [nzPageSizeOptions]="[10, 20, 50, 100]"
-    >
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th nzWidth="180px">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let role of rolesTable.data">
-          <td>{{ role.name }}</td>
-          <td>{{ role.description || '-' }}</td>
-          <td>
-            <nz-tag *ngIf="role.isSystemRole" nzColor="blue">System</nz-tag>
-            <nz-tag *ngIf="!role.isSystemRole" nzColor="default">Custom</nz-tag>
-          </td>
-          <td>
-            <nz-tag *ngIf="role.isActive" nzColor="success">Active</nz-tag>
-            <nz-tag *ngIf="!role.isActive" nzColor="default">Inactive</nz-tag>
-          </td>
-          <td>
-            <nz-space>
-              <button
-                *nzSpaceItem
-                nz-button
-                nzType="link"
-                nzSize="small"
-                (click)="editRole(role.id)"
-              >
-                <span nz-icon nzType="edit"></span>
-                Edit
-              </button>
-              <button
-                *nzSpaceItem
-                nz-button
-                nzType="link"
-                nzSize="small"
-                nzDanger
-                [disabled]="role.isSystemRole"
-                (click)="deleteRole(role)"
-              >
-                <span nz-icon nzType="delete"></span>
-                Delete
-              </button>
-            </nz-space>
-          </td>
-        </tr>
-      </tbody>
-    </nz-table>
-  </nz-card>
-</div>
+      <nz-table
+        #rolesTable
+        [nzData]="roles"
+        [nzLoading]="loading"
+        [nzTotal]="total"
+        [nzPageSize]="pageSize"
+        [nzPageIndex]="pageIndex"
+        [nzFrontPagination]="false"
+        (nzPageIndexChange)="onPageChange($event)"
+        (nzPageSizeChange)="onPageSizeChange($event)"
+        [nzShowSizeChanger]="true"
+        [nzPageSizeOptions]="[10, 20, 50, 100]"
+        >
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th nzWidth="180px">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (role of rolesTable.data; track role) {
+            <tr>
+              <td>{{ role.name }}</td>
+              <td>{{ role.description || '-' }}</td>
+              <td>
+                @if (role.isSystemRole) {
+                  <nz-tag nzColor="blue">System</nz-tag>
+                }
+                @if (!role.isSystemRole) {
+                  <nz-tag nzColor="default">Custom</nz-tag>
+                }
+              </td>
+              <td>
+                @if (role.isActive) {
+                  <nz-tag nzColor="success">Active</nz-tag>
+                }
+                @if (!role.isActive) {
+                  <nz-tag nzColor="default">Inactive</nz-tag>
+                }
+              </td>
+              <td>
+                <nz-space>
+                  <button
+                    *nzSpaceItem
+                    nz-button
+                    nzType="link"
+                    nzSize="small"
+                    (click)="editRole(role.id)"
+                    >
+                    <span nz-icon nzType="edit"></span>
+                    Edit
+                  </button>
+                  <button
+                    *nzSpaceItem
+                    nz-button
+                    nzType="link"
+                    nzSize="small"
+                    nzDanger
+                    [disabled]="role.isSystemRole"
+                    (click)="deleteRole(role)"
+                    >
+                    <span nz-icon nzType="delete"></span>
+                    Delete
+                  </button>
+                </nz-space>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </nz-table>
+    </nz-card>
+  </div>

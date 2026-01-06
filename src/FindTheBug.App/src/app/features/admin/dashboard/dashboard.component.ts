@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzRowDirective, NzColDirective } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -9,13 +9,12 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     selector: 'app-dashboard',
     standalone: true,
     imports: [
-        CommonModule,
-        NzCardModule,
-        NzRowDirective,
-        NzColDirective,
-        NzIconModule,
-        NzButtonModule
-    ],
+    NzCardModule,
+    NzRowDirective,
+    NzColDirective,
+    NzIconModule,
+    NzButtonModule
+],
     template: `
     <div class="dashboard-container">
         <div class="dashboard-header">
@@ -81,38 +80,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
             </nz-col>
         </nz-row>
 
-        <nz-row [nzGutter]="24" class="actions-row">
-            <nz-col [nzXs]="24" [nzMd]="12">
-                <nz-card title="Quick Actions" class="action-card">
-                    <div class="action-buttons">
-                        <button nz-button nzType="primary" nzSize="large" class="action-btn">
-                            <span nz-icon nzType="plus"></span>
-                            New Patient
-                        </button>
-                        <button nz-button nzType="default" nzSize="large" class="action-btn">
-                            <span nz-icon nzType="plus"></span>
-                            New Test Entry
-                        </button>
-                        <button nz-button nzType="default" nzSize="large" class="action-btn">
-                            <span nz-icon nzType="file-pdf"></span>
-                            Generate Invoice
-                        </button>
-                    </div>
-                </nz-card>
-            </nz-col>
-
-            <nz-col [nzXs]="24" [nzMd]="12">
-                <nz-card title="Recent Activity" class="activity-card">
-                    <div class="activity-placeholder">
-                        <div class="empty-state">
-                            <span nz-icon nzType="inbox" nzTheme="outline" class="empty-icon"></span>
-                            <p>No recent activity</p>
-                            <p class="empty-description">Start by adding patients or test entries to see activity here.</p>
-                        </div>
-                    </div>
-                </nz-card>
-            </nz-col>
-        </nz-row>
+        
     </div>
   `,
   styleUrl: './dashboard.component.css'
