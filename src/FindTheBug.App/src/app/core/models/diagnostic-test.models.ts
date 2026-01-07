@@ -9,19 +9,9 @@ export interface DiagnosticTest {
 
 export interface DiagnosticTestListItem {
   id: string;
-  name: string;
+  testName: string;
   testCode: string;
   category: string;
-  rate: number;
+  price: number;
   isActive: boolean;
-}
-
-export interface PagedDiagnosticTestsResult {
-  items: DiagnosticTestListItem[];
-  pageNumber: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
 }

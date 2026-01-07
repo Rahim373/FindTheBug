@@ -1,200 +1,86 @@
-.form-container {
-  padding: 24px;
-  margin: 0 auto;
+.no-tests-message {
+  text-align: center;
+  padding: 40px 0;
+  color: rgba(0, 0, 0, 0.45);
 }
 
-.form-row {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 0;
-}
-
-.form-item-half {
-  flex: 1;
-}
-
-.form-item-quarter {
-  flex: 0 0 calc(25% - 18px);
-}
-
-.form-item-two-thirds {
-  flex: 0 0 calc(66.666% - 8px);
-}
-
-.form-item-third {
-  flex: 0 0 calc(33.333% - 16px);
-}
-
-.form-item-full {
-  width: 100%;
-}
-
-/* Card styling */
-:host ::ng-deep .ant-card {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border-radius: 8px;
-}
-
-:host ::ng-deep .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
-}
-
-:host ::ng-deep .ant-card-head-title {
+.no-tests-message p {
+  margin: 16px 0 0 0;
   font-size: 16px;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.85);
 }
 
-/* Form styling */
-:host ::ng-deep .ant-form-item {
-  margin-bottom: 24px;
+.summary {
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 4px;
+  margin: 16px 0;
 }
 
-:host ::ng-deep .ant-form-item-label > label {
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.summary-row .amount {
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.85);
+  min-width: 120px;
+  text-align: right;
 }
 
-:host ::ng-deep .ant-input,
-:host ::ng-deep .ant-input:hover,
-:host ::ng-deep .ant-input:focus,
-:host ::ng-deep .ant-select-selector {
-  border-radius: 6px;
+.summary-row.total {
+  font-size: 18px;
+  font-weight: bold;
+  border-top: 1px solid #e8e8e8;
+  margin-top: 8px;
+  padding-top: 16px;
 }
 
-/* Test entries table styling */
-.test-entries-container {
-  width: 100%;
+.summary-row.total .amount {
+  color: #1890ff;
 }
 
-.test-entries-table {
-  margin-bottom: 16px;
+.summary-row.due {
+  font-weight: bold;
+  border-top: 1px solid #e8e8e8;
+  margin-top: 8px;
+  padding-top: 8px;
 }
 
-.test-entries-table thead th {
-  background-color: #fafafa;
+.summary-row.due .amount {
+  color: #ff4d4f;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+nz-table {
+  margin: 16px 0;
+}
+
+nz-table th {
   font-weight: 600;
+  background: #fafafa;
 }
 
-.test-entries-table td {
+nz-table td {
   vertical-align: middle;
 }
 
-.test-entries-table .ant-form-item {
-  margin-bottom: 0;
-}
-
-.test-entries-table .ant-form-item-control-input {
-  min-height: auto;
-}
-
-.test-entries-table .ant-input-number,
-.test-entries-table .ant-select-selector {
-  width: 100%;
-}
-
-.action-cell {
-  text-align: center;
-  vertical-align: middle !important;
-}
-
-.action-cell .ant-btn-link {
-  padding: 4px 8px;
-}
-
-/* Test entry styling for old layout (deprecated) */
-.test-entry-row {
+nz-form-item {
   margin-bottom: 16px;
-  padding: 16px;
-  background-color: #fafafa;
-  border: 1px solid #f0f0f0;
-  border-radius: 6px;
 }
 
-.test-entry-fields {
-  align-items: flex-end;
+nz-card {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.test-entry-actions {
-  display: flex;
-  align-items: flex-end;
-  padding-bottom: 24px;
-}
-
-.test-entry-actions button {
-  margin-bottom: 8px;
-}
-
-/* Form actions styling */
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid #f0f0f0;
-}
-
-.form-actions .ant-btn {
-  min-width: 120px;
-}
-
-/* Divider styling */
-:host ::ng-deep .ant-divider.ant-divider-with-text-left {
-  margin: 24px 0;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-/* Input number styling */
-:host ::ng-deep .ant-input-number {
-  width: 100%;
-}
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
-  .form-container {
-    padding: 16px;
-  }
-
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .form-item-half,
-  .form-item-quarter,
-  .form-item-two-thirds,
-  .form-item-third {
-    flex: 1;
-    width: 100%;
-  }
-
-  .test-entry-fields {
-    flex-direction: column;
-  }
-
-  .test-entry-actions {
-    width: 100%;
-    justify-content: flex-end;
-  }
-
-  .form-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .form-actions .ant-btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .form-container {
-    padding: 12px;
-  }
-
-  :host ::ng-deep .ant-card-head-title {
-    font-size: 14px;
+  nz-card {
+    margin: 0;
   }
 }

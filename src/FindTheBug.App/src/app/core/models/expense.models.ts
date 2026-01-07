@@ -49,13 +49,6 @@ export interface UpdateExpenseRequest {
   department: string;
 }
 
-export interface ApiResponse<T> {
-  isSuccess: boolean;
-  data?: T;
-  errors?: any[];
-  message?: string;
-}
-
 export enum PaymentMethod {
   Cash = 'Cash',
   Cheque = 'Cheque',

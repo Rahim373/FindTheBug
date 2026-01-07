@@ -100,7 +100,7 @@ export class UserFormComponent implements OnInit {
         this.loadingRoles = true;
         this.roleService.getActive().subscribe({
             next: (roles) => {
-                this.availableRoles = roles;
+                this.availableRoles = roles.data || [];
                 this.loadingRoles = false;
             },
             error: () => {

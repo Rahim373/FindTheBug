@@ -6,9 +6,9 @@ import {
     CreateExpenseRequest,
     UpdateExpenseRequest,
     Expense,
-    PaginatedExpenseList,
-    ApiResponse
+    PaginatedExpenseList
 } from '../models/expense.models';
+import { ApiResponse } from '../models/common.models';
 
 @Injectable({
     providedIn: 'root'

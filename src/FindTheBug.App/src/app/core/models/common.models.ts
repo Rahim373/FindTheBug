@@ -7,3 +7,10 @@ export interface PagedResult<T> {
   hasPreviousPage: boolean;
   hasNextPage: boolean;
 }
+
+export interface ApiResponse<T> {
+  isSuccess: boolean;
+  data?: T;
+  errors?: any[];
+  message?: string;
+}

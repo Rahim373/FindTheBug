@@ -27,7 +27,7 @@ import {NgOptimizedImage} from '@angular/common';
       class="sidebar">
       <div class="logo">
         @if (!isCollapsed) {
-          <img ngSrc="/images/Logo.svg" height="50" width="89" />
+          <img ngSrc="/images/Logo.svg" loading="eager" height="50" width="89" />
           <!-- <span class="logo-text">FindTheBug</span> -->
         }
         @if (isCollapsed) {
@@ -42,22 +42,24 @@ import {NgOptimizedImage} from '@angular/common';
             <span>Dashboard</span>
           </a>
         </li>
-        <li nz-submenu nzTitle="User Management" nzIcon="team" [nzOpen]="isUserManagementOpen">
-          <ul>
-            <li nz-menu-item nzMatchRouter>
-              <a routerLink="/admin/users">
-                <span nz-icon nzType="user"></span>
-                <span>Users</span>
-              </a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a routerLink="/admin/roles">
-                <span nzTheme="fill" nz-icon nzType="security-scan"></span>
-                <span>Roles</span>
-              </a>
-            </li>
-          </ul>
-        </li>
+        @if (permissionService.hasAnyPermissionSync('UserManagement')) {
+          <li nz-submenu nzTitle="User Management" nzIcon="team" [nzOpen]="isUserManagementOpen">
+            <ul>
+              <li nz-menu-item nzMatchRouter>
+                <a routerLink="/admin/users">
+                  <span nz-icon nzType="user"></span>
+                  <span>Users</span>
+                </a>
+              </li>
+              <li nz-menu-item nzMatchRouter>
+                <a routerLink="/admin/roles">
+                  <span nzTheme="fill" nz-icon nzType="security-scan"></span>
+                  <span>Roles</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        }
         @if (permissionService.hasAnyPermissionSync('DoctorManagement') || permissionService.hasAnyPermissionSync('Patients')) {
           <li nz-submenu nzTitle="Medical Management" nzIcon="fa:stethoscope" [nzOpen]="isMedicalManagementOpen"
             >

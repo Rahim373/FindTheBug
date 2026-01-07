@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { Role, CreateRoleRequest, UpdateRoleRequest } from '../models/role.models';
-import { PagedResult } from '../models/common.models';
+import { ApiResponse, PagedResult } from '../models/common.models';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +26,8 @@ export class RoleService {
     return this.http.get<PagedResult<Role>>(this.apiUrl, { params });
   }
 
-  getActive(): Observable<Role[]> {
-    return this.http.get<Role[]>(`${this.apiUrl}/active`);
+  getActive(): Observable<ApiResponse<Role[]>> {
+    return this.http.get<ApiResponse<Role[]>>(`${this.apiUrl}/active`);
   }
 
   getById(id: string): Observable<Role> {
