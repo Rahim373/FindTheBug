@@ -1,4 +1,4 @@
-import { Component, inject, Output, EventEmitter } from '@angular/core';
+import { Component, inject, Output, EventEmitter, computed } from '@angular/core';
 
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -36,7 +36,7 @@ import { AuthService } from '../../../../core/services/auth.service';
             <div nz-dropdown [nzDropdownMenu]="userMenu" nzPlacement="bottomRight">
                 <button nz-button nzType="text" class="user-menu">
                     <nz-avatar nzIcon="user" nzSize="small"></nz-avatar>
-                    <span class="user-name">Admin User</span>
+                    <span class="user-name">{{ userFullName() }}</span>
                     <span nz-icon nzType="down"></span>
                 </button>
             </div>
@@ -67,6 +67,15 @@ export class HeaderComponent {
     pageTitle = 'Dashboard';
     
     private authService = inject(AuthService);
+    private currentUser = computed(() => this.authService.getCurrentUser());
+    
+    userFullName = computed(() => {
+        const user = this.currentUser();
+        if (user?.firstName && user?.lastName) {
+            return `${user.firstName} ${user.lastName}`;
+        }
+        return 'User';
+    });
 
     onProfile(): void {
         // Navigate to profile page
