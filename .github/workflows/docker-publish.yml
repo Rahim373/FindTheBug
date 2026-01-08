@@ -3,10 +3,25 @@ name: Docker Build and Publish WebAPI
 on:
   push:
     branches: [ main, master, develop ]
+    paths:
+      - 'src/FindTheBug.Application/**'
+      - 'src/FindTheBug.Domain/**'
+      - 'src/FindTheBug.Infrastructure/**'
+      - 'src/FindTheBug.WebAPI/**'
+      - 'Dockerfile'
+      - 'FindTheBug.sln'
+      - '.github/workflows/docker-publish.yml'
     tags:
       - 'v*.*.*'
   pull_request:
     branches: [ main, master, develop ]
+    paths:
+      - 'src/FindTheBug.Application/**'
+      - 'src/FindTheBug.Domain/**'
+      - 'src/FindTheBug.Infrastructure/**'
+      - 'src/FindTheBug.WebAPI/**'
+      - 'Dockerfile'
+      - 'FindTheBug.sln'
   workflow_dispatch:
 
 env:
@@ -26,6 +41,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

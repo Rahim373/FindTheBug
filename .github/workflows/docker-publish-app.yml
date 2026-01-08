@@ -32,6 +32,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: src/FindTheBug.App/yarn.lock
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: src/FindTheBug.App/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('src/FindTheBug.App/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 

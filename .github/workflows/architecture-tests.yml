@@ -3,8 +3,21 @@ name: Architecture Tests
 on:
   push:
     branches: [ main, master, develop ]
+    paths:
+      - 'src/FindTheBug.Application/**'
+      - 'src/FindTheBug.Domain/**'
+      - 'src/FindTheBug.Infrastructure/**'
+      - 'src/FindTheBug.WebAPI/**'
+      - 'tests/FindTheBug.ArchitectureTests/**'
+      - '.github/workflows/architecture-tests.yml'
   pull_request:
     branches: [ main, master, develop ]
+    paths:
+      - 'src/FindTheBug.Application/**'
+      - 'src/FindTheBug.Domain/**'
+      - 'src/FindTheBug.Infrastructure/**'
+      - 'src/FindTheBug.WebAPI/**'
+      - 'tests/FindTheBug.ArchitectureTests/**'
 
 permissions:
   checks: write
@@ -23,6 +36,14 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
+        
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
         
     - name: Restore dependencies
       run: dotnet restore
