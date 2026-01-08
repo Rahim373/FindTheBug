@@ -2,26 +2,29 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copy solution and project files
+# Copy solution and project files for dependency restoration
 COPY ["FindTheBug.sln", "./"]
 COPY ["src/FindTheBug.Domain/FindTheBug.Domain.csproj", "src/FindTheBug.Domain/"]
 COPY ["src/FindTheBug.Application/FindTheBug.Application.csproj", "src/FindTheBug.Application/"]
 COPY ["src/FindTheBug.Infrastructure/FindTheBug.Infrastructure.csproj", "src/FindTheBug.Infrastructure/"]
 COPY ["src/FindTheBug.WebAPI/FindTheBug.WebAPI.csproj", "src/FindTheBug.WebAPI/"]
 
-# Restore dependencies
+# Restore dependencies (this layer is cached until csproj files change)
 RUN dotnet restore "src/FindTheBug.WebAPI/FindTheBug.WebAPI.csproj"
 
-# Copy everything else
-COPY . .
+# Copy source code
+COPY ["src/FindTheBug.Domain/", "src/FindTheBug.Domain/"]
+COPY ["src/FindTheBug.Application/", "src/FindTheBug.Application/"]
+COPY ["src/FindTheBug.Infrastructure/", "src/FindTheBug.Infrastructure/"]
+COPY ["src/FindTheBug.WebAPI/", "src/FindTheBug.WebAPI/"]
 
-# Build
+# Build (this layer is cached until source code changes)
 WORKDIR "/src/src/FindTheBug.WebAPI"
-RUN dotnet build "FindTheBug.WebAPI.csproj" -c Release -o /app/build
+RUN dotnet build "FindTheBug.WebAPI.csproj" -c Release -o /app/build --no-restore
 
 # Stage 2: Publish
 FROM build AS publish
-RUN dotnet publish "FindTheBug.WebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "FindTheBug.WebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false --no-restore
 
 # Stage 3: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
